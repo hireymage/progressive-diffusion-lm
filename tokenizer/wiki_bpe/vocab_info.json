@@ -1,0 +1,12 @@
+{
+  "vocab_size": 16000,
+  "model_vocab_size": 16000,
+  "mask_token_id_in_model": 16000,
+  "special_tokens": {
+    "[PAD]": 0,
+    "[UNK]": 1,
+    "[MASK]": 2,
+    "[BOS]": 3,
+    "[EOS]": 4
+  }
+}

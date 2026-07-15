@@ -9,18 +9,8 @@
     "d_ff": 512,
     "max_seq_len": 64,
     "dropout": 0.0,
-    "tie_word_embeddings": true,
     "n_diffusion_steps": 8,
-    "precision_schedule": [
-      16,
-      16,
-      16,
-      16,
-      16,
-      16,
-      16,
-      16
-    ],
+    "precision_schedule": [16, 16, 16, 16, 16, 16, 16, 16],
     "model_type": "baseline"
   },
   "data": {
@@ -31,13 +21,12 @@
     "seq_len": 64,
     "tokenizer_path": "tokenizer/wiki_bpe",
     "data_cache_dir": "data/cache",
-    "train_split": 0.9,
-    "dataset_revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa"
+    "train_split": 0.9
   },
   "train": {
     "batch_size": 4,
-    "learning_rate": 0.001,
-    "weight_decay": 0.0,
+    "learning_rate": 1e-3,
+    "weight_decay": 0.01,
     "max_steps": 50,
     "warmup_steps": 5,
     "grad_clip": 1.0,
@@ -47,7 +36,6 @@
     "eval_every": 25,
     "eval_steps": 5,
     "log_every": 10,
-    "results_dir": "results",
     "seed": 42
   }
 }

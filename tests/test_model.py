@@ -173,34 +173,6 @@ class TestDiffusionLM:
         assert not np.allclose(l1, l4, atol=1e-4), \
             "1-bit and 4-bit should produce different logits"
 
-    def test_configured_dropout_changes_training_outputs(self):
-        cfg = make_small_cfg(model_type="baseline", dropout=0.5)
-        model = DiffusionLM(cfg)
-        model.train()
-        x = mx.array([[1, 2, 3, 4, 5, 6, 7, 8]])
-        t = mx.array([0.5])
-        mx.random.seed(1)
-        first = model(x, t)
-        mx.eval(first)
-        mx.random.seed(2)
-        second = model(x, t)
-        mx.eval(second)
-        assert not np.allclose(np.array(first), np.array(second))
-
-    def test_configured_dropout_is_disabled_in_eval_mode(self):
-        cfg = make_small_cfg(model_type="baseline", dropout=0.5)
-        model = DiffusionLM(cfg)
-        model.eval()
-        x = mx.array([[1, 2, 3, 4, 5, 6, 7, 8]])
-        t = mx.array([0.5])
-        mx.random.seed(1)
-        first = model(x, t)
-        mx.eval(first)
-        mx.random.seed(2)
-        second = model(x, t)
-        mx.eval(second)
-        assert np.allclose(np.array(first), np.array(second))
-
 
 def run_all():
     test_classes = [

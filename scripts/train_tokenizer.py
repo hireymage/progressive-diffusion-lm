@@ -24,70 +24,36 @@ Special tokens
 import os
 import sys
 import argparse
-import hashlib
-import json
 from pathlib import Path
 
 
-def stream_text(
-    max_articles: int,
-    max_bytes: int,
-    dataset_name: str,
-    dataset_config: str,
-    dataset_revision: str,
-):
-    """Return a list of text strings from Wikipedia for tokenizer training.
-
-    Materialising the corpus as a list (rather than yielding from a generator)
-    ensures the HuggingFace streaming iterable is fully closed before the
-    caller processes the data, which prevents pyarrow ThreadPool::Shutdown
-    from hanging on process exit on macOS.
-    """
+def stream_text(max_articles: int, max_bytes: int, dataset_config: str):
+    """Yield text strings from Wikipedia for tokenizer training."""
     from datasets import load_dataset
 
     print(f"Streaming Wikipedia for tokenizer training "
           f"(max_articles={max_articles}, max_bytes={max_bytes:,})")
     dataset = load_dataset(
-        dataset_name,
+        "wikimedia/wikipedia",
         dataset_config,
         split="train",
         streaming=True,
-        revision=dataset_revision,
     )
 
-    texts: list[str] = []
-    try:
-        n = 0
-        total_bytes = 0
-        for ex in dataset:
-            text = ex.get("text", "")
-            if not text:
-                continue
-            total_bytes += len(text.encode("utf-8"))
-            texts.append(text)
-            n += 1
-            if n % 500 == 0:
-                print(f"  {n} articles / {total_bytes/1e6:.1f} MB streamed...")
-            if n >= max_articles or total_bytes >= max_bytes:
-                break
-        print(f"Tokenizer training corpus: {n} articles, {total_bytes/1e6:.1f} MB")
-    finally:
-        _close_iterable_dataset(dataset)
-
-    return texts
-
-
-def _close_iterable_dataset(dataset) -> None:
-    """Best-effort cleanup of a HuggingFace IterableDataset."""
-    for target in (dataset, getattr(dataset, "_ex_iterable", None)):
-        if target is None:
+    n = 0
+    total_bytes = 0
+    for ex in dataset:
+        text = ex.get("text", "")
+        if not text:
             continue
-        close = getattr(target, "close", None)
-        if callable(close):
-            try:
-                close()
-            except Exception:
-                pass
+        total_bytes += len(text.encode("utf-8"))
+        yield text
+        n += 1
+        if n % 500 == 0:
+            print(f"  {n} articles / {total_bytes/1e6:.1f} MB streamed...")
+        if n >= max_articles or total_bytes >= max_bytes:
+            break
+    print(f"Tokenizer training corpus: {n} articles, {total_bytes/1e6:.1f} MB")
 
 
 def train_tokenizer(
@@ -95,9 +61,7 @@ def train_tokenizer(
     max_articles: int,
     max_bytes: int,
     output_dir: str,
-    dataset_name: str = "wikimedia/wikipedia",
     dataset_config: str = "20231101.en",
-    dataset_revision: str = "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
 ):
     from tokenizers import Tokenizer, models, pre_tokenizers, trainers, decoders, processors
 
@@ -129,13 +93,7 @@ def train_tokenizer(
     )
 
     # Train from iterator to avoid loading all text into RAM
-    text_iter = stream_text(
-        max_articles,
-        max_bytes,
-        dataset_name,
-        dataset_config,
-        dataset_revision,
-    )
+    text_iter = stream_text(max_articles, max_bytes, dataset_config)
     tokenizer.train_from_iterator(text_iter, trainer=trainer)
 
     # Post-processor: add BOS/EOS
@@ -158,22 +116,14 @@ def train_tokenizer(
     print(f"  [BOS]  → {tokenizer.token_to_id('[BOS]')}")
     print(f"  [EOS]  → {tokenizer.token_to_id('[EOS]')}")
 
-    # Save vocab and immutable corpus provenance.
-    tokenizer_sha256 = hashlib.sha256(tok_file.read_bytes()).hexdigest()
+    # Save vocab info
     info = {
         "vocab_size": actual_vocab_size,
         "model_vocab_size": actual_vocab_size,
         "mask_token_id_in_model": actual_vocab_size,  # one past end
         "special_tokens": {tok: tokenizer.token_to_id(tok) for tok in special_tokens},
-        "tokenizer_sha256": tokenizer_sha256,
-        "training_corpus": {
-            "dataset_name": dataset_name,
-            "dataset_config": dataset_config,
-            "dataset_revision": dataset_revision,
-            "max_articles": max_articles,
-            "max_text_bytes": max_bytes,
-        },
     }
+    import json
     with open(output_path / "vocab_info.json", "w") as f:
         json.dump(info, f, indent=2)
     print(f"\nVocab info saved to {output_path / 'vocab_info.json'}")
@@ -188,14 +138,7 @@ def main():
     parser.add_argument("--max-bytes", type=int, default=50_000_000,
                         help="Max bytes of text for training")
     parser.add_argument("--output", type=str, default="tokenizer/wiki_bpe")
-    parser.add_argument("--dataset-name", type=str, default="wikimedia/wikipedia")
     parser.add_argument("--dataset-config", type=str, default="20231101.en")
-    parser.add_argument(
-        "--dataset-revision",
-        type=str,
-        default="b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
-        help="Immutable Hugging Face dataset revision",
-    )
     args = parser.parse_args()
 
     train_tokenizer(
@@ -203,16 +146,8 @@ def main():
         max_articles=args.max_articles,
         max_bytes=args.max_bytes,
         output_dir=args.output,
-        dataset_name=args.dataset_name,
         dataset_config=args.dataset_config,
-        dataset_revision=args.dataset_revision,
     )
-
-    # Force-exit to avoid pyarrow ThreadPool::Shutdown hang on macOS.
-    # The HuggingFace datasets streaming backend creates background threads
-    # that block process exit indefinitely on this platform.
-    import os as _os
-    _os._exit(0)
 
 
 if __name__ == "__main__":

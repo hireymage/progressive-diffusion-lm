@@ -1,38 +1,42 @@
-# Python / environments
+# Environments
 .venv/
 __pycache__/
-*.py[cod]
+*.pyc
+*.pyo
 .pytest_cache/
-*.egg-info/
-dist/
-build/
 
-# Private agent/editor state
-.claude/
-.vscode/
-.idea/
+# Large data — never commit Wikipedia or cached chunks
+data/
+*.npy
+*.jsonl
+*.parquet
+
+# Model checkpoints — can be large
+checkpoints/
+*.npz
+*.safetensors
+*.bin
+
+# Hugging Face cache
+~/.cache/huggingface/
+.cache/
+
+# Tokenizer artefacts (reproducible from script, so optional to commit)
+# Comment out the next line if you want to commit the tokenizer
+# tokenizer/
+
+# macOS artefacts
 .DS_Store
 *.swp
 
-# Datasets, caches and model artifacts
-data/
-.cache/
-tokenizer/wiki_bpe/
-checkpoints/
-results/
-results.zip
-runs/
-wandb/
-configs/campaign/generated/
-*.npy
-*.npz
-*.jsonl
-*.parquet
-*.safetensors
-*.bin
+# Logs
 *.log
+wandb/
+runs/
 
-# Local secrets / environment
-.env
-.env.*
-!.env.example
+# IDE
+.vscode/
+.idea/
+*.egg-info/
+dist/
+build/

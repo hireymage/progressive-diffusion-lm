@@ -74,7 +74,7 @@ def mask_rate_to_step(mask_rate: float, n_steps: int) -> int:
     """Map a continuous mask rate in [0,1] to a discrete step index [0, T-1]."""
     # step 0 → highest noise (mask_rate near 1.0)
     # step T-1 → lowest noise (mask_rate near 0.0)
-    step = int((1.0 - mask_rate) * n_steps)
+    step = int(mask_rate * n_steps)
     return max(0, min(n_steps - 1, step))
 
 

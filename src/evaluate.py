@@ -42,7 +42,7 @@ from .config import ExperimentConfig, ModelConfig
 from .model import DiffusionLM
 from .diffusion import corrupt_tokens, mask_rate_to_step
 from .data import build_and_cache_dataset, BatchIterator
-from .quantization import model_storage_report, bits_per_param_from_schedule
+from .quantization import theoretical_storage_bytes, bits_per_param
 from .train import load_checkpoint
 
 
@@ -79,12 +79,8 @@ def eval_model(
     cfg: ExperimentConfig,
     n_steps: int = 100,
     label: str = "model",
-    rng_seed: int | None = None,
 ) -> dict:
-    """Compute validation metrics on deterministic fixtures when seeded."""
-    model.eval()
-    if rng_seed is not None:
-        mx.random.seed(rng_seed)
+    """Compute validation metrics."""
     mask_token_id = cfg.model.mask_token_id()
     precision_schedule = (
         cfg.model.precision_schedule
@@ -137,23 +133,23 @@ def eval_model(
     total_tokens_processed = sum(n_tokens_per_step)
     tokens_per_sec = total_tokens_processed / elapsed
 
-    storage = model_storage_report(model, precision_schedule)
+    # For progressive models, report schedule-average bits; for baseline, 16
+    schedule_avg_bits = float(np.mean(precision_schedule))
+    n_params = model.total_params()
+    fp32_bytes = n_params * 4
+    q_bytes = int(n_params * schedule_avg_bits / 8)
+    compression = fp32_bytes / max(q_bytes, 1)
 
     return {
         "label": label,
         "val_loss": total_loss / n_steps,
         "val_accuracy": total_correct / max(total_masked, 1),
         "masked_tokens_per_sec": tokens_per_sec,
-        "n_params": storage["total_params"],
-        "q_linear_weight_params": storage["q_linear_weight_params"],
-        "non_quantized_params": storage["non_quantized_params"],
-        "average_step_weight_bits": storage["average_step_weight_bits"],
-        "actual_model_mb": storage["actual_model_mb"],
-        "actual_compression_vs_fp32": storage["actual_compression_vs_fp32"],
-        "hypothetical_packed_mb": storage["hypothetical_packed_mb"],
-        "hypothetical_packed_compression_vs_fp32": storage[
-            "hypothetical_packed_compression_vs_fp32"
-        ],
+        "n_params": n_params,
+        "bits_per_param": schedule_avg_bits,
+        "fp32_bytes": fp32_bytes,
+        "theoretical_quantised_bytes": q_bytes,
+        "theoretical_compression_ratio": compression,
     }
 
 
@@ -231,18 +227,12 @@ def print_report(results: list[dict], flop_info: dict = None) -> None:
         print(f"{'─'*40}")
         print(f"  Validation loss:        {r['val_loss']:.4f}")
         print(f"  Masked-token accuracy:  {r['val_accuracy']:.4f}  ({r['val_accuracy']*100:.1f}%)")
-        print(f"  Parameters (total):     {r['n_params']:,}")
-        print(f"    QuantizedLinear:       {r['q_linear_weight_params']:,}")
-        print(f"    Non-quantized:         {r['non_quantized_params']:,}")
-        print(f"  Avg step weight bits:     {r['average_step_weight_bits']:.3f}")
-        print(f"  Actual model storage:     {r['actual_model_mb']:.2f} MB (FP32)")
-        print(f"  Actual vs FP32:           {r['actual_compression_vs_fp32']:.1f}×")
-        if r["hypothetical_packed_mb"] is not None:
-            print(f"  Packed lower bound:       {r['hypothetical_packed_mb']:.2f} MB")
-            print(f"  Hyp. packed vs FP32:      "
-                  f"{r['hypothetical_packed_compression_vs_fp32']:.1f}×")
-        else:
-            print("  Packed lower bound:       n/a for dynamic schedule")
+        print(f"  Parameters:             {r['n_params']:,}")
+        print(f"  Bits per parameter:     {r['bits_per_param']:.2f}")
+        print(f"  Theoretical weight storage:")
+        print(f"    Full precision (fp32): {r['fp32_bytes'] / 1e6:.2f} MB")
+        print(f"    Quantised:             {r['theoretical_quantised_bytes'] / 1e6:.2f} MB")
+        print(f"    Compression ratio:     {r['theoretical_compression_ratio']:.1f}×")
         print(f"  Throughput (masked tok/s): {r['masked_tokens_per_sec']:,.0f}")
 
         if "gen_tokens_per_sec" in r:
@@ -278,8 +268,6 @@ def main():
     parser.add_argument("--config", type=str, required=True, help="Config JSON")
     parser.add_argument("--eval-steps", type=int, default=100)
     parser.add_argument("--measure-speed", action="store_true")
-    parser.add_argument("--save-results", type=str, default=None,
-                        help="Path to save JSON results (e.g. results/comparison.json)")
     args = parser.parse_args()
 
     cfg = ExperimentConfig.from_json(args.config)
@@ -290,28 +278,17 @@ def main():
         seq_len=cfg.data.seq_len,
         max_articles=cfg.data.max_articles,
         max_text_bytes=cfg.data.max_text_bytes,
-        dataset_name=cfg.data.dataset_name,
-        dataset_config=cfg.data.dataset_config,
-        dataset_revision=cfg.data.dataset_revision,
-        train_split=cfg.data.train_split,
-        seed=cfg.train.seed,
     )
+    val_iter = BatchIterator(val_data, cfg.train.batch_size)
+
     results = []
     flop_info = None
-    eval_seed = cfg.train.seed + 2
 
     if args.baseline:
         b_cfg = ExperimentConfig.from_json(args.config)
         b_cfg.model.model_type = "baseline"
         model = load_model(args.baseline, b_cfg)
-        r = eval_model(
-            model,
-            BatchIterator(val_data, cfg.train.batch_size, seed=eval_seed),
-            b_cfg,
-            n_steps=args.eval_steps,
-            label="Baseline (full precision)",
-            rng_seed=eval_seed,
-        )
+        r = eval_model(model, val_iter, b_cfg, n_steps=args.eval_steps, label="Baseline (full precision)")
         if args.measure_speed:
             speed = measure_inference_speed(model, b_cfg)
             r.update(speed)
@@ -321,14 +298,7 @@ def main():
         p_cfg = ExperimentConfig.from_json(args.config)
         p_cfg.model.model_type = "progressive"
         model = load_model(args.progressive, p_cfg)
-        r = eval_model(
-            model,
-            BatchIterator(val_data, cfg.train.batch_size, seed=eval_seed),
-            p_cfg,
-            n_steps=args.eval_steps,
-            label="Progressive (1→2→4-bit)",
-            rng_seed=eval_seed,
-        )
+        r = eval_model(model, val_iter, p_cfg, n_steps=args.eval_steps, label="Progressive (1→2→4-bit)")
         if args.measure_speed:
             speed = measure_inference_speed(model, p_cfg)
             r.update(speed)
@@ -336,14 +306,6 @@ def main():
         flop_info = estimate_flop_savings(p_cfg.model.precision_schedule)
 
     print_report(results, flop_info)
-
-    if args.save_results:
-        import json as _json
-        out_path = Path(args.save_results)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(out_path, "w") as f:
-            _json.dump({"results": results, "flop_info": flop_info}, f, indent=2)
-        print(f"\nResults saved to {out_path}")
 
 
 if __name__ == "__main__":
