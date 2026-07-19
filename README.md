@@ -141,7 +141,17 @@ The full vision includes:
 | Incremental computation | ❌ full recompute | ✅ yₙ₊₁ = yₙ + Δ |
 | Early exit | ❌ | ✅ confidence-based |
 | Result reuse | ❌ | ✅ residual/delta weights |
-| Progressive Down | partial (4→2→1) | full (5→4→3→2→1) |
+| Progressive Down | partial (4→2→1) | full (8→4→2→1) |
+
+## Latest completed campaign
+
+- Report: [`docs/reports/p1-matched-noise-3node-summary-2026-07-19.md`](docs/reports/p1-matched-noise-3node-summary-2026-07-19.md)
+- Scope: three-node matched-noise campaign (`m1-256`, `m1-512`, `m4-air`), 24/24 tasks completed.
+- Result (mean best val loss, n=6 per variant):
+  - clean-fp32: **7.421699**
+  - constant-q1: 7.427120 (`+0.005420` vs clean-fp32)
+  - gaussian-matched-fp32: 7.456407 (`+0.034708`)
+  - uniform-matched-fp32: 7.456817 (`+0.035117`)
 
 ## License
 

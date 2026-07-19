@@ -67,7 +67,17 @@ Plná vize zahrnuje:
 | Incrementální výpočet | ❌ plný recompute | ✅ yₙ₊₁ = yₙ + Δ |
 | Early exit | ❌ | ✅ confidence-based |
 | Reuse mezivýsledků | ❌ | ✅ residual/delta weights |
-| Progressive Down | částečný (4→2→1) | plný (5→4→3→2→1) |
+| Progressive Down | částečný (4→2→1) | plný (8→4→2→1) |
+
+## Poslední dokončená kampaň
+
+- Report: [`docs/reports/p1-matched-noise-3node-summary-2026-07-19.md`](docs/reports/p1-matched-noise-3node-summary-2026-07-19.md)
+- Scope: tří-node matched-noise kampaň (`m1-256`, `m1-512`, `m4-air`), 24/24 tasků dokončeno.
+- Výsledek (mean best val loss, n=6 na variantu):
+  - clean-fp32: **7.421699**
+  - constant-q1: 7.427120 (`+0.005420` vůči clean-fp32)
+  - gaussian-matched-fp32: 7.456407 (`+0.034708`)
+  - uniform-matched-fp32: 7.456817 (`+0.035117`)
 
 ## Licence
 

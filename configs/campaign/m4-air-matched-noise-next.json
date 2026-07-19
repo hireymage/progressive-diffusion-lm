@@ -1,0 +1,415 @@
+{
+  "campaign_slug": "matched-noise-next",
+  "node": "m4-air",
+  "seeds": [
+    157,
+    163
+  ],
+  "minimum_memory_gib": 14.0,
+  "memory_profile": "16GB unified RAM; eight sequential metrics-only 10k runs; node-local data and MLX caches",
+  "max_parallel_tasks": 1,
+  "scientific_rationale": "Paired clean FP32, native Q1, Gaussian matched-RMS FP32 and Uniform matched-RMS FP32 isolate quantization-specific effects from matched-strength weight-noise regularization.",
+  "estimated_runtime_basis": "Eight sequential 10k runs on M4 Air follow-up seeds for matched-noise replication.",
+  "tasks": [
+    {
+      "id": "m4-air-clean-fp32-s157",
+      "description": "Clean FP32 baseline, seed 157.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {
+        "experiment_name": "matched_m4_air_clean-fp32_s157",
+        "model": {
+          "model_type": "baseline",
+          "precision_schedule": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_noise_mode": "none",
+          "weight_noise_multiplier": 1.0
+        },
+        "train": {
+          "seed": 157,
+          "max_steps": 10000,
+          "save_checkpoints": false,
+          "checkpoint_every": 999999,
+          "checkpoint_dir": "checkpoints/campaign",
+          "results_dir": "results/campaign"
+        }
+      },
+      "command": [
+        "{python}",
+        "-m",
+        "src.train",
+        "--config",
+        "{config}"
+      ],
+      "artifacts": [
+        "results/campaign/matched_m4_air_clean-fp32_s157"
+      ],
+      "expected_metrics_contract": {
+        "artifact_dir": "results/campaign/matched_m4_air_clean-fp32_s157",
+        "expected_summary": {
+          "experiment_name": "matched_m4_air_clean-fp32_s157",
+          "model_type": "baseline",
+          "weight_noise_mode": "none",
+          "seed": 157
+        }
+      }
+    },
+    {
+      "id": "m4-air-constant-q1-s157",
+      "description": "Native constant Q1, seed 157.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {
+        "experiment_name": "matched_m4_air_constant-q1_s157",
+        "model": {
+          "model_type": "progressive",
+          "precision_schedule": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "weight_noise_mode": "none",
+          "weight_noise_multiplier": 1.0
+        },
+        "train": {
+          "seed": 157,
+          "max_steps": 10000,
+          "save_checkpoints": false,
+          "checkpoint_every": 999999,
+          "checkpoint_dir": "checkpoints/campaign",
+          "results_dir": "results/campaign"
+        }
+      },
+      "command": [
+        "{python}",
+        "-m",
+        "src.train",
+        "--config",
+        "{config}"
+      ],
+      "artifacts": [
+        "results/campaign/matched_m4_air_constant-q1_s157"
+      ],
+      "expected_metrics_contract": {
+        "artifact_dir": "results/campaign/matched_m4_air_constant-q1_s157",
+        "expected_summary": {
+          "experiment_name": "matched_m4_air_constant-q1_s157",
+          "model_type": "progressive",
+          "weight_noise_mode": "none",
+          "seed": 157
+        }
+      }
+    },
+    {
+      "id": "m4-air-gaussian-matched-fp32-s157",
+      "description": "Gaussian matched-RMS train-only FP32, seed 157.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {
+        "experiment_name": "matched_m4_air_gaussian-matched-fp32_s157",
+        "model": {
+          "model_type": "baseline",
+          "precision_schedule": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_noise_mode": "gaussian_matched",
+          "weight_noise_multiplier": 1.0
+        },
+        "train": {
+          "seed": 157,
+          "max_steps": 10000,
+          "save_checkpoints": false,
+          "checkpoint_every": 999999,
+          "checkpoint_dir": "checkpoints/campaign",
+          "results_dir": "results/campaign"
+        }
+      },
+      "command": [
+        "{python}",
+        "-m",
+        "src.train",
+        "--config",
+        "{config}"
+      ],
+      "artifacts": [
+        "results/campaign/matched_m4_air_gaussian-matched-fp32_s157"
+      ],
+      "expected_metrics_contract": {
+        "artifact_dir": "results/campaign/matched_m4_air_gaussian-matched-fp32_s157",
+        "expected_summary": {
+          "experiment_name": "matched_m4_air_gaussian-matched-fp32_s157",
+          "model_type": "baseline",
+          "weight_noise_mode": "gaussian_matched",
+          "seed": 157
+        }
+      }
+    },
+    {
+      "id": "m4-air-uniform-matched-fp32-s157",
+      "description": "Uniform matched-RMS train-only FP32, seed 157.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {
+        "experiment_name": "matched_m4_air_uniform-matched-fp32_s157",
+        "model": {
+          "model_type": "baseline",
+          "precision_schedule": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_noise_mode": "uniform_matched",
+          "weight_noise_multiplier": 1.0
+        },
+        "train": {
+          "seed": 157,
+          "max_steps": 10000,
+          "save_checkpoints": false,
+          "checkpoint_every": 999999,
+          "checkpoint_dir": "checkpoints/campaign",
+          "results_dir": "results/campaign"
+        }
+      },
+      "command": [
+        "{python}",
+        "-m",
+        "src.train",
+        "--config",
+        "{config}"
+      ],
+      "artifacts": [
+        "results/campaign/matched_m4_air_uniform-matched-fp32_s157"
+      ],
+      "expected_metrics_contract": {
+        "artifact_dir": "results/campaign/matched_m4_air_uniform-matched-fp32_s157",
+        "expected_summary": {
+          "experiment_name": "matched_m4_air_uniform-matched-fp32_s157",
+          "model_type": "baseline",
+          "weight_noise_mode": "uniform_matched",
+          "seed": 157
+        }
+      }
+    },
+    {
+      "id": "m4-air-clean-fp32-s163",
+      "description": "Clean FP32 baseline, seed 163.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {
+        "experiment_name": "matched_m4_air_clean-fp32_s163",
+        "model": {
+          "model_type": "baseline",
+          "precision_schedule": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_noise_mode": "none",
+          "weight_noise_multiplier": 1.0
+        },
+        "train": {
+          "seed": 163,
+          "max_steps": 10000,
+          "save_checkpoints": false,
+          "checkpoint_every": 999999,
+          "checkpoint_dir": "checkpoints/campaign",
+          "results_dir": "results/campaign"
+        }
+      },
+      "command": [
+        "{python}",
+        "-m",
+        "src.train",
+        "--config",
+        "{config}"
+      ],
+      "artifacts": [
+        "results/campaign/matched_m4_air_clean-fp32_s163"
+      ],
+      "expected_metrics_contract": {
+        "artifact_dir": "results/campaign/matched_m4_air_clean-fp32_s163",
+        "expected_summary": {
+          "experiment_name": "matched_m4_air_clean-fp32_s163",
+          "model_type": "baseline",
+          "weight_noise_mode": "none",
+          "seed": 163
+        }
+      }
+    },
+    {
+      "id": "m4-air-constant-q1-s163",
+      "description": "Native constant Q1, seed 163.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {
+        "experiment_name": "matched_m4_air_constant-q1_s163",
+        "model": {
+          "model_type": "progressive",
+          "precision_schedule": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "weight_noise_mode": "none",
+          "weight_noise_multiplier": 1.0
+        },
+        "train": {
+          "seed": 163,
+          "max_steps": 10000,
+          "save_checkpoints": false,
+          "checkpoint_every": 999999,
+          "checkpoint_dir": "checkpoints/campaign",
+          "results_dir": "results/campaign"
+        }
+      },
+      "command": [
+        "{python}",
+        "-m",
+        "src.train",
+        "--config",
+        "{config}"
+      ],
+      "artifacts": [
+        "results/campaign/matched_m4_air_constant-q1_s163"
+      ],
+      "expected_metrics_contract": {
+        "artifact_dir": "results/campaign/matched_m4_air_constant-q1_s163",
+        "expected_summary": {
+          "experiment_name": "matched_m4_air_constant-q1_s163",
+          "model_type": "progressive",
+          "weight_noise_mode": "none",
+          "seed": 163
+        }
+      }
+    },
+    {
+      "id": "m4-air-gaussian-matched-fp32-s163",
+      "description": "Gaussian matched-RMS train-only FP32, seed 163.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {
+        "experiment_name": "matched_m4_air_gaussian-matched-fp32_s163",
+        "model": {
+          "model_type": "baseline",
+          "precision_schedule": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_noise_mode": "gaussian_matched",
+          "weight_noise_multiplier": 1.0
+        },
+        "train": {
+          "seed": 163,
+          "max_steps": 10000,
+          "save_checkpoints": false,
+          "checkpoint_every": 999999,
+          "checkpoint_dir": "checkpoints/campaign",
+          "results_dir": "results/campaign"
+        }
+      },
+      "command": [
+        "{python}",
+        "-m",
+        "src.train",
+        "--config",
+        "{config}"
+      ],
+      "artifacts": [
+        "results/campaign/matched_m4_air_gaussian-matched-fp32_s163"
+      ],
+      "expected_metrics_contract": {
+        "artifact_dir": "results/campaign/matched_m4_air_gaussian-matched-fp32_s163",
+        "expected_summary": {
+          "experiment_name": "matched_m4_air_gaussian-matched-fp32_s163",
+          "model_type": "baseline",
+          "weight_noise_mode": "gaussian_matched",
+          "seed": 163
+        }
+      }
+    },
+    {
+      "id": "m4-air-uniform-matched-fp32-s163",
+      "description": "Uniform matched-RMS train-only FP32, seed 163.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {
+        "experiment_name": "matched_m4_air_uniform-matched-fp32_s163",
+        "model": {
+          "model_type": "baseline",
+          "precision_schedule": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16
+          ],
+          "weight_noise_mode": "uniform_matched",
+          "weight_noise_multiplier": 1.0
+        },
+        "train": {
+          "seed": 163,
+          "max_steps": 10000,
+          "save_checkpoints": false,
+          "checkpoint_every": 999999,
+          "checkpoint_dir": "checkpoints/campaign",
+          "results_dir": "results/campaign"
+        }
+      },
+      "command": [
+        "{python}",
+        "-m",
+        "src.train",
+        "--config",
+        "{config}"
+      ],
+      "artifacts": [
+        "results/campaign/matched_m4_air_uniform-matched-fp32_s163"
+      ],
+      "expected_metrics_contract": {
+        "artifact_dir": "results/campaign/matched_m4_air_uniform-matched-fp32_s163",
+        "expected_summary": {
+          "experiment_name": "matched_m4_air_uniform-matched-fp32_s163",
+          "model_type": "baseline",
+          "weight_noise_mode": "uniform_matched",
+          "seed": 163
+        }
+      }
+    }
+  ]
+}
