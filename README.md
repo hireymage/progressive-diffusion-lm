@@ -120,6 +120,28 @@ The rebuilt source-only tree was verified locally with 132 passing tests before 
 - Historical dataset arrays have checksums but no provable immutable upstream dataset revision.
 - Apple Silicon execution is not guaranteed bitwise deterministic across sessions.
 
+## Roadmap — toward full progressive precision
+
+The current implementation is a **first step** toward a broader experiment.
+See [`PROGRESSIVE-PRECISION-PRINCIPLE.md`](PROGRESSIVE-PRECISION-PRINCIPLE.md)
+for the canonical experiment design.
+
+The full vision includes:
+
+- **Five precision levels** (1b, 2b, 3b, 4b, 5b) in both directions;
+- **Incremental computation** — `y₂b = y₁b + Δ₂b`, not a full forward recompute at each precision step;
+- **Early exit at inference** — stop at 1b if the prediction is already confident;
+- **Maximum reuse of intermediate results** across precision steps;
+- **Bidirectional experiments** — Progressive Up (1b→5b) and Progressive Down (5b→1b) as first-class comparisons.
+
+| Feature | Current | Target |
+|---|---|---|
+| Precision levels | 1b, 2b, 4b | 1b, 2b, 3b, 4b, 5b |
+| Incremental computation | ❌ full recompute | ✅ yₙ₊₁ = yₙ + Δ |
+| Early exit | ❌ | ✅ confidence-based |
+| Result reuse | ❌ | ✅ residual/delta weights |
+| Progressive Down | partial (4→2→1) | full (5→4→3→2→1) |
+
 ## License
 
 Source code is licensed under the [Apache License 2.0](LICENSE). External datasets, dependencies, tokenizers, generated artifacts, and third-party models retain their own licenses and are not relicensed by this repository.

@@ -46,6 +46,28 @@ Poslední lokální kontrola opraveného source-only stromu měla `132 passed`.
 - staré runs byly ve skutečnosti unregularized Adam, přestože config uváděl dropout/weight decay;
 - žádné obecné tvrzení o výhodě Q1 nebo progressive precision zatím není oprávněné.
 
+## Plán — směřující k plné progressive precision
+
+Aktuální implementace je **první krok** k širšímu experimentu.
+Viz [`PROGRESSIVE-PRECISION-PRINCIPLE.md`](PROGRESSIVE-PRECISION-PRINCIPLE.md)
+pro canonical experiment design.
+
+Plná vize zahrnuje:
+
+- **pět úrovní přesnosti** (1b, 2b, 3b, 4b, 5b) oběma směry;
+- **incrementální výpočet** — `y₂b = y₁b + Δ₂b`, ne plný forward recompute;
+- **early exit při inferenci** — stop při 1b, pokud je predikce dostatečně jistá;
+- **maximální znovupoužití mezivýsledků** napříč precision kroky;
+- **bidirectionální experimenty** — Progressive Up (1b→5b) i Progressive Down (5b→1b).
+
+| Funkce | Aktuálně | Cíl |
+|---|---|---|
+| Úrovně přesnosti | 1b, 2b, 4b | 1b, 2b, 3b, 4b, 5b |
+| Incrementální výpočet | ❌ plný recompute | ✅ yₙ₊₁ = yₙ + Δ |
+| Early exit | ❌ | ✅ confidence-based |
+| Reuse mezivýsledků | ❌ | ✅ residual/delta weights |
+| Progressive Down | částečný (4→2→1) | plný (5→4→3→2→1) |
+
 ## Licence
 
 Vlastní zdrojový kód je pod licencí [Apache License 2.0](LICENSE). Externí datasety, závislosti, tokenizery a cizí modely si zachovávají své licence.
