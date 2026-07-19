@@ -1,0 +1,53 @@
+{
+  "experiment_name": "smoke_test_progressive",
+  "model": {
+    "vocab_size": 16000,
+    "pad_token_id": 0,
+    "d_model": 128,
+    "n_layers": 2,
+    "n_heads": 4,
+    "d_ff": 512,
+    "max_seq_len": 64,
+    "dropout": 0.0,
+    "tie_word_embeddings": true,
+    "n_diffusion_steps": 8,
+    "precision_schedule": [
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      4,
+      4
+    ],
+    "model_type": "progressive"
+  },
+  "data": {
+    "dataset_name": "wikimedia/wikipedia",
+    "dataset_config": "20231101.en",
+    "max_articles": 100,
+    "max_text_bytes": 1000000,
+    "seq_len": 64,
+    "tokenizer_path": "tokenizer/wiki_bpe",
+    "data_cache_dir": "data/cache",
+    "train_split": 0.9,
+    "dataset_revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa"
+  },
+  "train": {
+    "batch_size": 4,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "max_steps": 50,
+    "warmup_steps": 5,
+    "grad_clip": 1.0,
+    "checkpoint_dir": "checkpoints",
+    "checkpoint_every": 50,
+    "resume_from": null,
+    "eval_every": 25,
+    "eval_steps": 5,
+    "log_every": 10,
+    "results_dir": "results",
+    "seed": 42
+  }
+}

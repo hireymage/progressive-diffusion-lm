@@ -1,0 +1,38 @@
+# Python / environments
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Private agent/editor state
+.claude/
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Datasets, caches and model artifacts
+data/
+.cache/
+tokenizer/wiki_bpe/
+checkpoints/
+results/
+results.zip
+runs/
+wandb/
+configs/campaign/generated/
+*.npy
+*.npz
+*.jsonl
+*.parquet
+*.safetensors
+*.bin
+*.log
+
+# Local secrets / environment
+.env
+.env.*
+!.env.example

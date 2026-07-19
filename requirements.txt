@@ -1,0 +1,19 @@
+# Progressive Diffusion LM — Python dependencies
+# Install with: pip install -r requirements.txt
+
+# Core ML framework — Apple Silicon only
+mlx>=0.21.0
+
+# Tokenization
+tokenizers>=0.15.0
+sentencepiece>=0.1.99
+
+# Dataset streaming from Hugging Face
+datasets>=2.14.0
+huggingface-hub>=0.20.0
+
+# Numerics
+numpy>=1.24.0
+
+# Progress / utilities
+tqdm>=4.65.0

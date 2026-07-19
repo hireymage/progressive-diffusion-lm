@@ -1,0 +1,84 @@
+{
+  "campaign_slug": "matched-noise",
+  "node": "m1-512",
+  "seeds": [47, 73],
+  "minimum_memory_gib": 7.0,
+  "memory_profile": "8GB unified RAM; eight sequential metrics-only 10k runs; node-local data and MLX caches",
+  "max_parallel_tasks": 1,
+  "scientific_rationale": "Paired clean FP32, native Q1, Gaussian matched-RMS FP32 and Uniform matched-RMS FP32 isolate quantization-specific effects from matched-strength weight-noise regularization.",
+  "estimated_runtime_basis": "Eight sequential 10k runs; approximately 10-12 hours, hardware dependent.",
+  "tasks": [
+    {
+      "id": "m1-512-clean-fp32-s47",
+      "description": "Clean FP32 baseline, seed 47.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {"experiment_name": "matched_m1_512_clean_fp32_s47", "model": {"model_type": "baseline", "precision_schedule": [16,16,16,16,16,16,16,16], "weight_noise_mode": "none", "weight_noise_multiplier": 1.0}, "train": {"seed": 47, "max_steps": 10000, "save_checkpoints": false, "checkpoint_every": 999999, "checkpoint_dir": "checkpoints/campaign", "results_dir": "results/campaign"}},
+      "command": ["{python}", "-m", "src.train", "--config", "{config}"],
+      "artifacts": ["results/campaign/matched_m1_512_clean_fp32_s47"],
+      "expected_metrics_contract": {"artifact_dir": "results/campaign/matched_m1_512_clean_fp32_s47", "expected_summary": {"experiment_name": "matched_m1_512_clean_fp32_s47", "model_type": "baseline", "weight_noise_mode": "none", "seed": 47}}
+    },
+    {
+      "id": "m1-512-constant-q1-s47",
+      "description": "Native constant Q1, seed 47.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {"experiment_name": "matched_m1_512_constant_q1_s47", "model": {"model_type": "progressive", "precision_schedule": [1,1,1,1,1,1,1,1], "weight_noise_mode": "none", "weight_noise_multiplier": 1.0}, "train": {"seed": 47, "max_steps": 10000, "save_checkpoints": false, "checkpoint_every": 999999, "checkpoint_dir": "checkpoints/campaign", "results_dir": "results/campaign"}},
+      "command": ["{python}", "-m", "src.train", "--config", "{config}"],
+      "artifacts": ["results/campaign/matched_m1_512_constant_q1_s47"],
+      "expected_metrics_contract": {"artifact_dir": "results/campaign/matched_m1_512_constant_q1_s47", "expected_summary": {"experiment_name": "matched_m1_512_constant_q1_s47", "model_type": "progressive", "weight_noise_mode": "none", "seed": 47}}
+    },
+    {
+      "id": "m1-512-gaussian-matched-fp32-s47",
+      "description": "Gaussian matched-RMS train-only FP32, seed 47.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {"experiment_name": "matched_m1_512_gaussian_matched_fp32_s47", "model": {"model_type": "baseline", "precision_schedule": [16,16,16,16,16,16,16,16], "weight_noise_mode": "gaussian_matched", "weight_noise_multiplier": 1.0}, "train": {"seed": 47, "max_steps": 10000, "save_checkpoints": false, "checkpoint_every": 999999, "checkpoint_dir": "checkpoints/campaign", "results_dir": "results/campaign"}},
+      "command": ["{python}", "-m", "src.train", "--config", "{config}"],
+      "artifacts": ["results/campaign/matched_m1_512_gaussian_matched_fp32_s47"],
+      "expected_metrics_contract": {"artifact_dir": "results/campaign/matched_m1_512_gaussian_matched_fp32_s47", "expected_summary": {"experiment_name": "matched_m1_512_gaussian_matched_fp32_s47", "model_type": "baseline", "weight_noise_mode": "gaussian_matched", "seed": 47}}
+    },
+    {
+      "id": "m1-512-uniform-matched-fp32-s47",
+      "description": "Uniform matched-RMS train-only FP32, seed 47.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {"experiment_name": "matched_m1_512_uniform_matched_fp32_s47", "model": {"model_type": "baseline", "precision_schedule": [16,16,16,16,16,16,16,16], "weight_noise_mode": "uniform_matched", "weight_noise_multiplier": 1.0}, "train": {"seed": 47, "max_steps": 10000, "save_checkpoints": false, "checkpoint_every": 999999, "checkpoint_dir": "checkpoints/campaign", "results_dir": "results/campaign"}},
+      "command": ["{python}", "-m", "src.train", "--config", "{config}"],
+      "artifacts": ["results/campaign/matched_m1_512_uniform_matched_fp32_s47"],
+      "expected_metrics_contract": {"artifact_dir": "results/campaign/matched_m1_512_uniform_matched_fp32_s47", "expected_summary": {"experiment_name": "matched_m1_512_uniform_matched_fp32_s47", "model_type": "baseline", "weight_noise_mode": "uniform_matched", "seed": 47}}
+    },
+    {
+      "id": "m1-512-clean-fp32-s73",
+      "description": "Clean FP32 baseline, seed 73.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {"experiment_name": "matched_m1_512_clean_fp32_s73", "model": {"model_type": "baseline", "precision_schedule": [16,16,16,16,16,16,16,16], "weight_noise_mode": "none", "weight_noise_multiplier": 1.0}, "train": {"seed": 73, "max_steps": 10000, "save_checkpoints": false, "checkpoint_every": 999999, "checkpoint_dir": "checkpoints/campaign", "results_dir": "results/campaign"}},
+      "command": ["{python}", "-m", "src.train", "--config", "{config}"],
+      "artifacts": ["results/campaign/matched_m1_512_clean_fp32_s73"],
+      "expected_metrics_contract": {"artifact_dir": "results/campaign/matched_m1_512_clean_fp32_s73", "expected_summary": {"experiment_name": "matched_m1_512_clean_fp32_s73", "model_type": "baseline", "weight_noise_mode": "none", "seed": 73}}
+    },
+    {
+      "id": "m1-512-constant-q1-s73",
+      "description": "Native constant Q1, seed 73.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {"experiment_name": "matched_m1_512_constant_q1_s73", "model": {"model_type": "progressive", "precision_schedule": [1,1,1,1,1,1,1,1], "weight_noise_mode": "none", "weight_noise_multiplier": 1.0}, "train": {"seed": 73, "max_steps": 10000, "save_checkpoints": false, "checkpoint_every": 999999, "checkpoint_dir": "checkpoints/campaign", "results_dir": "results/campaign"}},
+      "command": ["{python}", "-m", "src.train", "--config", "{config}"],
+      "artifacts": ["results/campaign/matched_m1_512_constant_q1_s73"],
+      "expected_metrics_contract": {"artifact_dir": "results/campaign/matched_m1_512_constant_q1_s73", "expected_summary": {"experiment_name": "matched_m1_512_constant_q1_s73", "model_type": "progressive", "weight_noise_mode": "none", "seed": 73}}
+    },
+    {
+      "id": "m1-512-gaussian-matched-fp32-s73",
+      "description": "Gaussian matched-RMS train-only FP32, seed 73.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {"experiment_name": "matched_m1_512_gaussian_matched_fp32_s73", "model": {"model_type": "baseline", "precision_schedule": [16,16,16,16,16,16,16,16], "weight_noise_mode": "gaussian_matched", "weight_noise_multiplier": 1.0}, "train": {"seed": 73, "max_steps": 10000, "save_checkpoints": false, "checkpoint_every": 999999, "checkpoint_dir": "checkpoints/campaign", "results_dir": "results/campaign"}},
+      "command": ["{python}", "-m", "src.train", "--config", "{config}"],
+      "artifacts": ["results/campaign/matched_m1_512_gaussian_matched_fp32_s73"],
+      "expected_metrics_contract": {"artifact_dir": "results/campaign/matched_m1_512_gaussian_matched_fp32_s73", "expected_summary": {"experiment_name": "matched_m1_512_gaussian_matched_fp32_s73", "model_type": "baseline", "weight_noise_mode": "gaussian_matched", "seed": 73}}
+    },
+    {
+      "id": "m1-512-uniform-matched-fp32-s73",
+      "description": "Uniform matched-RMS train-only FP32, seed 73.",
+      "base_config": "configs/full_baseline.json",
+      "overrides": {"experiment_name": "matched_m1_512_uniform_matched_fp32_s73", "model": {"model_type": "baseline", "precision_schedule": [16,16,16,16,16,16,16,16], "weight_noise_mode": "uniform_matched", "weight_noise_multiplier": 1.0}, "train": {"seed": 73, "max_steps": 10000, "save_checkpoints": false, "checkpoint_every": 999999, "checkpoint_dir": "checkpoints/campaign", "results_dir": "results/campaign"}},
+      "command": ["{python}", "-m", "src.train", "--config", "{config}"],
+      "artifacts": ["results/campaign/matched_m1_512_uniform_matched_fp32_s73"],
+      "expected_metrics_contract": {"artifact_dir": "results/campaign/matched_m1_512_uniform_matched_fp32_s73", "expected_summary": {"experiment_name": "matched_m1_512_uniform_matched_fp32_s73", "model_type": "baseline", "weight_noise_mode": "uniform_matched", "seed": 73}}
+    }
+  ]
+}
