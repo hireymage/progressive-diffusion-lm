@@ -54,15 +54,16 @@ pro canonical experiment design.
 
 Plná vize zahrnuje:
 
-- **pět úrovní přesnosti** (1b, 2b, 3b, 4b, 5b) oběma směry;
+- **standardní úrovně přesnosti** (1b, 2b, 4b, 8b) oběma směry;
 - **incrementální výpočet** — `y₂b = y₁b + Δ₂b`, ne plný forward recompute;
 - **early exit při inferenci** — stop při 1b, pokud je predikce dostatečně jistá;
 - **maximální znovupoužití mezivýsledků** napříč precision kroky;
-- **bidirectionální experimenty** — Progressive Up (1b→5b) i Progressive Down (5b→1b).
+- **bidirectionální experimenty** — Progressive Up (1b→8b) i Progressive Down (8b→1b).
+- **oddělené baseline rodiny** — FP16 a FP32 vést odděleně jako samostatné baseline.
 
 | Funkce | Aktuálně | Cíl |
 |---|---|---|
-| Úrovně přesnosti | 1b, 2b, 4b | 1b, 2b, 3b, 4b, 5b |
+| Úrovně přesnosti | 1b, 2b, 4b | 1b, 2b, 4b, 8b |
 | Incrementální výpočet | ❌ plný recompute | ✅ yₙ₊₁ = yₙ + Δ |
 | Early exit | ❌ | ✅ confidence-based |
 | Reuse mezivýsledků | ❌ | ✅ residual/delta weights |

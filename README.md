@@ -128,15 +128,16 @@ for the canonical experiment design.
 
 The full vision includes:
 
-- **Five precision levels** (1b, 2b, 3b, 4b, 5b) in both directions;
+- **Standard precision levels** (1b, 2b, 4b, 8b) in both directions;
 - **Incremental computation** — `y₂b = y₁b + Δ₂b`, not a full forward recompute at each precision step;
 - **Early exit at inference** — stop at 1b if the prediction is already confident;
 - **Maximum reuse of intermediate results** across precision steps;
-- **Bidirectional experiments** — Progressive Up (1b→5b) and Progressive Down (5b→1b) as first-class comparisons.
+- **Bidirectional experiments** — Progressive Up (1b→8b) and Progressive Down (8b→1b) as first-class comparisons.
+- **Baseline families separated** — FP16 and FP32 tracked as distinct baselines where relevant.
 
 | Feature | Current | Target |
 |---|---|---|
-| Precision levels | 1b, 2b, 4b | 1b, 2b, 3b, 4b, 5b |
+| Precision levels | 1b, 2b, 4b | 1b, 2b, 4b, 8b |
 | Incremental computation | ❌ full recompute | ✅ yₙ₊₁ = yₙ + Δ |
 | Early exit | ❌ | ✅ confidence-based |
 | Result reuse | ❌ | ✅ residual/delta weights |

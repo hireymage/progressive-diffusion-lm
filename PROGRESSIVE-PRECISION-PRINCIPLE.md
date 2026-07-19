@@ -16,7 +16,7 @@ computation where precision can be dynamically added or removed.
 ### 1. Progressive Up
 
 ```
-1b → 2b → 3b → 4b → 5b
+1b → 2b → 4b → 8b
 ```
 
 Gradually **adding information**:
@@ -24,9 +24,8 @@ Gradually **adding information**:
 ```
 y_1b = base coarse computation
 y_2b = y_1b + Δ_2b
-y_3b = y_2b + Δ_3b
-y_4b = y_3b + Δ_4b
-y_5b = y_4b + Δ_5b
+y_4b = y_2b + Δ_4b
+y_8b = y_4b + Δ_8b
 ```
 
 Each step should ideally **only add the missing precision** and build on
@@ -35,7 +34,7 @@ the previous result, not recompute the full forward pass from scratch.
 ### 2. Progressive Down
 
 ```
-5b → 4b → 3b → 2b → 1b
+8b → 4b → 2b → 1b
 ```
 
 Gradually **removing precision and information**. Investigates whether
@@ -45,21 +44,21 @@ representations of higher precision.
 ### 3. Constant Precision
 
 ```
-always 1b / always 2b / always 3b / always 4b / always 5b
+always 1b / always 2b / always 4b / always 8b
 ```
 
 ### 4. Baseline
 
 Standard non-progressive model / full precision per specific experiment.
+Baseline families are tracked separately for FP16 and FP32 where relevant.
 
 ## Inference — main hypothesis
 
 ```
 1b → sufficiently confident? → PREDICTION → STOP
 1b → not enough? → add information → 2b
-2b → not enough? → 3b
-3b → not enough? → 4b
-4b → not enough? → 5b
+2b → not enough? → 4b
+4b → not enough? → 8b
 ```
 
 Higher precision should **add to the already-computed result**, not
@@ -93,14 +92,14 @@ vision:
 
 | Feature | Status |
 |---|---|
-| Precision levels | 1b, 2b, 4b (3 levels) — **missing 3b and 5b** |
+| Precision levels | 1b, 2b, 4b (3 levels) — **missing 8b** |
 | Progressive Up schedule | ✅ 1→2→4 (partial) |
 | Progressive Down schedule | ✅ 4→2→1 (partial) |
 | Constant precision | ✅ |
 | Incremental computation (yₙ₊₁ = yₙ + Δ) | ❌ each step does full forward pass |
 | Early exit at inference | ❌ |
 | Intermediate result reuse | ❌ |
-| 5-level schedule (1→2→3→4→5) | ❌ |
+| 4-level schedule (1→2→4→8) | ❌ |
 
 Current results (constant and progressive schedules with full recompute)
 remain valid for what they actually test, but represent only the first
