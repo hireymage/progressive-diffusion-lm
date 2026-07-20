@@ -6,6 +6,7 @@ bits=1  — binary {-1, +1}                       2 levels, 1.0 eff. bits
 bits=2  — true 2-bit {-3,-1,+1,+3}×step        4 levels, 2.0 eff. bits
 bits=3  — true 3-bit odd levels × step          8 non-zero levels, 3.0 eff. bits
 bits=4  — true 4-bit odd levels × step         16 non-zero levels, 4.0 eff. bits
+bits=8  — symmetric 8-bit (256 levels)           8.0 eff. bits
 bits=16 — no quantisation (full-precision baseline)
 bits=0  — optional ternary {-1,0,+1}×scale      3 levels, ~1.585 eff. bits
 """
@@ -57,7 +58,7 @@ class ModelConfig:
             raise ValueError(
                 "precision_schedule length must equal n_diffusion_steps"
             )
-        unsupported = sorted(set(self.precision_schedule) - {0, 1, 2, 3, 4, 16})
+        unsupported = sorted(set(self.precision_schedule) - {0, 1, 2, 3, 4, 8, 16})
         if unsupported:
             raise ValueError(f"unsupported precision values: {unsupported}")
         if self.model_type not in {"baseline", "progressive"}:

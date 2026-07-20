@@ -1,0 +1,47 @@
+{
+  "experiment_name": "smoke_test_phase2_up",
+  "model": {
+    "vocab_size": 16000,
+    "pad_token_id": 0,
+    "d_model": 128,
+    "n_layers": 2,
+    "n_heads": 4,
+    "d_ff": 512,
+    "max_seq_len": 64,
+    "dropout": 0.0,
+    "tie_word_embeddings": true,
+    "n_diffusion_steps": 4,
+    "precision_schedule": [1, 2, 4, 8],
+    "model_type": "progressive",
+    "weight_noise_mode": "none",
+    "weight_noise_multiplier": 1.0
+  },
+  "data": {
+    "dataset_name": "wikimedia/wikipedia",
+    "dataset_config": "20231101.en",
+    "max_articles": 100,
+    "max_text_bytes": 500000,
+    "seq_len": 64,
+    "tokenizer_path": "tokenizer/wiki_bpe",
+    "data_cache_dir": "data/cache",
+    "train_split": 0.95,
+    "dataset_revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa"
+  },
+  "train": {
+    "batch_size": 4,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "max_steps": 50,
+    "warmup_steps": 10,
+    "grad_clip": 1.0,
+    "checkpoint_dir": "checkpoints/smoke",
+    "checkpoint_every": 999999,
+    "resume_from": null,
+    "eval_every": 50,
+    "eval_steps": 10,
+    "log_every": 10,
+    "results_dir": "results/smoke_phase2_up",
+    "seed": 42,
+    "save_checkpoints": false
+  }
+}
