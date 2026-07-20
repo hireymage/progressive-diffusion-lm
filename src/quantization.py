@@ -28,6 +28,11 @@ bits=4  — Q4 / True 4-bit: 16 levels {-15, -13, …, -1, +1, …, +15} × step
             {-7,…,+7}×scale/7 (with zero).  The ablation const_4bit variant
             was trained under the old scheme — see ptq_study.py for caveat.
 
+bits=8  — Q8 / True 8-bit: 256 levels {-255, -253, …, -1, +1, …, +253, +255} × step.
+            step = max(|w|) / 255.  Boundaries: ±2, ±4, …, ±254 × step.
+            General formula: mag = 2·floor(|w_norm|/2)+1, capped at 255.
+            No zero level.  Effective bits: 8.0
+
 bits=16 — Identity pass-through (no quantisation). Used for the baseline.
             Storage bits: 32.0 because master/checkpoint weights are float32.
 
@@ -56,7 +61,7 @@ _LAST_INJECTED_NOISE: dict[int, mx.array] = {}
 
 # Effective bits per scheme value.
 # 0 = ternary sentinel (optional, ~1.585 bits); 3/4 are true 3-/4-bit.
-EFFECTIVE_BITS = {0: math.log2(3), 1: 1.0, 2: 2.0, 3: 3.0, 4: 4.0, 16: 32.0}
+EFFECTIVE_BITS = {0: math.log2(3), 1: 1.0, 2: 2.0, 3: 3.0, 4: 4.0, 8: 8.0, 16: 32.0}
 
 
 # ---------------------------------------------------------------------------
@@ -144,6 +149,24 @@ def _quantize_4bit(w: mx.array) -> mx.array:
     return w_sign * w_mag * step
 
 
+def _quantize_8bit(w: mx.array) -> mx.array:
+    """
+    Q8 / True 8-bit: 256 symmetric levels {-255, -253, …, -1, +1, …, +253, +255} × step.
+
+    step = max(|w|) / 255 per output-row.
+    Boundaries at ±2, ±4, …, ±254 × step.
+    General formula: mag = 2·floor(|w_norm|/2)+1, capped at 255.
+    No zero level.  Effective bits: 8.0
+    """
+    w_max = mx.max(mx.abs(w), axis=-1, keepdims=True)
+    step = mx.maximum(w_max / 255.0, 1e-8)
+    w_norm = w / step
+    w_sign = mx.where(w_norm >= 0, mx.ones_like(w_norm), -mx.ones_like(w_norm))
+    w_abs = mx.abs(w_norm)
+    w_mag = mx.minimum(2.0 * mx.floor(w_abs / 2.0) + 1.0, 255.0)
+    return w_sign * w_mag * step
+
+
 def quantize_weights(w: mx.array, bits: int) -> mx.array:
     """
     Return float approximation of w at the given precision.
@@ -154,6 +177,7 @@ def quantize_weights(w: mx.array, bits: int) -> mx.array:
     bits=2  → Q2  true 2-bit ×step     (4 levels,  eff. 2.0 bits)
     bits=3  → Q3  true 3-bit ×step     (8 levels,  eff. 3.0 bits)
     bits=4  → Q4  true 4-bit ×step     (16 levels, eff. 4.0 bits)
+    bits=8  → Q8  true 8-bit ×step     (256 levels, eff. 8.0 bits)
     bits=16 → identity                 (no quantisation)
     bits=0  → ternary ×scale (optional, 3 levels, eff. ~1.585 bits)
     """
@@ -165,6 +189,8 @@ def quantize_weights(w: mx.array, bits: int) -> mx.array:
         return _quantize_3bit(w)
     elif bits == 4:
         return _quantize_4bit(w)
+    elif bits == 8:
+        return _quantize_8bit(w)
     elif bits == 0:
         return _quantize_ternary(w)
     else:

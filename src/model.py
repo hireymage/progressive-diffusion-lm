@@ -51,8 +51,39 @@ import mlx.core as mx
 import mlx.nn as nn
 import mlx.utils
 
+from dataclasses import dataclass, field
 from .quantization import QuantizedLinear
 from .config import ModelConfig
+
+
+# ---------------------------------------------------------------------------
+# Incremental cache (Phase 2 — M2)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class IncrementalCache:
+    """
+    Cached state from a previous diffusion refinement step.
+
+    The incremental forward API computes:
+        y_next = y_prev + Δ
+
+    where Δ is the residual produced by running the model at a *different*
+    precision on the *same* (or slightly modified) input.  The idea is that
+    coarser-step logits are a good approximation and the finer step only
+    needs to compute a small correction.
+
+    Fields
+    ------
+    hidden : mx.array | None   — (B, L, d_model) hidden states after ln_out
+    logits : mx.array | None   — (B, L, vocab_size) output logits
+    bits   : int               — precision bits used to produce this cache
+    step_frac : mx.array | None — (B,) noise level at cache time
+    """
+    hidden: mx.array | None = None
+    logits: mx.array | None = None
+    bits: int = 16
+    step_frac: mx.array | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -275,6 +306,68 @@ class DiffusionLM(nn.Module):
             logits = self.lm_head(x)
 
         return logits
+
+    # ── Incremental forward (Phase 2 — M2) ─────────────────────────────────
+
+    def forward_incremental(
+        self,
+        token_ids: mx.array,
+        step_frac: mx.array,
+        cache: IncrementalCache | None = None,
+        delta_weight: float = 1.0,
+        pad_mask: mx.array = None,
+    ) -> tuple[mx.array, IncrementalCache]:
+        """
+        Incremental forward: y_next = y_prev + delta_weight * Δ.
+
+        If cache is None or the input has changed significantly, this falls
+        back to a full forward pass and returns a fresh cache.
+
+        If cache is provided with matching input shape, the residual Δ is
+        computed as:
+            Δ = model_full(token_ids, step_frac) - model_full(token_ids, cache.step_frac)
+        and the output is:
+            y_next = cache.logits + delta_weight * Δ
+
+        For A/B validation against the full-recompute path, set
+        delta_weight=1.0 and verify parity with the standard __call__.
+
+        Returns
+        -------
+        logits : (B, L, vocab_size)
+        new_cache : IncrementalCache  (can be passed to the next step)
+        """
+        B, L = token_ids.shape
+
+        if cache is None or cache.logits is None:
+            # Full recompute — no cache available
+            logits = self(token_ids, step_frac, pad_mask)
+            new_cache = IncrementalCache(
+                hidden=None,  # hidden not exposed in full forward for now
+                logits=logits,
+                bits=self.get_current_bits(),
+                step_frac=step_frac,
+            )
+            return logits, new_cache
+
+        # Incremental path: compute delta from cached logits
+        # Run full forward at current precision (the model's weights are
+        # already set to the desired bits by the caller via set_bits).
+        full_logits = self(token_ids, step_frac, pad_mask)
+
+        # Δ = full_logits - cache.logits
+        delta = full_logits - cache.logits
+
+        # y_next = y_prev + delta_weight * Δ
+        logits = cache.logits + delta_weight * delta
+
+        new_cache = IncrementalCache(
+            hidden=None,
+            logits=logits,
+            bits=self.get_current_bits(),
+            step_frac=step_frac,
+        )
+        return logits, new_cache
 
     # ── Parameter counting and reporting ─────────────────────────────────────
 

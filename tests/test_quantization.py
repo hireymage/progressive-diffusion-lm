@@ -260,6 +260,103 @@ class TestQuantize4Bit:
         assert not np.any(np.abs(wq_np) < 1e-7)
 
 
+class TestQuantize8Bit:
+    """True 8-bit quantization: 256 non-zero odd levels from -255 to +255."""
+
+    def test_256_levels(self):
+        """bits=8 exposes all 256 Q8 levels when each region is sampled."""
+        # Construct weights that span all 256 levels: -255, -253, ..., 253, 255
+        levels = [float(v) for v in range(-255, 256, 2)]  # 256 values
+        w = mx.array([levels])
+        w_q = quantize_weights(w, bits=8)
+        mx.eval(w_q)
+        wq_np = np.array(w_q.tolist())
+        assert len(np.unique(np.round(wq_np[0], 4))) == 256, \
+            f"Expected 256 distinct levels, got {len(np.unique(np.round(wq_np[0], 4)))}"
+
+    def test_more_levels_than_4bit(self):
+        """8-bit should produce more distinct values than 4-bit."""
+        mx.random.seed(42)
+        w = mx.random.normal((4, 512))
+        w4 = quantize_weights(w, bits=4)
+        w8 = quantize_weights(w, bits=8)
+        mx.eval(w4, w8)
+        w4_np = np.array(w4.tolist())
+        w8_np = np.array(w8.tolist())
+        n_levels_4 = len(np.unique(np.round(w4_np.flatten(), 6)))
+        n_levels_8 = len(np.unique(np.round(w8_np.flatten(), 6)))
+        assert n_levels_8 > n_levels_4, \
+            f"8-bit ({n_levels_8} levels) should exceed 4-bit ({n_levels_4} levels)"
+
+    def test_no_zero_level(self):
+        """True Q8 has no zero level — all 256 values are nonzero."""
+        mx.random.seed(7)
+        w = mx.random.normal((8, 256))
+        w_q = quantize_weights(w, bits=8)
+        mx.eval(w_q)
+        w_np = np.array(w_q.tolist())
+        assert not np.any(np.abs(w_np) < 1e-7), \
+            "bits=8 (true Q8) must not produce zero weights"
+
+    def test_levels_are_odd_multiples_of_step(self):
+        """Quantised values should be in {-255,-253,…,+253,+255}×step."""
+        w = mx.array([[255.0, -255.0, 127.0, -127.0, 1.0, -1.0, 0.5, -0.5]])
+        w_q = quantize_weights(w, bits=8)
+        mx.eval(w_q, w)
+        w_np = np.array(w.tolist())
+        wq_np = np.array(w_q.tolist())
+        step = np.max(np.abs(w_np)) / 255.0
+        norm = np.round(wq_np / step, 4)
+        allowed = {float(v) for v in range(-255, 256, 2)}
+        for v in norm.flatten():
+            assert v in allowed, f"Value {v} not in allowed 256 odd levels"
+
+    def test_effective_bits(self):
+        assert EFFECTIVE_BITS[8] == 8.0, "bits=8 effective bits should be 8.0"
+
+    def test_bounded(self):
+        """Quantised values should stay within [-max(|w|), +max(|w|)]."""
+        mx.random.seed(11)
+        w = mx.random.normal((4, 64))
+        w_q = quantize_weights(w, bits=8)
+        mx.eval(w_q, w)
+        w_np = np.array(w.tolist())
+        wq_np = np.array(w_q.tolist())
+        orig_max = np.max(np.abs(w_np), axis=-1, keepdims=True)
+        assert np.all(np.abs(wq_np) <= orig_max + 1e-5), "Q8 values out of range"
+
+    def test_ste_forward_matches(self):
+        """STE forward for bits=8 matches direct quantization."""
+        mx.random.seed(23)
+        w = mx.random.normal((4, 64))
+        w_ste = ste_quantize(w, bits=8)
+        w_q = quantize_weights(w, bits=8)
+        mx.eval(w_ste, w_q)
+        assert np.allclose(
+            np.array(w_ste.tolist()), np.array(w_q.tolist()), atol=1e-5
+        ), "STE forward should equal direct quantization for bits=8"
+
+    def test_close_to_original(self):
+        """8-bit quantization should be closer to original than 4-bit."""
+        mx.random.seed(77)
+        w = mx.random.normal((8, 128))
+        w4 = quantize_weights(w, bits=4)
+        w8 = quantize_weights(w, bits=8)
+        mx.eval(w, w4, w8)
+        w_np = np.array(w.tolist())
+        err4 = np.mean((w_np - np.array(w4.tolist()))**2)
+        err8 = np.mean((w_np - np.array(w8.tolist()))**2)
+        assert err8 < err4, \
+            f"8-bit MSE ({err8:.6f}) should be less than 4-bit MSE ({err4:.6f})"
+
+    def test_bits_per_param_schedule(self):
+        """bits_per_param_from_schedule with 8-bit values."""
+        schedule = [1, 2, 4, 8]
+        avg = bits_per_param_from_schedule(schedule)
+        expected = (1.0 + 2.0 + 4.0 + 8.0) / 4
+        assert abs(avg - expected) < 1e-6, f"Expected {expected}, got {avg}"
+
+
 class TestQuantize16Bit:
     """bits=16 identity pass-through."""
 
@@ -521,6 +618,7 @@ def run_all():
         TestQuantize3BitTrue,
         TestQuantizeTernary,
         TestQuantize4Bit,
+        TestQuantize8Bit,
         TestQuantize16Bit,
         TestSTE,
         TestQuantizedLinear,

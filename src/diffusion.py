@@ -273,3 +273,229 @@ def generate(
         mx.eval(x)
 
     return x
+
+
+def generate_incremental(
+    model,
+    seq_len: int,
+    mask_token_id: int,
+    precision_schedule: list[int],
+    n_steps: int | None = None,
+    temperature: float = 1.0,
+    batch_size: int = 1,
+    delta_weight: float = 1.0,
+) -> mx.array:
+    """
+    Generate via progressive refinement using the incremental forward API.
+
+    This is the Phase 2 variant of ``generate`` that uses
+    ``model.forward_incremental`` with an ``IncrementalCache`` to compute
+        y_next = y_prev + delta_weight * Δ
+    at each refinement step.
+
+    When delta_weight=1.0 the output is mathematically identical to the
+    standard ``generate`` function (parity guarantee).  When delta_weight<1.0
+    the residual is attenuated, which may improve robustness at the cost of
+    slightly slower convergence.
+
+    Parameters
+    ----------
+    model : DiffusionLM
+    seq_len : length of sequence to generate
+    mask_token_id : the [MASK] token ID
+    precision_schedule : list of bits per step
+    n_steps : number of refinement steps (default: len(precision_schedule))
+    temperature : softmax temperature
+    batch_size : number of sequences to generate in parallel
+    delta_weight : residual scaling factor (1.0 = exact parity)
+
+    Returns
+    -------
+    token_ids : (batch_size, seq_len) integer array
+    """
+    from .model import IncrementalCache
+
+    if n_steps is None:
+        n_steps = len(precision_schedule)
+
+    x = mx.full((batch_size, seq_len), mask_token_id, dtype=mx.int32)
+    cache: IncrementalCache | None = None
+
+    for step_i in range(n_steps):
+        bits = precision_schedule[step_i]
+        model.set_bits(bits)
+
+        current_frac = 1.0 - step_i / n_steps
+        step_frac = mx.full((batch_size,), current_frac)
+
+        target_unmasked = int((step_i + 1) / n_steps * seq_len)
+        current_unmasked = int((x != mask_token_id).sum()) // batch_size
+        n_to_reveal = max(0, target_unmasked - current_unmasked)
+
+        if n_to_reveal == 0:
+            continue
+
+        logits, cache = model.forward_incremental(x, step_frac, cache, delta_weight)
+
+        if temperature != 1.0:
+            logits = logits / temperature
+
+        probs = nn.softmax(logits.astype(mx.float32), axis=-1)
+        pred_ids = probs.argmax(axis=-1)
+        confidence = probs.max(axis=-1)
+        is_masked = (x == mask_token_id)
+
+        mx.eval(x, confidence, pred_ids, is_masked)
+
+        x_np = x.tolist()
+        conf_np = confidence.tolist()
+        pred_np = pred_ids.tolist()
+        masked_np = is_masked.tolist()
+
+        for b in range(batch_size):
+            candidates = [
+                (conf_np[b][p], p)
+                for p in range(seq_len)
+                if masked_np[b][p]
+            ]
+            candidates.sort(reverse=True)
+            for _, pos in candidates[:n_to_reveal]:
+                x_np[b][pos] = pred_np[b][pos]
+
+        x = mx.array(x_np, dtype=mx.int32)
+        mx.eval(x)
+
+    still_masked = (x == mask_token_id)
+    if bool(still_masked.any()):
+        step_frac = mx.zeros((batch_size,))
+        model.set_bits(precision_schedule[-1])
+        logits, _ = model.forward_incremental(x, step_frac, cache, delta_weight)
+        mx.eval(logits)
+        pred_ids = logits.argmax(axis=-1)
+        x = mx.where(still_masked, pred_ids, x)
+        mx.eval(x)
+
+    return x
+
+
+def generate_with_early_exit(
+    model,
+    seq_len: int,
+    mask_token_id: int,
+    precision_schedule: list[int],
+    confidence_threshold: float = 0.95,
+    n_steps: int | None = None,
+    temperature: float = 1.0,
+    batch_size: int = 1,
+    min_steps: int = 1,
+    use_incremental: bool = False,
+    delta_weight: float = 1.0,
+) -> tuple[mx.array, int]:
+    """
+    Generate with early-exit: stop refinement once mean confidence exceeds
+    a threshold, saving compute on 'easy' sequences.
+
+    Parameters
+    ----------
+    model : DiffusionLM
+    seq_len : length of sequence to generate
+    mask_token_id : the MASK token ID
+    precision_schedule : list of bits per step
+    confidence_threshold : mean top-1 confidence above which we stop early
+    n_steps : max number of refinement steps (default: len(schedule))
+    temperature : softmax temperature
+    batch_size : number of sequences to generate in parallel
+    min_steps : minimum steps before early-exit is allowed (default 1)
+    use_incremental : if True, use forward_incremental instead of standard forward
+    delta_weight : residual scaling for incremental mode (1.0 = parity)
+
+    Returns
+    -------
+    token_ids : (batch_size, seq_len) integer array
+    steps_used : int - actual number of refinement steps executed
+    """
+    from .model import IncrementalCache
+
+    if n_steps is None:
+        n_steps = len(precision_schedule)
+
+    x = mx.full((batch_size, seq_len), mask_token_id, dtype=mx.int32)
+    cache: IncrementalCache | None = None
+    steps_used = 0
+
+    for step_i in range(n_steps):
+        bits = precision_schedule[step_i]
+        model.set_bits(bits)
+
+        current_frac = 1.0 - step_i / n_steps
+        step_frac = mx.full((batch_size,), current_frac)
+
+        target_unmasked = int((step_i + 1) / n_steps * seq_len)
+        current_unmasked = int((x != mask_token_id).sum()) // batch_size
+        n_to_reveal = max(0, target_unmasked - current_unmasked)
+
+        if n_to_reveal == 0:
+            continue
+
+        if use_incremental:
+            logits, cache = model.forward_incremental(x, step_frac, cache, delta_weight)
+        else:
+            logits = model(x, step_frac)
+
+        if temperature != 1.0:
+            logits = logits / temperature
+
+        probs = nn.softmax(logits.astype(mx.float32), axis=-1)
+        pred_ids = probs.argmax(axis=-1)
+        confidence = probs.max(axis=-1)
+        is_masked = (x == mask_token_id)
+
+        mx.eval(x, confidence, pred_ids, is_masked)
+
+        # Early-exit check: mean confidence of masked positions
+        conf_np = confidence.tolist()
+        masked_np = is_masked.tolist()
+        masked_confs = [
+            conf_np[b][p]
+            for b in range(batch_size)
+            for p in range(seq_len)
+            if masked_np[b][p]
+        ]
+        mean_conf = sum(masked_confs) / max(len(masked_confs), 1)
+
+        # Reveal tokens
+        x_np = x.tolist()
+        pred_np = pred_ids.tolist()
+        for b in range(batch_size):
+            candidates = [
+                (conf_np[b][p], p)
+                for p in range(seq_len)
+                if masked_np[b][p]
+            ]
+            candidates.sort(reverse=True)
+            for _, pos in candidates[:n_to_reveal]:
+                x_np[b][pos] = pred_np[b][pos]
+
+        x = mx.array(x_np, dtype=mx.int32)
+        mx.eval(x)
+        steps_used += 1
+
+        # Early exit: if confidence is high enough and we've done min_steps
+        if steps_used >= min_steps and mean_conf >= confidence_threshold:
+            break
+
+    # Fill any remaining masked tokens with model's best guess
+    still_masked = (x == mask_token_id)
+    if bool(still_masked.any()):
+        step_frac = mx.zeros((batch_size,))
+        model.set_bits(precision_schedule[-1])
+        if use_incremental:
+            logits, _ = model.forward_incremental(x, step_frac, cache, delta_weight)
+        else:
+            logits = model(x, step_frac)
+        mx.eval(logits)
+        pred_ids = logits.argmax(axis=-1)
+        x = mx.where(still_masked, pred_ids, x)
+        mx.eval(x)
+
+    return x, steps_used

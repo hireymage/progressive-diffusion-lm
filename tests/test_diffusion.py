@@ -7,8 +7,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import numpy as np
 import mlx.core as mx
 
-from src.diffusion import corrupt_tokens, mask_rate_to_step, compute_loss, generate
-from src.model import DiffusionLM
+from src.diffusion import (
+    corrupt_tokens, mask_rate_to_step, compute_loss,
+    generate, generate_incremental, generate_with_early_exit,
+)
+from src.model import DiffusionLM, IncrementalCache
 from src.config import ModelConfig
 
 
@@ -228,12 +231,370 @@ class TestGenerate:
             f"Token IDs should be < vocab_size={cfg.vocab_size}, got max {tokens_np.max()}"
 
 
+class TestForwardIncremental:
+    """Tests for the incremental forward API (Phase 2 — M2)."""
+
+    def test_no_cache_falls_back_to_full_forward(self):
+        """Without a cache, forward_incremental should produce same result as __call__."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        x = mx.array([[1, 2, 3, 4, 5, 6, 7, 8,
+                       mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id]])
+        step_frac = mx.array([0.5])
+        model.set_bits(2)
+
+        logits_full = model(x, step_frac)
+        logits_inc, cache = model.forward_incremental(x, step_frac, cache=None)
+        mx.eval(logits_full, logits_inc)
+
+        np.testing.assert_allclose(
+            np.array(logits_full.tolist()),
+            np.array(logits_inc.tolist()),
+            atol=1e-6,
+        )
+
+    def test_cache_returns_correct_bits(self):
+        """The cache should record the bits used for the forward pass."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        x = mx.array([[1, 2, 3, 4, 5, 6, 7, 8,
+                       mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id]])
+        step_frac = mx.array([0.5])
+        model.set_bits(4)
+
+        _, cache = model.forward_incremental(x, step_frac, cache=None)
+        assert cache.bits == 4, f"Expected cache.bits=4, got {cache.bits}"
+
+    def test_delta_weight_1_parities_with_full_recompute(self):
+        """With delta_weight=1.0, cached path should equal full recompute."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        x = mx.array([[1, 2, 3, 4, 5, 6, 7, 8,
+                       mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id]])
+        step_frac_1 = mx.array([0.8])
+        step_frac_2 = mx.array([0.4])
+
+        # Step 1: no cache
+        model.set_bits(1)
+        logits1, cache = model.forward_incremental(x, step_frac_1, cache=None)
+
+        # Step 2: with cache, delta_weight=1.0
+        model.set_bits(4)
+        logits2_inc, _ = model.forward_incremental(x, step_frac_2, cache=cache, delta_weight=1.0)
+
+        # Full recompute at step 2
+        model.set_bits(4)
+        logits2_full = model(x, step_frac_2)
+
+        mx.eval(logits2_inc, logits2_full)
+        np.testing.assert_allclose(
+            np.array(logits2_inc.tolist()),
+            np.array(logits2_full.tolist()),
+            atol=1e-6,
+        )
+
+    def test_delta_weight_0_returns_cached_logits(self):
+        """With delta_weight=0.0, output should be exactly the cached logits."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        x = mx.array([[1, 2, 3, 4, 5, 6, 7, 8,
+                       mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id]])
+        step_frac_1 = mx.array([0.8])
+        step_frac_2 = mx.array([0.4])
+
+        model.set_bits(1)
+        _, cache = model.forward_incremental(x, step_frac_1, cache=None)
+
+        model.set_bits(4)
+        logits2, _ = model.forward_incremental(x, step_frac_2, cache=cache, delta_weight=0.0)
+
+        mx.eval(logits2, cache.logits)
+        np.testing.assert_allclose(
+            np.array(logits2.tolist()),
+            np.array(cache.logits.tolist()),
+            atol=1e-6,
+        )
+
+    def test_incremental_cache_chain(self):
+        """Chaining multiple incremental steps should work without errors."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        x = mx.array([[1, 2, 3, 4, 5, 6, 7, 8,
+                       mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id]])
+
+        cache = None
+        fracs = [0.9, 0.6, 0.3, 0.1]
+        bits_list = [1, 2, 4, 8]
+        for frac, bits in zip(fracs, bits_list):
+            model.set_bits(bits)
+            sf = mx.array([frac])
+            logits, cache = model.forward_incremental(x, sf, cache=cache)
+            mx.eval(logits)
+            assert logits.shape == (1, 16, cfg.vocab_size), \
+                f"Expected (1,16,{cfg.vocab_size}), got {logits.shape}"
+
+
+class TestGenerateIncremental:
+    """Tests for generate_incremental (Phase 2 — M2)."""
+
+    def test_generate_incremental_shape(self):
+        """Should return (batch_size, seq_len) tensor."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens = generate_incremental(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=2,
+        )
+        mx.eval(tokens)
+        assert tokens.shape == (2, 16), f"Expected (2,16), got {tokens.shape}"
+
+    def test_generate_incremental_no_mask_tokens(self):
+        """Final output should not contain MASK tokens."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens = generate_incremental(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+        )
+        mx.eval(tokens)
+        tokens_np = np.array(tokens.tolist())
+        assert not np.any(tokens_np == mask_id), \
+            f"Generated sequence should not contain MASK tokens, got: {tokens_np}"
+
+    def test_generate_incremental_tokens_in_vocab(self):
+        """Generated token IDs should be in valid vocabulary range."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens = generate_incremental(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=2,
+        )
+        mx.eval(tokens)
+        tokens_np = np.array(tokens.tolist())
+        assert np.all(tokens_np >= 0), "Token IDs should be non-negative"
+        assert np.all(tokens_np < cfg.vocab_size), \
+            f"Token IDs should be < vocab_size={cfg.vocab_size}, got max {tokens_np.max()}"
+
+    def test_parity_generate_vs_incremental(self):
+        """generate and generate_incremental should produce identical results
+        with delta_weight=1.0 and the same random seed."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+
+        # Use deterministic seed for reproducibility
+        mx.random.seed(123)
+        tokens_std = generate(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+        )
+        mx.eval(tokens_std)
+
+        mx.random.seed(123)
+        tokens_inc = generate_incremental(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+            delta_weight=1.0,
+        )
+        mx.eval(tokens_inc)
+
+        np_std = np.array(tokens_std.tolist())
+        np_inc = np.array(tokens_inc.tolist())
+        np.testing.assert_array_equal(
+            np_std, np_inc,
+            err_msg="generate and generate_incremental should produce identical tokens"
+        )
+
+    def test_delta_weight_below_1_still_valid(self):
+        """With delta_weight=0.5, output should still be valid tokens (no crash)."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens = generate_incremental(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+            delta_weight=0.5,
+        )
+        mx.eval(tokens)
+        tokens_np = np.array(tokens.tolist())
+        assert not np.any(tokens_np == mask_id), \
+            "Should not contain MASK tokens even with delta_weight<1.0"
+        assert np.all(tokens_np >= 0) and np.all(tokens_np < cfg.vocab_size)
+
+
+class TestGenerateWithEarlyExit:
+    """Tests for generate_with_early_exit (Phase 2 - M3)."""
+
+    def test_returns_tuple(self):
+        """Should return (token_ids, steps_used) tuple."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        result = generate_with_early_exit(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+        )
+        assert isinstance(result, tuple), f"Expected tuple, got {type(result)}"
+        assert len(result) == 2, f"Expected 2 elements, got {len(result)}"
+
+    def test_shape_correct(self):
+        """Token IDs should have shape (batch_size, seq_len)."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens, steps = generate_with_early_exit(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=2,
+        )
+        mx.eval(tokens)
+        assert tokens.shape == (2, 16), f"Expected (2,16), got {tokens.shape}"
+
+    def test_no_mask_tokens(self):
+        """Output should not contain MASK tokens."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens, _ = generate_with_early_exit(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+        )
+        mx.eval(tokens)
+        tokens_np = np.array(tokens.tolist())
+        assert not np.any(tokens_np == mask_id), "Should not contain MASK tokens"
+
+    def test_tokens_in_vocab(self):
+        """Generated tokens should be in valid vocab range."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens, _ = generate_with_early_exit(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+        )
+        mx.eval(tokens)
+        tokens_np = np.array(tokens.tolist())
+        assert np.all(tokens_np >= 0)
+        assert np.all(tokens_np < cfg.vocab_size)
+
+    def test_high_threshold_uses_all_steps(self):
+        """With threshold=1.0, early-exit should never trigger, using all steps."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens, steps_used = generate_with_early_exit(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+            confidence_threshold=1.0,  # impossible to reach
+        )
+        n_steps = len(cfg.precision_schedule)
+        assert steps_used == n_steps, \
+            f"Threshold=1.0 should use all {n_steps} steps, got {steps_used}"
+
+    def test_low_threshold_exits_early(self):
+        """With threshold=0.0, early-exit should trigger after min_steps."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens, steps_used = generate_with_early_exit(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+            confidence_threshold=0.0,  # always satisfied
+            min_steps=1,
+        )
+        assert steps_used == 1, \
+            f"Threshold=0.0 + min_steps=1 should exit after 1 step, got {steps_used}"
+
+    def test_min_steps_respected(self):
+        """Even with threshold=0.0, should not exit before min_steps."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens, steps_used = generate_with_early_exit(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+            confidence_threshold=0.0,
+            min_steps=3,
+        )
+        assert steps_used == 3, \
+            f"min_steps=3 should force 3 steps even with threshold=0.0, got {steps_used}"
+
+    def test_incremental_mode_works(self):
+        """Early-exit should work with use_incremental=True."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens, steps_used = generate_with_early_exit(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=1,
+            use_incremental=True,
+            delta_weight=1.0,
+        )
+        mx.eval(tokens)
+        tokens_np = np.array(tokens.tolist())
+        assert not np.any(tokens_np == mask_id), "Should not contain MASK tokens"
+        assert steps_used >= 1, "Should complete at least 1 step"
+
+    def test_valid_output_with_incremental_and_early_exit(self):
+        """Output with incremental + early-exit should be valid tokens."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        tokens, _ = generate_with_early_exit(
+            model,
+            seq_len=16,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=2,
+            use_incremental=True,
+            delta_weight=0.5,
+            confidence_threshold=0.5,
+        )
+        mx.eval(tokens)
+        tokens_np = np.array(tokens.tolist())
+        assert not np.any(tokens_np == mask_id)
+        assert np.all(tokens_np >= 0) and np.all(tokens_np < cfg.vocab_size)
+
+
 def run_all():
     test_classes = [
         TestCorruptTokens,
         TestMaskRateToStep,
         TestComputeLoss,
         TestGenerate,
+        TestForwardIncremental,
+        TestGenerateIncremental,
+        TestGenerateWithEarlyExit,
     ]
 
     passed = 0
