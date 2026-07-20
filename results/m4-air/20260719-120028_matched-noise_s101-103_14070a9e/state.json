@@ -1,0 +1,113 @@
+{
+  "run_id": "20260719-120028_matched-noise_s101-103_14070a9e",
+  "campaign": "matched-noise",
+  "node": "m4-air",
+  "status": "completed",
+  "tasks": {
+    "m4-air-clean-fp32-s101": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m4-air/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-clean-fp32-s101.json"
+      ],
+      "started_at_utc": "2026-07-19T12:00:28.677309+00:00",
+      "finished_at_utc": "2026-07-19T13:04:41.115833+00:00"
+    },
+    "m4-air-constant-q1-s101": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m4-air/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-constant-q1-s101.json"
+      ],
+      "started_at_utc": "2026-07-19T13:04:41.116950+00:00",
+      "finished_at_utc": "2026-07-19T14:12:09.159311+00:00"
+    },
+    "m4-air-gaussian-matched-fp32-s101": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m4-air/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-gaussian-matched-fp32-s101.json"
+      ],
+      "started_at_utc": "2026-07-19T14:12:09.160314+00:00",
+      "finished_at_utc": "2026-07-19T15:22:12.474020+00:00"
+    },
+    "m4-air-uniform-matched-fp32-s101": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m4-air/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-uniform-matched-fp32-s101.json"
+      ],
+      "started_at_utc": "2026-07-19T15:22:12.475308+00:00",
+      "finished_at_utc": "2026-07-19T16:32:27.238447+00:00"
+    },
+    "m4-air-clean-fp32-s103": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m4-air/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-clean-fp32-s103.json"
+      ],
+      "started_at_utc": "2026-07-19T16:32:27.239606+00:00",
+      "finished_at_utc": "2026-07-19T17:36:15.483837+00:00"
+    },
+    "m4-air-constant-q1-s103": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m4-air/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-constant-q1-s103.json"
+      ],
+      "started_at_utc": "2026-07-19T17:36:15.484959+00:00",
+      "finished_at_utc": "2026-07-19T18:43:13.782432+00:00"
+    },
+    "m4-air-gaussian-matched-fp32-s103": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m4-air/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-gaussian-matched-fp32-s103.json"
+      ],
+      "started_at_utc": "2026-07-19T18:43:13.783534+00:00",
+      "finished_at_utc": "2026-07-19T19:53:38.630598+00:00"
+    },
+    "m4-air-uniform-matched-fp32-s103": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m4-air/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-uniform-matched-fp32-s103.json"
+      ],
+      "started_at_utc": "2026-07-19T19:53:38.631784+00:00",
+      "finished_at_utc": "2026-07-19T21:07:24.692680+00:00"
+    }
+  },
+  "completed_at_utc": "2026-07-19T21:07:24.693778+00:00"
+}

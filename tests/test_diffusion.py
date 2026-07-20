@@ -96,18 +96,20 @@ class TestCorruptTokens:
 
 
 class TestMaskRateToStep:
-    def test_high_rate_low_step(self):
-        """High mask rate → early step (high noise, step 0)."""
-        step = mask_rate_to_step(0.95, n_steps=8)
-        assert step == 7 or step == 7, f"Expected step 7, got {step}"
-        # Actually high rate → high step index (max noise)
-        step = mask_rate_to_step(0.99, n_steps=8)
-        assert step >= 6, f"Expected high step for high mask rate, got {step}"
+    def test_high_rate_selects_first_coarse_schedule_entry(self):
+        """High mask rate is the coarse/high-noise start of refinement."""
+        assert mask_rate_to_step(1.0, n_steps=8) == 0
+        assert mask_rate_to_step(0.99, n_steps=8) == 0
 
-    def test_low_rate_high_step(self):
-        """Low mask rate → later step (fine refinement)."""
-        step = mask_rate_to_step(0.05, n_steps=8)
-        assert step == 0, f"Expected step 0 for low rate, got {step}"
+    def test_low_rate_selects_last_fine_schedule_entry(self):
+        """Low mask rate is the fine/low-noise end of refinement."""
+        assert mask_rate_to_step(0.0, n_steps=8) == 7
+        assert mask_rate_to_step(0.05, n_steps=8) == 7
+
+    def test_monotonically_moves_from_coarse_to_fine_as_noise_decreases(self):
+        rates = [1.0, 0.75, 0.5, 0.25, 0.0]
+        steps = [mask_rate_to_step(rate, n_steps=8) for rate in rates]
+        assert steps == sorted(steps), steps
 
     def test_clamped_to_valid_range(self):
         for n in [4, 8, 16]:

@@ -1,0 +1,113 @@
+{
+  "run_id": "20260719-182528_matched-noise-next_s149-151_4917cde7",
+  "campaign": "matched-noise-next",
+  "node": "m1-512",
+  "status": "completed",
+  "tasks": {
+    "m1-512-clean-fp32-s149": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-512/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-clean-fp32-s149.json"
+      ],
+      "started_at_utc": "2026-07-19T18:25:28.340793+00:00",
+      "finished_at_utc": "2026-07-19T19:45:52.513934+00:00"
+    },
+    "m1-512-constant-q1-s149": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-512/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-constant-q1-s149.json"
+      ],
+      "started_at_utc": "2026-07-19T19:45:52.517298+00:00",
+      "finished_at_utc": "2026-07-19T21:11:36.605346+00:00"
+    },
+    "m1-512-gaussian-matched-fp32-s149": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-512/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-gaussian-matched-fp32-s149.json"
+      ],
+      "started_at_utc": "2026-07-19T21:11:36.607013+00:00",
+      "finished_at_utc": "2026-07-19T22:42:01.261522+00:00"
+    },
+    "m1-512-uniform-matched-fp32-s149": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-512/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-uniform-matched-fp32-s149.json"
+      ],
+      "started_at_utc": "2026-07-19T22:42:01.263856+00:00",
+      "finished_at_utc": "2026-07-20T00:11:47.931160+00:00"
+    },
+    "m1-512-clean-fp32-s151": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-512/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-clean-fp32-s151.json"
+      ],
+      "started_at_utc": "2026-07-20T00:11:47.933976+00:00",
+      "finished_at_utc": "2026-07-20T01:32:14.569961+00:00"
+    },
+    "m1-512-constant-q1-s151": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-512/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-constant-q1-s151.json"
+      ],
+      "started_at_utc": "2026-07-20T01:32:14.571901+00:00",
+      "finished_at_utc": "2026-07-20T02:57:58.763508+00:00"
+    },
+    "m1-512-gaussian-matched-fp32-s151": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-512/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-gaussian-matched-fp32-s151.json"
+      ],
+      "started_at_utc": "2026-07-20T02:57:58.765969+00:00",
+      "finished_at_utc": "2026-07-20T04:28:30.807994+00:00"
+    },
+    "m1-512-uniform-matched-fp32-s151": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-512/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-uniform-matched-fp32-s151.json"
+      ],
+      "started_at_utc": "2026-07-20T04:28:30.810491+00:00",
+      "finished_at_utc": "2026-07-20T05:58:12.907708+00:00"
+    }
+  },
+  "completed_at_utc": "2026-07-20T05:58:12.910002+00:00"
+}

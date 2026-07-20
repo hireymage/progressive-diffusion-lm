@@ -1,0 +1,46 @@
+{
+  "run_id": "20260718-201544_ptq-plus-native-gaps_s42-123-7-31415_f0d73b66",
+  "campaign": "ptq-plus-native-gaps",
+  "node": "m1-256",
+  "status": "completed",
+  "tasks": {
+    "ptq-main-and-ternary": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-256/env/bin/python",
+        "scripts/ptq_study.py",
+        "--include-ternary"
+      ],
+      "started_at_utc": "2026-07-18T20:15:58.967959+00:00",
+      "finished_at_utc": "2026-07-19T00:13:32.665465+00:00"
+    },
+    "native-q3-s31415": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-256/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/native-q3-s31415.json"
+      ],
+      "started_at_utc": "2026-07-19T00:13:32.674786+00:00",
+      "finished_at_utc": "2026-07-19T01:42:19.360713+00:00"
+    },
+    "native-ternary-s31415": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-256/env/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/native-ternary-s31415.json"
+      ],
+      "started_at_utc": "2026-07-19T01:42:19.370128+00:00",
+      "finished_at_utc": "2026-07-19T03:05:49.112429+00:00"
+    }
+  },
+  "completed_at_utc": "2026-07-19T03:05:49.117341+00:00"
+}

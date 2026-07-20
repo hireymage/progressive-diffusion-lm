@@ -1,0 +1,19 @@
+seed,bits,bits_label,eff_bits,ptq_val_loss,fp_val_loss,delta_vs_fp,native_variant,native_val_loss,delta_ptq_minus_native,q4_scheme_caveat
+42,1,"Q1 (binary, 2 levels)",1.0,7.4707,7.4277,0.043,const_1bit,7.458,0.0127,False
+42,2,"Q2 (true 2-bit, 4 levels)",2.0,7.4309,7.4277,0.0032,const_2bit,7.4456,-0.0148,False
+42,3,"Q3 (true 3-bit, 8 levels)",3.0,7.4301,7.4277,0.0024,,,,False
+42,4,"Q4 (true 4-bit, 16 levels)",4.0,7.4276,7.4277,-0.0001,const_4bit,7.426,0.0015,True
+42,16,FP32 (unquantized),16.0,7.4277,7.4277,0.0,baseline,7.4194,0.0082,False
+123,1,"Q1 (binary, 2 levels)",1.0,7.5548,7.4896,0.0651,const_1bit,7.4095,0.1453,False
+123,2,"Q2 (true 2-bit, 4 levels)",2.0,7.5,7.4896,0.0104,const_2bit,7.4625,0.0375,False
+123,3,"Q3 (true 3-bit, 8 levels)",3.0,7.4896,7.4896,0.0,,,,False
+123,4,"Q4 (true 4-bit, 16 levels)",4.0,7.4897,7.4896,0.0001,const_4bit,7.4634,0.0262,True
+123,16,FP32 (unquantized),16.0,7.4896,7.4896,0.0,baseline,7.4627,0.0269,False
+7,1,"Q1 (binary, 2 levels)",1.0,7.6993,7.4566,0.2428,const_1bit,7.4331,0.2663,False
+7,2,"Q2 (true 2-bit, 4 levels)",2.0,7.5423,7.4566,0.0857,const_2bit,7.4677,0.0746,False
+7,3,"Q3 (true 3-bit, 8 levels)",3.0,7.4569,7.4566,0.0003,,,,False
+7,4,"Q4 (true 4-bit, 16 levels)",4.0,7.4566,7.4566,0.0001,const_4bit,7.4457,0.0109,True
+7,16,FP32 (unquantized),16.0,7.4566,7.4566,0.0,baseline,7.4481,0.0084,False
+42,0,"ternary / 3-state (~1.585 bits, 3 levels)",1.584962500721156,7.4945,7.4277,0.0669,,,,False
+123,0,"ternary / 3-state (~1.585 bits, 3 levels)",1.584962500721156,7.5371,7.4896,0.0474,,,,False
+7,0,"ternary / 3-state (~1.585 bits, 3 levels)",1.584962500721156,7.7138,7.4566,0.2573,,,,False

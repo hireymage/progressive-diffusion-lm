@@ -1,0 +1,14 @@
+{
+  "captured_at_utc": "2026-07-19T18:25:28.284523+00:00",
+  "node": "m1-512",
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "python": "3.11.15 (main, May 10 2026, 19:23:07) [Clang 22.1.3 ]",
+  "executable": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-512/env/bin/python",
+  "physical_memory_bytes": 8589934592,
+  "physical_memory_gib": 8.0,
+  "source_git_head": "unavailable",
+  "environment": {
+    "TMPDIR": "/var/folders/cq/m6yz_wxd2_gdr_2y5t_cv_080000gn/T/"
+  }
+}

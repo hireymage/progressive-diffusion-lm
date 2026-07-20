@@ -8,9 +8,18 @@
     "n_heads": 8,
     "d_ff": 2048,
     "max_seq_len": 256,
-    "dropout": 0.1,
+    "dropout": 0.0,
     "n_diffusion_steps": 8,
-    "precision_schedule": [1, 1, 1, 1, 2, 2, 4, 4],
+    "precision_schedule": [
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      4,
+      4
+    ],
     "model_type": "progressive"
   },
   "data": {
@@ -21,12 +30,13 @@
     "seq_len": 256,
     "tokenizer_path": "tokenizer/wiki_bpe",
     "data_cache_dir": "data/cache",
-    "train_split": 0.95
+    "train_split": 0.95,
+    "dataset_revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa"
   },
   "train": {
     "batch_size": 8,
-    "learning_rate": 3e-4,
-    "weight_decay": 0.01,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0,
     "max_steps": 10000,
     "warmup_steps": 500,
     "grad_clip": 1.0,

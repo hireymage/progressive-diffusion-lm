@@ -1,0 +1,38 @@
+[
+  {
+    "step": 500,
+    "val_loss": 7.580664,
+    "val_accuracy": 0.03486,
+    "bits_used": 2
+  },
+  {
+    "step": 1000,
+    "val_loss": 7.5688,
+    "val_accuracy": 0.032385,
+    "bits_used": 1
+  },
+  {
+    "step": 1500,
+    "val_loss": 7.524601,
+    "val_accuracy": 0.03673,
+    "bits_used": 2
+  },
+  {
+    "step": 2000,
+    "val_loss": 7.504582,
+    "val_accuracy": 0.0354,
+    "bits_used": 2
+  },
+  {
+    "step": 2500,
+    "val_loss": 7.521136,
+    "val_accuracy": 0.036004,
+    "bits_used": 2
+  },
+  {
+    "step": 3000,
+    "val_loss": 7.496411,
+    "val_accuracy": 0.036738,
+    "bits_used": 2
+  }
+]

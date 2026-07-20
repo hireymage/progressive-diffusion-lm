@@ -1,0 +1,20 @@
+{
+  "baseline-s31415": [
+    "results/campaign/campaign_baseline_s31415"
+  ],
+  "const-1bit-s31415": [
+    "results/campaign/campaign_const_1bit_s31415"
+  ],
+  "progressive-s31415": [
+    "results/campaign/campaign_progressive_1_2_4_s31415"
+  ],
+  "baseline-s27182": [
+    "results/campaign/campaign_baseline_s27182"
+  ],
+  "const-1bit-s27182": [
+    "results/campaign/campaign_const_1bit_s27182"
+  ],
+  "progressive-s27182": [
+    "results/campaign/campaign_progressive_1_2_4_s27182"
+  ]
+}

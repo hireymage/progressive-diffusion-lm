@@ -4,18 +4,45 @@ Progressive-precision diffusion language model.
 Architecture
 ------------
 Bidirectional (non-causal) Transformer encoder.  The model takes a partially
-masked token sequence and predicts the original token at every position.
+masked token sequence and predicts the original (clean) token at every
+position.
 
-Conditioning on the noise level (mask rate) is done by adding a sinusoidal
-"step embedding" to every token position — analogous to time conditioning in
-image diffusion models.
+Noise-level conditioning:
+  A sinusoidal embedding of the current mask rate (0 = clean, 1 = fully noisy)
+  is projected by a small MLP and added to every token position before the
+  Transformer blocks.  This is analogous to timestep conditioning in image
+  diffusion models.
 
-All weight matrices in attention and feed-forward sub-layers are
-QuantizedLinear layers; their `bits` attribute is updated at runtime to
-implement the progressive precision schedule.
+Weight quantisation:
+  All linear projections in attention and feed-forward sub-layers use
+  QuantizedLinear.  The `bits` attribute of every QuantizedLinear can be
+  changed at runtime via `model.set_bits(bits)`, allowing a single set of
+  float32 master weights to be evaluated at different precisions across
+  diffusion refinement steps.
 
-The model operates identically whether it is used as the "baseline" (bits=16,
-no quantisation) or the "progressive" model (bits per step from the schedule).
+  Embeddings, LayerNorm, and output head remain in float32 throughout.
+
+Weight tying (default: enabled):
+  When `cfg.tie_word_embeddings = True` (the default), the output LM head
+  re-uses the token embedding table instead of allocating a separate weight
+  matrix.  This saves vocab_size × d_model parameters (e.g., ~8 M for
+  vocab=16 K, d_model=512).
+
+Precision modes:
+  model_type = "baseline"     → bits=16 at every step (float32, no quantisation)
+  model_type = "progressive"  → bits from precision_schedule at each step
+
+Precision types (bits argument) — uniform no-zero 2^n-level scheme:
+  1  → Q1 binary {-1,+1}×scale                           (2 levels)
+  2  → Q2 true 2-bit {-3,-1,+1,+3}×step                 (4 levels)
+  3  → Q3 true 3-bit {-7,-5,-3,-1,+1,+3,+5,+7}×step     (8 levels)
+  4  → Q4 true 4-bit {-15,-13,…,-1,+1,…,+15}×step       (16 levels)
+  16 → float32 identity (no quantisation)
+  0  → ternary/3-state {-1,0,+1}×scale (optional, ~1.585 eff. bits)
+
+See src/quantization.py for full scheme documentation. Historical result
+artifacts are not included in the source-only snapshot and must carry their own
+scheme/version metadata when published.
 """
 
 import math
@@ -24,37 +51,37 @@ import mlx.core as mx
 import mlx.nn as nn
 import mlx.utils
 
-from .quantization import QuantizedLinear, set_model_bits
+from .quantization import QuantizedLinear
 from .config import ModelConfig
 
 
 # ---------------------------------------------------------------------------
-# Sinusoidal step / noise-level embedding
+# Sinusoidal noise-level embedding
 # ---------------------------------------------------------------------------
 
 class SinusoidalEmbedding(nn.Module):
-    """
-    Maps a scalar in [0, 1] (normalised diffusion step / mask rate) to a
-    vector of dimension `dim` using sinusoidal features, then passes it
-    through a small MLP.
-    """
+    """Maps a scalar mask-rate in [0, 1] to a d_model-dimensional vector."""
 
     def __init__(self, dim: int):
         super().__init__()
-        assert dim % 2 == 0, "dim must be even for sinusoidal embedding"
+        assert dim % 2 == 0, "dim must be even"
         self.dim = dim
-        self.proj = nn.Sequential(nn.Linear(dim, dim * 2), nn.SiLU(), nn.Linear(dim * 2, dim))
+        self.proj = nn.Sequential(
+            nn.Linear(dim, dim * 2),
+            nn.SiLU(),
+            nn.Linear(dim * 2, dim),
+        )
 
     def __call__(self, t: mx.array) -> mx.array:
         # t: (batch,) float in [0, 1]
         half = self.dim // 2
         freqs = mx.exp(
             -math.log(10000.0) * mx.arange(half, dtype=mx.float32) / half
-        )  # (half,)
-        t = t[:, None]  # (batch, 1)
-        emb = t * freqs[None, :]  # (batch, half)
-        emb = mx.concatenate([mx.sin(emb), mx.cos(emb)], axis=-1)  # (batch, dim)
-        return self.proj(emb)  # (batch, dim)
+        )
+        t = t[:, None]                                    # (B, 1)
+        emb = t * freqs[None, :]                          # (B, half)
+        emb = mx.concatenate([mx.sin(emb), mx.cos(emb)], axis=-1)  # (B, dim)
+        return self.proj(emb)                             # (B, dim)
 
 
 # ---------------------------------------------------------------------------
@@ -62,19 +89,23 @@ class SinusoidalEmbedding(nn.Module):
 # ---------------------------------------------------------------------------
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, d_model: int, n_heads: int, bits: int = 16, dropout: float = 0.0):
+    def __init__(self, d_model: int, n_heads: int, bits: int = 16,
+                 dropout: float = 0.0,
+                 weight_noise_mode: str = "none", weight_noise_multiplier: float = 1.0):
         super().__init__()
         assert d_model % n_heads == 0
         self.d_model = d_model
         self.n_heads = n_heads
         self.head_dim = d_model // n_heads
         self.scale = self.head_dim ** -0.5
-        self.dropout = dropout
+        self.dropout = nn.Dropout(dropout)
 
-        self.q_proj = QuantizedLinear(d_model, d_model, bias=False, bits=bits)
-        self.k_proj = QuantizedLinear(d_model, d_model, bias=False, bits=bits)
-        self.v_proj = QuantizedLinear(d_model, d_model, bias=False, bits=bits)
-        self.out_proj = QuantizedLinear(d_model, d_model, bias=True, bits=bits)
+        noise = dict(weight_noise_mode=weight_noise_mode,
+                     weight_noise_multiplier=weight_noise_multiplier)
+        self.q_proj = QuantizedLinear(d_model, d_model, bias=False, bits=bits, **noise)
+        self.k_proj = QuantizedLinear(d_model, d_model, bias=False, bits=bits, **noise)
+        self.v_proj = QuantizedLinear(d_model, d_model, bias=False, bits=bits, **noise)
+        self.out_proj = QuantizedLinear(d_model, d_model, bias=True, bits=bits, **noise)
 
     def __call__(self, x: mx.array, mask: mx.array = None) -> mx.array:
         B, L, _ = x.shape
@@ -87,15 +118,11 @@ class MultiHeadAttention(nn.Module):
         scores = (q @ k.transpose(0, 1, 3, 2)) * self.scale  # (B, H, L, L)
 
         if mask is not None:
-            # mask: (B, 1, 1, L) True = keep, False = ignore
+            # mask: (B, 1, 1, L) True = attend, False = ignore
             scores = mx.where(mask, scores, mx.full(scores.shape, float("-inf")))
 
         attn = nn.softmax(scores.astype(mx.float32), axis=-1).astype(x.dtype)
-
-        if self.dropout > 0.0:
-            # Simple dropout approximation via scaling (MLX lacks nn.Dropout in older ver)
-            pass
-
+        attn = self.dropout(attn)
         out = (attn @ v).transpose(0, 2, 1, 3).reshape(B, L, self.d_model)
         return self.out_proj(out)
 
@@ -105,11 +132,22 @@ class MultiHeadAttention(nn.Module):
 # ---------------------------------------------------------------------------
 
 class TransformerBlock(nn.Module):
-    def __init__(self, d_model: int, n_heads: int, d_ff: int, bits: int = 16, dropout: float = 0.0):
+    def __init__(self, d_model: int, n_heads: int, d_ff: int, bits: int = 16,
+                 dropout: float = 0.0,
+                 weight_noise_mode: str = "none", weight_noise_multiplier: float = 1.0):
         super().__init__()
-        self.attn = MultiHeadAttention(d_model, n_heads, bits=bits, dropout=dropout)
-        self.ff1 = QuantizedLinear(d_model, d_ff, bits=bits)
-        self.ff2 = QuantizedLinear(d_ff, d_model, bits=bits)
+        noise = dict(weight_noise_mode=weight_noise_mode,
+                     weight_noise_multiplier=weight_noise_multiplier)
+        self.attn = MultiHeadAttention(
+            d_model,
+            n_heads,
+            bits=bits,
+            dropout=dropout,
+            weight_noise_mode=weight_noise_mode,
+            weight_noise_multiplier=weight_noise_multiplier,
+        )
+        self.ff1 = QuantizedLinear(d_model, d_ff, bits=bits, **noise)
+        self.ff2 = QuantizedLinear(d_ff, d_model, bits=bits, **noise)
         self.ln1 = nn.LayerNorm(d_model)
         self.ln2 = nn.LayerNorm(d_model)
 
@@ -127,103 +165,136 @@ class DiffusionLM(nn.Module):
     """
     Masked-diffusion language model with configurable per-step precision.
 
-    The forward pass:
-        1. Embed input tokens (including [MASK] tokens at noised positions).
-        2. Add sinusoidal noise-level embedding (broadcast over sequence).
-        3. Add learned positional embedding.
+    Forward pass:
+        1. Embed input tokens (including [MASK] at noised positions).
+        2. Add position embeddings.
+        3. Add sinusoidal noise-level embedding (broadcast to all positions).
         4. Pass through N Transformer blocks.
-        5. Project to logits over the full vocabulary.
+        5. LayerNorm + project to vocabulary logits.
 
-    The model predicts the original token at EVERY position (including
-    non-masked positions), but the training loss is computed only at masked
-    positions.
+    Loss is computed only at masked positions during training; the model
+    predicts all positions at once (parallel denoising).
 
-    Precision is controlled externally:
-        model.set_bits(bits)   # e.g., 1, 2, 4, or 16 for full precision
-    All QuantizedLinear layers in attention + FF sub-layers are updated.
-    Embeddings and projections remain in float32 throughout.
+    To change precision between diffusion steps:
+        model.set_bits(1)   # coarse step — binary weights
+        model.set_bits(4)   # fine step — 4-bit weights
+
+    Precision types:
+        bits=1 binary, bits=2 true Q2, bits=3 true Q3, bits=4 true Q4,
+        bits=16 float32 (baseline), bits=0 optional ternary
     """
 
     def __init__(self, cfg: ModelConfig):
         super().__init__()
         self.cfg = cfg
-        vocab_with_mask = cfg.vocab_size + 1  # regular vocab + 1 MASK token
+        vocab_with_mask = cfg.vocab_size + 1  # regular vocab + MASK sentinel
 
-        # Embeddings — kept in full precision
+        # ── Embeddings (always float32) ─────────────────────────────────────
         self.token_embed = nn.Embedding(vocab_with_mask, cfg.d_model)
         self.pos_embed = nn.Embedding(cfg.max_seq_len, cfg.d_model)
         self.step_embed = SinusoidalEmbedding(cfg.d_model)
 
-        # Transformer blocks — contain QuantizedLinear layers
+        # ── Transformer blocks (contain QuantizedLinear) ────────────────────
         initial_bits = 16 if cfg.model_type == "baseline" else cfg.precision_schedule[0]
         self.blocks = [
-            TransformerBlock(cfg.d_model, cfg.n_heads, cfg.d_ff, bits=initial_bits, dropout=cfg.dropout)
+            TransformerBlock(
+                cfg.d_model, cfg.n_heads, cfg.d_ff, bits=initial_bits,
+                dropout=cfg.dropout,
+                weight_noise_mode=cfg.weight_noise_mode,
+                weight_noise_multiplier=cfg.weight_noise_multiplier,
+            )
             for _ in range(cfg.n_layers)
         ]
 
-        # Output head — full precision (predicting vocab is a high-precision op)
+        # ── Output projection ───────────────────────────────────────────────
         self.ln_out = nn.LayerNorm(cfg.d_model)
-        self.lm_head = nn.Linear(cfg.d_model, cfg.vocab_size)  # logits over clean vocab only
+
+        if cfg.tie_word_embeddings:
+            # No separate weight matrix — share token_embed.weight.
+            # A small bias vector is still learned for flexibility.
+            self.lm_head_bias = mx.zeros((cfg.vocab_size,))
+        else:
+            # Independent LM head (wastes vocab_size × d_model params).
+            self.lm_head = nn.Linear(cfg.d_model, cfg.vocab_size, bias=True)
+
+    # ── Precision control ────────────────────────────────────────────────────
 
     def set_bits(self, bits: int) -> None:
-        """Update precision of all QuantizedLinear layers in the model."""
+        """Set quantisation precision for all QuantizedLinear layers."""
         for block in self.blocks:
             for _, module in block.named_modules():
                 if isinstance(module, QuantizedLinear):
                     module.set_bits(bits)
 
     def get_current_bits(self) -> int:
-        """Return current bits of the first QuantizedLinear found."""
+        """Return the bits value of the first QuantizedLinear found."""
         for block in self.blocks:
             for _, module in block.named_modules():
                 if isinstance(module, QuantizedLinear):
                     return module.bits
         return 16
 
+    def set_weight_noise_seed(self, seed: int) -> None:
+        """Reset independent, deterministic per-layer weight-noise streams."""
+        index = 0
+        for block in self.blocks:
+            for _, module in block.named_modules():
+                if isinstance(module, QuantizedLinear):
+                    module.set_noise_seed(seed + index * 1_000_003)
+                    index += 1
+
+    # ── Forward pass ─────────────────────────────────────────────────────────
+
     def __call__(
         self,
-        token_ids: mx.array,      # (B, L) integer IDs; MASK_TOKEN at noised positions
-        step_frac: mx.array,      # (B,) float in [0, 1]; 1.0 = fully noisy, 0.0 = clean
-        pad_mask: mx.array = None, # (B, L) bool; True = real token, False = padding
+        token_ids: mx.array,       # (B, L) int — MASK_TOKEN at noised positions
+        step_frac: mx.array,       # (B,) float in [0,1] — 1=fully noisy, 0=clean
+        pad_mask: mx.array = None, # (B, L) bool — True = real token
     ) -> mx.array:
-        """
-        Returns logits: (B, L, vocab_size).
-        Logits at masked positions are used for training loss.
-        """
+        """Returns logits: (B, L, vocab_size)."""
         B, L = token_ids.shape
-
         positions = mx.arange(L)[None, :]  # (1, L)
+
         x = self.token_embed(token_ids) + self.pos_embed(positions)
+        x = x + self.step_embed(step_frac)[:, None, :]  # broadcast noise level
 
-        # Add noise-level embedding (same vector broadcast across sequence positions)
-        step_emb = self.step_embed(step_frac)  # (B, d_model)
-        x = x + step_emb[:, None, :]           # (B, L, d_model)
-
-        # Attention mask for padding (None = attend to all positions)
         attn_mask = None
         if pad_mask is not None:
-            # (B, 1, 1, L) — True = positions to attend to
-            attn_mask = pad_mask[:, None, None, :]
+            attn_mask = pad_mask[:, None, None, :]  # (B, 1, 1, L)
 
         for block in self.blocks:
             x = block(x, attn_mask)
 
-        x = self.ln_out(x)
-        logits = self.lm_head(x)  # (B, L, vocab_size)
+        x = self.ln_out(x)  # (B, L, d_model)
+
+        if self.cfg.tie_word_embeddings:
+            # Tie: use first vocab_size rows of embedding table as projection
+            embed_w = self.token_embed.weight[:self.cfg.vocab_size]  # (V, d)
+            logits = x @ embed_w.T + self.lm_head_bias               # (B, L, V)
+        else:
+            logits = self.lm_head(x)
+
         return logits
 
-    def count_params(self) -> dict:
-        """Count trainable parameters by component."""
-        def _count(m):
-            return sum(v.size for _, v in mlx.utils.tree_flatten(m.parameters()))
-
-        return {
-            "token_embed": _count(self.token_embed),
-            "pos_embed": _count(self.pos_embed),
-            "step_embed": _count(self.step_embed),
-            "blocks_total": sum(_count(b) for b in self.blocks),
-            "lm_head": _count(self.lm_head),
-        }
+    # ── Parameter counting and reporting ─────────────────────────────────────
 
     def total_params(self) -> int:
+        """Total trainable parameter count (shared weights counted once)."""
         return sum(v.size for _, v in mlx.utils.tree_flatten(self.parameters()))
+
+    def param_breakdown(self) -> dict:
+        """Parameter count per component."""
+        def _n(m):
+            return sum(v.size for _, v in mlx.utils.tree_flatten(m.parameters()))
+        result = {
+            "token_embed": _n(self.token_embed),
+            "pos_embed": _n(self.pos_embed),
+            "step_embed": _n(self.step_embed),
+            "blocks_total": sum(_n(b) for b in self.blocks),
+            "ln_out": _n(self.ln_out),
+        }
+        if self.cfg.tie_word_embeddings:
+            result["lm_head_bias_only"] = self.lm_head_bias.size
+        else:
+            result["lm_head"] = _n(self.lm_head)
+        return result

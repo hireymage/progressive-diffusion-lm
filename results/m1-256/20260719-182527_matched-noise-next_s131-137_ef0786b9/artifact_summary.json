@@ -1,0 +1,26 @@
+{
+  "m1-256-clean-fp32-s131": [
+    "results/campaign/matched_m1_256_clean_fp32_s131"
+  ],
+  "m1-256-constant-q1-s131": [
+    "results/campaign/matched_m1_256_constant_q1_s131"
+  ],
+  "m1-256-gaussian-matched-fp32-s131": [
+    "results/campaign/matched_m1_256_gaussian_matched_fp32_s131"
+  ],
+  "m1-256-uniform-matched-fp32-s131": [
+    "results/campaign/matched_m1_256_uniform_matched_fp32_s131"
+  ],
+  "m1-256-clean-fp32-s137": [
+    "results/campaign/matched_m1_256_clean_fp32_s137"
+  ],
+  "m1-256-constant-q1-s137": [
+    "results/campaign/matched_m1_256_constant_q1_s137"
+  ],
+  "m1-256-gaussian-matched-fp32-s137": [
+    "results/campaign/matched_m1_256_gaussian_matched_fp32_s137"
+  ],
+  "m1-256-uniform-matched-fp32-s137": [
+    "results/campaign/matched_m1_256_uniform_matched_fp32_s137"
+  ]
+}

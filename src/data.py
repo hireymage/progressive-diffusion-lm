@@ -26,6 +26,7 @@ smoke-test values are deliberately tiny.
 import os
 import json
 import random
+import hashlib
 import numpy as np
 from pathlib import Path
 from typing import Iterator, Optional
@@ -47,12 +48,20 @@ def stream_wikipedia_tokens(
     tokenizer_path: str,
     max_articles: int = 1000,
     max_text_bytes: int = 10_000_000,
+    dataset_name: str = "wikimedia/wikipedia",
     dataset_config: str = "20231101.en",
+    dataset_revision: str | None = None,
     seed: int = 42,
-) -> Iterator[list[int]]:
+) -> list[list[int]]:
     """
-    Stream tokenised Wikipedia articles one at a time.
-    Yields a flat list of integer token IDs per article.
+    Return a list of tokenised Wikipedia articles.
+
+    Each element is a flat list of integer token IDs for one article.
+
+    The corpus is materialised as a list (rather than yielded from a
+    generator) so that the HuggingFace streaming iterable is fully closed
+    before the caller processes the data, preventing pyarrow
+    ThreadPool::Shutdown from hanging on process exit on macOS.
     """
     from datasets import load_dataset
 
@@ -60,35 +69,58 @@ def stream_wikipedia_tokens(
     eos_id = tokenizer.token_to_id("[EOS]") or 2
 
     dataset = load_dataset(
-        "wikimedia/wikipedia",
+        dataset_name,
         dataset_config,
         split="train",
         streaming=True,
+        revision=dataset_revision,
     )
 
-    n_articles = 0
-    n_bytes = 0
+    articles: list[list[int]] = []
+    try:
+        n_articles = 0
+        n_bytes = 0
 
-    for example in dataset:
-        text = example.get("text", "")
-        if not text:
+        for example in dataset:
+            text = example.get("text", "")
+            if not text:
+                continue
+
+            n_bytes += len(text.encode("utf-8"))
+            if n_bytes > max_text_bytes:
+                break
+
+            encoding = tokenizer.encode(text)
+            ids = encoding.ids + [eos_id]
+            articles.append(ids)
+
+            n_articles += 1
+            if n_articles >= max_articles:
+                break
+    finally:
+        # Explicitly close the HuggingFace streaming iterable to release
+        # pyarrow ThreadPool resources.  Without this, the process can
+        # hang on exit on macOS because pyarrow::ThreadPool::Shutdown blocks.
+        _close_iterable_dataset(dataset)
+
+    return articles
+
+
+def _close_iterable_dataset(dataset) -> None:
+    """Best-effort cleanup of a HuggingFace IterableDataset."""
+    for target in (dataset, getattr(dataset, "_ex_iterable", None)):
+        if target is None:
             continue
-
-        n_bytes += len(text.encode("utf-8"))
-        if n_bytes > max_text_bytes:
-            break
-
-        encoding = tokenizer.encode(text)
-        ids = encoding.ids + [eos_id]
-        yield ids
-
-        n_articles += 1
-        if n_articles >= max_articles:
-            break
+        close = getattr(target, "close", None)
+        if callable(close):
+            try:
+                close()
+            except Exception:
+                pass
 
 
 def build_chunks(
-    token_stream: Iterator[list[int]],
+    token_stream,
     seq_len: int,
 ) -> list[list[int]]:
     """
@@ -107,13 +139,23 @@ def build_chunks(
     return chunks
 
 
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def build_and_cache_dataset(
     tokenizer_path: str,
     cache_dir: str,
     seq_len: int,
     max_articles: int = 1000,
     max_text_bytes: int = 10_000_000,
+    dataset_name: str = "wikimedia/wikipedia",
     dataset_config: str = "20231101.en",
+    dataset_revision: str | None = None,
     train_split: float = 0.95,
     seed: int = 42,
     force_rebuild: bool = False,
@@ -129,28 +171,54 @@ def build_and_cache_dataset(
     cache_path = Path(cache_dir)
     cache_path.mkdir(parents=True, exist_ok=True)
 
-    # Cache key encodes the configuration
-    key = f"seq{seq_len}_art{max_articles}_bytes{max_text_bytes}"
+    tokenizer_file = Path(tokenizer_path) / "tokenizer.json"
+    if not tokenizer_file.exists():
+        raise FileNotFoundError(f"Tokenizer not found at {tokenizer_file}")
+    tokenizer_sha256 = _sha256_file(tokenizer_file)
+    provenance = {
+        "dataset_name": dataset_name,
+        "dataset_config": dataset_config,
+        "dataset_revision": dataset_revision,
+        "tokenizer_sha256": tokenizer_sha256,
+        "seq_len": seq_len,
+        "max_articles": max_articles,
+        "max_text_bytes": max_text_bytes,
+        "train_split": train_split,
+        "seed": seed,
+    }
+    identity = hashlib.sha256(
+        json.dumps(provenance, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()[:16]
+    key = f"seq{seq_len}_{identity}"
     train_file = cache_path / f"train_{key}.npy"
     val_file = cache_path / f"val_{key}.npy"
     meta_file = cache_path / f"meta_{key}.json"
 
-    if train_file.exists() and val_file.exists() and not force_rebuild:
-        print(f"Loading cached dataset from {cache_dir}")
-        train_data = np.load(str(train_file))
-        val_data = np.load(str(val_file))
+    if train_file.exists() and val_file.exists() and meta_file.exists() and not force_rebuild:
         with open(meta_file) as f:
             meta = json.load(f)
-        print(f"  Train chunks: {len(train_data):,}  Val chunks: {len(val_data):,}")
-        print(f"  Total tokens: {meta['total_tokens']:,}")
-        return train_data, val_data
+        metadata_matches = all(meta.get(k) == v for k, v in provenance.items())
+        checksums_match = (
+            meta.get("train_sha256") == _sha256_file(train_file)
+            and meta.get("val_sha256") == _sha256_file(val_file)
+        )
+        if metadata_matches and checksums_match:
+            print(f"Loading cached dataset from {cache_dir}")
+            train_data = np.load(str(train_file))
+            val_data = np.load(str(val_file))
+            print(f"  Train chunks: {len(train_data):,}  Val chunks: {len(val_data):,}")
+            print(f"  Total tokens: {meta['total_tokens']:,}")
+            return train_data, val_data
+        print(f"Cache metadata/checksum mismatch for {key}; rebuilding")
 
     print(f"Building dataset (max_articles={max_articles}, max_text_bytes={max_text_bytes:,})")
     token_stream = stream_wikipedia_tokens(
         tokenizer_path=tokenizer_path,
         max_articles=max_articles,
         max_text_bytes=max_text_bytes,
+        dataset_name=dataset_name,
         dataset_config=dataset_config,
+        dataset_revision=dataset_revision,
         seed=seed,
     )
     chunks = build_chunks(token_stream, seq_len)
@@ -176,12 +244,12 @@ def build_and_cache_dataset(
     np.save(str(val_file), val_data)
 
     meta = {
-        "seq_len": seq_len,
-        "max_articles": max_articles,
-        "max_text_bytes": max_text_bytes,
+        **provenance,
         "n_train_chunks": len(train_data),
         "n_val_chunks": len(val_data),
         "total_tokens": (len(train_data) + len(val_data)) * seq_len,
+        "train_sha256": _sha256_file(train_file),
+        "val_sha256": _sha256_file(val_file),
     }
     with open(meta_file, "w") as f:
         json.dump(meta, f, indent=2)

@@ -1,0 +1,93 @@
+{
+  "description": "PTQ study aggregate results \u2014 direct/naive PTQ vs native low-bit training",
+  "method": "direct_naive_ptq",
+  "seeds": [
+    42,
+    123,
+    7
+  ],
+  "ptq_bits_main": [
+    1,
+    2,
+    3,
+    4,
+    16
+  ],
+  "ptq_bits_optional": [
+    0
+  ],
+  "aggregate_main": [
+    {
+      "bits": 1,
+      "bits_label": "Q1 (binary, 2 levels)",
+      "eff_bits": 1.0,
+      "ptq_mean": 7.5749,
+      "ptq_std": 0.1156,
+      "delta_vs_fp": 0.117,
+      "native_mean": 7.4335,
+      "delta_ptq_minus_native": 0.1414,
+      "q4_scheme_caveat": false
+    },
+    {
+      "bits": 2,
+      "bits_label": "Q2 (true 2-bit, 4 levels)",
+      "eff_bits": 2.0,
+      "ptq_mean": 7.4911,
+      "ptq_std": 0.0562,
+      "delta_vs_fp": 0.0331,
+      "native_mean": 7.4586,
+      "delta_ptq_minus_native": 0.0325,
+      "q4_scheme_caveat": false
+    },
+    {
+      "bits": 3,
+      "bits_label": "Q3 (true 3-bit, 8 levels)",
+      "eff_bits": 3.0,
+      "ptq_mean": 7.4589,
+      "ptq_std": 0.0298,
+      "delta_vs_fp": 0.0009,
+      "native_mean": null,
+      "delta_ptq_minus_native": null,
+      "q4_scheme_caveat": false
+    },
+    {
+      "bits": 4,
+      "bits_label": "Q4 (true 4-bit, 16 levels)",
+      "eff_bits": 4.0,
+      "ptq_mean": 7.458,
+      "ptq_std": 0.0311,
+      "delta_vs_fp": 0.0,
+      "native_mean": 7.445,
+      "delta_ptq_minus_native": 0.0129,
+      "q4_scheme_caveat": true
+    },
+    {
+      "bits": 16,
+      "bits_label": "FP32 (unquantized)",
+      "eff_bits": 16.0,
+      "ptq_mean": 7.458,
+      "ptq_std": 0.031,
+      "delta_vs_fp": 0.0,
+      "native_mean": 7.4434,
+      "delta_ptq_minus_native": 0.0146,
+      "q4_scheme_caveat": false
+    }
+  ],
+  "aggregate_ternary": [
+    {
+      "bits": 0,
+      "bits_label": "ternary / 3-state (~1.585 bits, 3 levels)",
+      "eff_bits": 1.584962500721156,
+      "ptq_mean": 7.5818,
+      "ptq_std": 0.1163,
+      "delta_vs_fp": 0.1239,
+      "native_mean": null,
+      "delta_ptq_minus_native": null
+    }
+  ],
+  "caveats": {
+    "q4_scheme_mismatch": "PTQ Q4 uses 16-level no-zero scheme. Native const_4bit was trained under the prior 15-level with-zero scheme.",
+    "q3_no_native": "No native ablation run exists for Q3 (true 3-bit, 8 levels).",
+    "ternary_no_native": "No native ablation run exists for ternary (3 levels)."
+  }
+}

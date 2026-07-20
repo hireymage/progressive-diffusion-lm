@@ -1,0 +1,84 @@
+{
+  "experiment_name": "short_exp_progressive_ternary",
+  "model_type": "progressive",
+  "precision_schedule": [
+    1,
+    1,
+    1,
+    1,
+    3,
+    3,
+    4,
+    4
+  ],
+  "tie_word_embeddings": true,
+  "max_steps": 500,
+  "best_val_loss": 7.533732,
+  "total_training_seconds": 40.8,
+  "storage": {
+    "total_params": 7564416,
+    "q_linear_weight_params": 3145728,
+    "non_quantized_params": 4418688,
+    "fp32_total_bytes": 30257664,
+    "fp32_total_mb": 30.257664,
+    "bf16_total_bytes": 15128832,
+    "bf16_total_mb": 15.128832,
+    "theoretical_q_bytes": 18420384,
+    "theoretical_q_mb": 18.420384,
+    "effective_avg_bits": 1.896240625180289,
+    "compression_vs_fp32": 1.6426185252164125,
+    "compression_vs_bf16": 0.8213092626082062,
+    "training_memory_estimate_mb": 121.030656
+  },
+  "config": {
+    "model": {
+      "vocab_size": 16000,
+      "pad_token_id": 0,
+      "d_model": 256,
+      "n_layers": 4,
+      "n_heads": 8,
+      "d_ff": 1024,
+      "max_seq_len": 128,
+      "dropout": 0.0,
+      "tie_word_embeddings": true,
+      "n_diffusion_steps": 8,
+      "precision_schedule": [
+        1,
+        1,
+        1,
+        1,
+        3,
+        3,
+        4,
+        4
+      ],
+      "model_type": "progressive"
+    },
+    "train": {
+      "batch_size": 8,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.01,
+      "max_steps": 500,
+      "warmup_steps": 50,
+      "grad_clip": 1.0,
+      "checkpoint_dir": "checkpoints",
+      "checkpoint_every": 500,
+      "resume_from": null,
+      "eval_every": 100,
+      "eval_steps": 20,
+      "log_every": 10,
+      "results_dir": "results",
+      "seed": 42
+    },
+    "data": {
+      "dataset_name": "wikimedia/wikipedia",
+      "dataset_config": "20231101.en",
+      "max_articles": 100,
+      "max_text_bytes": 1000000,
+      "seq_len": 128,
+      "tokenizer_path": "tokenizer/wiki_bpe",
+      "data_cache_dir": "data/cache",
+      "train_split": 0.9
+    }
+  }
+}

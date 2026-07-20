@@ -6,6 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import numpy as np
+import pytest
 import mlx
 import mlx.core as mx
 import mlx.nn as nn
@@ -16,6 +17,7 @@ from src.model import DiffusionLM
 from src.config import ModelConfig, ExperimentConfig, DataConfig, TrainConfig
 from src.diffusion import compute_loss
 from src.train import save_checkpoint, load_checkpoint
+import src.train as train_module
 
 
 MASK_TOKEN = 50  # small vocab for tests
@@ -134,6 +136,13 @@ class TestOneTrainingStep:
 
 
 class TestCheckpointing:
+    def test_optimizer_factory_applies_configured_weight_decay(self):
+        assert hasattr(train_module, "build_optimizer")
+        cfg = TrainConfig(learning_rate=1e-3, weight_decay=0.123)
+        optimizer = train_module.build_optimizer(cfg)
+        assert isinstance(optimizer, optim.AdamW)
+        assert optimizer.weight_decay == 0.123
+
     def test_save_and_load(self):
         """Saved checkpoint should be loadable and produce same output."""
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -184,6 +193,72 @@ class TestCheckpointing:
             weight_keys = [k for k in data.keys() if not k.startswith("opt_")]
             assert len(weight_keys) > 0, f"No model weights in checkpoint: {list(data.keys())}"
             print(f"  Checkpoint contains {len(weight_keys)} weight arrays")
+
+    def test_save_checkpoint_fails_loudly_if_optimizer_state_is_unavailable(self):
+        class BrokenOptimizer:
+            @property
+            def state(self):
+                raise RuntimeError("optimizer state unavailable")
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            cfg = make_tiny_cfg()
+            model = DiffusionLM(cfg)
+            experiment_cfg = ExperimentConfig(model=cfg, experiment_name="test")
+            with pytest.raises(RuntimeError, match="optimizer state unavailable"):
+                save_checkpoint(
+                    model,
+                    BrokenOptimizer(),
+                    1,
+                    0.0,
+                    experiment_cfg,
+                    Path(tmpdir),
+                )
+
+    def test_load_with_optimizer_rejects_checkpoint_without_optimizer_state(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            cfg = make_tiny_cfg()
+            model = DiffusionLM(cfg)
+            path = Path(tmpdir) / "step_0000001.npz"
+            mx.savez(str(path), **dict(mlx.utils.tree_flatten(model.parameters())))
+            restored = DiffusionLM(cfg)
+            optimizer = optim.Adam(learning_rate=1e-3)
+            with pytest.raises(ValueError, match="optimizer state"):
+                load_checkpoint(restored, str(path), optimizer=optimizer)
+
+    def test_loading_older_checkpoint_returns_its_own_step(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            cfg = make_tiny_cfg()
+            model = DiffusionLM(cfg)
+            optimizer = optim.Adam(learning_rate=1e-3)
+            experiment_cfg = ExperimentConfig(model=cfg, experiment_name="test")
+            ckpt_dir = Path(tmpdir)
+            older = save_checkpoint(model, optimizer, 100, 1.0, experiment_cfg, ckpt_dir)
+            save_checkpoint(model, optimizer, 200, 0.9, experiment_cfg, ckpt_dir)
+
+            restored = DiffusionLM(cfg)
+            assert load_checkpoint(restored, str(older)) == 100
+
+    def test_load_checkpoint_restores_optimizer_state(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            cfg = make_tiny_cfg()
+            model = DiffusionLM(cfg)
+            optimizer = optim.Adam(learning_rate=1e-3)
+            grads = mlx.utils.tree_map(mx.ones_like, model.parameters())
+            optimizer.update(model, grads)
+            mx.eval(model.parameters(), optimizer.state)
+
+            experiment_cfg = ExperimentConfig(model=cfg, experiment_name="test")
+            ckpt = save_checkpoint(model, optimizer, 1, 0.0, experiment_cfg, Path(tmpdir))
+
+            restored_model = DiffusionLM(cfg)
+            restored_optimizer = optim.Adam(learning_rate=1e-3)
+            load_checkpoint(restored_model, str(ckpt), optimizer=restored_optimizer)
+            expected = dict(mlx.utils.tree_flatten(optimizer.state))
+            actual = dict(mlx.utils.tree_flatten(restored_optimizer.state))
+            assert actual.keys() == expected.keys()
+            for key in expected:
+                mx.eval(expected[key], actual[key])
+                assert np.array_equal(np.array(actual[key]), np.array(expected[key])), key
 
 
 class TestBaselineModel:

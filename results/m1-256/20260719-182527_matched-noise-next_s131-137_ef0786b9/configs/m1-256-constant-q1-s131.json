@@ -1,0 +1,56 @@
+{
+  "experiment_name": "matched_m1_256_constant_q1_s131",
+  "model": {
+    "vocab_size": 16000,
+    "pad_token_id": 0,
+    "d_model": 512,
+    "n_layers": 6,
+    "n_heads": 8,
+    "d_ff": 2048,
+    "max_seq_len": 256,
+    "dropout": 0.0,
+    "tie_word_embeddings": true,
+    "n_diffusion_steps": 8,
+    "precision_schedule": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "model_type": "progressive",
+    "weight_noise_mode": "none",
+    "weight_noise_multiplier": 1.0
+  },
+  "data": {
+    "dataset_name": "wikimedia/wikipedia",
+    "dataset_config": "20231101.en",
+    "max_articles": 50000,
+    "max_text_bytes": 500000000,
+    "seq_len": 256,
+    "tokenizer_path": "tokenizer/wiki_bpe",
+    "data_cache_dir": "data/cache",
+    "train_split": 0.95,
+    "dataset_revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa"
+  },
+  "train": {
+    "batch_size": 8,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0,
+    "max_steps": 10000,
+    "warmup_steps": 500,
+    "grad_clip": 1.0,
+    "checkpoint_dir": "checkpoints/campaign",
+    "checkpoint_every": 999999,
+    "resume_from": null,
+    "eval_every": 500,
+    "eval_steps": 100,
+    "log_every": 10,
+    "results_dir": "results/campaign",
+    "seed": 131,
+    "save_checkpoints": false
+  }
+}

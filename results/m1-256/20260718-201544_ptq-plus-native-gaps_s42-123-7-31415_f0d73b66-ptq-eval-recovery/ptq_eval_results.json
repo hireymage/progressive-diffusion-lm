@@ -1,0 +1,200 @@
+[
+  {
+    "seed": 42,
+    "bits": 1,
+    "bits_label": "Q1 (binary, 2 levels)",
+    "eff_bits": 1.0,
+    "val_loss": 7.470693998336792,
+    "val_accuracy": 0.03804650229410101,
+    "eval_steps": 100,
+    "eval_seconds": 14.1,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s42/step_0010000.npz"
+  },
+  {
+    "seed": 42,
+    "bits": 2,
+    "bits_label": "Q2 (true 2-bit, 4 levels)",
+    "eff_bits": 2.0,
+    "val_loss": 7.430855364799499,
+    "val_accuracy": 0.04665736255917686,
+    "eval_steps": 100,
+    "eval_seconds": 15.8,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s42/step_0010000.npz"
+  },
+  {
+    "seed": 42,
+    "bits": 3,
+    "bits_label": "Q3 (true 3-bit, 8 levels)",
+    "eff_bits": 3.0,
+    "val_loss": 7.430106654167175,
+    "val_accuracy": 0.046392834012898045,
+    "eval_steps": 100,
+    "eval_seconds": 16.3,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s42/step_0010000.npz"
+  },
+  {
+    "seed": 42,
+    "bits": 4,
+    "bits_label": "Q4 (true 4-bit, 16 levels)",
+    "eff_bits": 4.0,
+    "val_loss": 7.427557053565979,
+    "val_accuracy": 0.046447564056955735,
+    "eval_steps": 100,
+    "eval_seconds": 16.1,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s42/step_0010000.npz"
+  },
+  {
+    "seed": 42,
+    "bits": 16,
+    "bits_label": "FP32 (unquantized)",
+    "eff_bits": 16.0,
+    "val_loss": 7.4276830768585205,
+    "val_accuracy": 0.04605533207454232,
+    "eval_steps": 100,
+    "eval_seconds": 11.1,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s42/step_0010000.npz"
+  },
+  {
+    "seed": 42,
+    "bits": 0,
+    "bits_label": "ternary / 3-state (~1.585 bits, 3 levels)",
+    "eff_bits": 1.584962500721156,
+    "val_loss": 7.494545936584473,
+    "val_accuracy": 0.0411752364793987,
+    "eval_steps": 100,
+    "eval_seconds": 13.6,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s42/step_0010000.npz"
+  },
+  {
+    "seed": 123,
+    "bits": 1,
+    "bits_label": "Q1 (binary, 2 levels)",
+    "eff_bits": 1.0,
+    "val_loss": 7.554752840995788,
+    "val_accuracy": 0.036492695311470515,
+    "eval_steps": 100,
+    "eval_seconds": 13.9,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s123/step_0010000.npz"
+  },
+  {
+    "seed": 123,
+    "bits": 2,
+    "bits_label": "Q2 (true 2-bit, 4 levels)",
+    "eff_bits": 2.0,
+    "val_loss": 7.500007925033569,
+    "val_accuracy": 0.036492695311470515,
+    "eval_steps": 100,
+    "eval_seconds": 15.8,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s123/step_0010000.npz"
+  },
+  {
+    "seed": 123,
+    "bits": 3,
+    "bits_label": "Q3 (true 3-bit, 8 levels)",
+    "eff_bits": 3.0,
+    "val_loss": 7.48964093208313,
+    "val_accuracy": 0.036492695311470515,
+    "eval_steps": 100,
+    "eval_seconds": 16.3,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s123/step_0010000.npz"
+  },
+  {
+    "seed": 123,
+    "bits": 4,
+    "bits_label": "Q4 (true 4-bit, 16 levels)",
+    "eff_bits": 4.0,
+    "val_loss": 7.489683575630188,
+    "val_accuracy": 0.036492695311470515,
+    "eval_steps": 100,
+    "eval_seconds": 16.2,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s123/step_0010000.npz"
+  },
+  {
+    "seed": 123,
+    "bits": 16,
+    "bits_label": "FP32 (unquantized)",
+    "eff_bits": 16.0,
+    "val_loss": 7.489608607292175,
+    "val_accuracy": 0.036492695311470515,
+    "eval_steps": 100,
+    "eval_seconds": 11.2,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s123/step_0010000.npz"
+  },
+  {
+    "seed": 123,
+    "bits": 0,
+    "bits_label": "ternary / 3-state (~1.585 bits, 3 levels)",
+    "eff_bits": 1.584962500721156,
+    "val_loss": 7.537055959701538,
+    "val_accuracy": 0.03521887710729063,
+    "eval_steps": 100,
+    "eval_seconds": 13.7,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s123/step_0010000.npz"
+  },
+  {
+    "seed": 7,
+    "bits": 1,
+    "bits_label": "Q1 (binary, 2 levels)",
+    "eff_bits": 1.0,
+    "val_loss": 7.699345235824585,
+    "val_accuracy": 0.04230115299211208,
+    "eval_steps": 100,
+    "eval_seconds": 13.9,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s7/step_0010000.npz"
+  },
+  {
+    "seed": 7,
+    "bits": 2,
+    "bits_label": "Q2 (true 2-bit, 4 levels)",
+    "eff_bits": 2.0,
+    "val_loss": 7.542288517951965,
+    "val_accuracy": 0.042096754712773965,
+    "eval_steps": 100,
+    "eval_seconds": 15.9,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s7/step_0010000.npz"
+  },
+  {
+    "seed": 7,
+    "bits": 3,
+    "bits_label": "Q3 (true 3-bit, 8 levels)",
+    "eff_bits": 3.0,
+    "val_loss": 7.456866102218628,
+    "val_accuracy": 0.042440515455297166,
+    "eval_steps": 100,
+    "eval_seconds": 16.2,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s7/step_0010000.npz"
+  },
+  {
+    "seed": 7,
+    "bits": 4,
+    "bits_label": "Q4 (true 4-bit, 16 levels)",
+    "eff_bits": 4.0,
+    "val_loss": 7.4566434955596925,
+    "val_accuracy": 0.04255200542584523,
+    "eval_steps": 100,
+    "eval_seconds": 16.2,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s7/step_0010000.npz"
+  },
+  {
+    "seed": 7,
+    "bits": 16,
+    "bits_label": "FP32 (unquantized)",
+    "eff_bits": 16.0,
+    "val_loss": 7.456566724777222,
+    "val_accuracy": 0.04263562290375628,
+    "eval_steps": 100,
+    "eval_seconds": 11.1,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s7/step_0010000.npz"
+  },
+  {
+    "seed": 7,
+    "bits": 0,
+    "bits_label": "ternary / 3-state (~1.585 bits, 3 levels)",
+    "eff_bits": 1.584962500721156,
+    "val_loss": 7.713833560943604,
+    "val_accuracy": 0.037191196008659055,
+    "eval_steps": 100,
+    "eval_seconds": 13.7,
+    "ckpt_path": "checkpoints/ptq_baselines/ptq_baseline_s7/step_0010000.npz"
+  }
+]

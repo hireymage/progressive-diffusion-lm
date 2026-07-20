@@ -1,0 +1,11 @@
+{
+  "ptq-main-and-ternary": [
+    "results/ptq_study"
+  ],
+  "native-q3-s31415": [
+    "results/campaign/campaign_native_q3_s31415"
+  ],
+  "native-ternary-s31415": [
+    "results/campaign/campaign_native_ternary_s31415"
+  ]
+}

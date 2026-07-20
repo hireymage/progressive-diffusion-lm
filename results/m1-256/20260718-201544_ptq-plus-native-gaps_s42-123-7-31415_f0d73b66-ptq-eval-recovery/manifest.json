@@ -1,0 +1,30 @@
+{
+  "recovery_id": "20260718-201544_ptq-plus-native-gaps_s42-123-7-31415_f0d73b66-ptq-eval-recovery",
+  "parent_run_id": "20260718-201544_ptq-plus-native-gaps_s42-123-7-31415_f0d73b66",
+  "node": "m1-256",
+  "created_at_utc": "2026-07-19T03:19:02Z",
+  "reason": "Original Phase 2 produced 18 No module named src errors while ptq_study.py incorrectly exited 0.",
+  "fixes": [
+    "Add project root to sys.path for direct script execution",
+    "Return exit code 2 when any PTQ evaluation fails",
+    "Correct PTQ-minus-native delta labels and winner direction"
+  ],
+  "execution": "scripts/ptq_study.py --skip-training --include-ternary; corrected analysis regenerated with --eval-only --include-ternary",
+  "ptq_result_count": 18,
+  "expected_result_count": 18,
+  "verification": [
+    "py_compile",
+    "src import from scripts cwd",
+    "18-entry unique seed/bits matrix",
+    "aggregate JSON and CSV generated"
+  ],
+  "source_git_head": "89ed7950a65fa8d1d80f1e76e4b0479aef56f21c",
+  "files": [
+    "code/ptq_study.py",
+    "logs/ptq-analysis-corrected.log",
+    "logs/ptq-eval-recovery.log",
+    "ptq_aggregate.json",
+    "ptq_comparison.csv",
+    "ptq_eval_results.json"
+  ]
+}

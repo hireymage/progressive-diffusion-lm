@@ -1,0 +1,26 @@
+{
+  "m4-air-clean-fp32-s101": [
+    "results/campaign/matched_m4_air_clean-fp32_s101"
+  ],
+  "m4-air-constant-q1-s101": [
+    "results/campaign/matched_m4_air_constant-q1_s101"
+  ],
+  "m4-air-gaussian-matched-fp32-s101": [
+    "results/campaign/matched_m4_air_gaussian-matched-fp32_s101"
+  ],
+  "m4-air-uniform-matched-fp32-s101": [
+    "results/campaign/matched_m4_air_uniform-matched-fp32_s101"
+  ],
+  "m4-air-clean-fp32-s103": [
+    "results/campaign/matched_m4_air_clean-fp32_s103"
+  ],
+  "m4-air-constant-q1-s103": [
+    "results/campaign/matched_m4_air_constant-q1_s103"
+  ],
+  "m4-air-gaussian-matched-fp32-s103": [
+    "results/campaign/matched_m4_air_gaussian-matched-fp32_s103"
+  ],
+  "m4-air-uniform-matched-fp32-s103": [
+    "results/campaign/matched_m4_air_uniform-matched-fp32_s103"
+  ]
+}

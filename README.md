@@ -1,389 +1,165 @@
 # Progressive-Precision Diffusion Language Model
 
-> **Experimental proof-of-concept** — not a production chatbot.
+> **Experimental proof-of-concept** on Apple Silicon. Not a production chatbot.
+
+A research project investigating whether a masked diffusion language model can train effectively with extremely low-bit weight representations, and whether assigning lower precision to high-noise denoising steps and higher precision to fine-grained steps (a "progressive precision schedule") provides any benefit.
+
+---
 
 ## Research Hypothesis
 
-A diffusion language model may not need every refinement step to use
-high-precision weights. Early denoising steps only need to get the coarse
-token layout right (cheap with 1-bit weights); later refinement steps
-need to disambiguate between similar tokens (requires higher precision).
+Early denoising steps (high noise, coarse structure) may only need binary (1-bit) weights. Late refinement steps (low noise, token disambiguation) benefit from higher precision (4-bit). A single set of FP32 master weights can be evaluated at different precisions across diffusion steps via runtime switching — no separate models needed.
 
-**Progressive precision schedule:**
-
-| Refinement step | Weight precision |
-|:-:|:-:|
-| 1 – 4 (coarse) | 1-bit (binary) |
-| 5 – 6 (middle) | 2-bit |
-| 7 – 8 (fine)   | 4-bit |
-
-The schedule is fully configurable without editing model source code.
-
-**Key question:** Can progressive precision approach the quality of a full-precision
-baseline while dramatically reducing theoretical memory and compute requirements?
+**Key finding so far** (from 18 completed ablation runs, 6 variants × 3 seeds × 10k steps):
+- Binary (const_1bit) ranks first with mean best_val_loss 7.4336 vs. baseline 7.4434 (0.01 nats better)
+- Progressive schedule [1,1,1,1,2,2,4,4] is statistically tied with the FP32 baseline
+- All differences are small (range 0.001–0.025 nats) and seed variance is large — no definitive ranking at 3 seeds
+- **Critical**: all low-bit operations are SIMULATED in FP32 via Straight-Through Estimation — no real memory or speed benefit at present
 
 ---
 
 ## Architecture
 
-```
-Input tokens (with [MASK] at noised positions)
-         │
-         ▼
-┌─────────────────────────────────────────────────────────┐
-│  Token Embedding  (vocab_size+1, d_model)  [full prec]  │
-│  Position Embedding (max_seq_len, d_model) [full prec]  │
-│  Step Embedding  sinusoidal(mask_rate) → MLP  [f.p.]    │
-│         ADD ───────────────────────────────────────────  │
-│                                                          │
-│  ┌────────────────────────────────────────────────────┐  │
-│  │  TransformerBlock × N  (bidirectional attention)   │  │
-│  │                                                    │  │
-│  │  LayerNorm → MultiHeadAttention → residual         │  │
-│  │             ├─ Q_proj  (QuantizedLinear)           │  │
-│  │             ├─ K_proj  (QuantizedLinear)           │  │
-│  │             ├─ V_proj  (QuantizedLinear)           │  │
-│  │             └─ out_proj (QuantizedLinear)          │  │
-│  │                                                    │  │
-│  │  LayerNorm → MLP → residual                        │  │
-│  │             ├─ ff1  (QuantizedLinear)              │  │
-│  │             └─ ff2  (QuantizedLinear)              │  │
-│  └────────────────────────────────────────────────────┘  │
-│                                                          │
-│  LayerNorm → LM head (Linear, full prec)                 │
-└─────────────────────────────────────────────────────────┘
-         │
-         ▼
-   Logits (B, L, vocab_size)
-```
+Bidirectional Transformer (28.3M parameters):
+- d_model=512, n_layers=6, n_heads=8, d_ff=2048, max_seq_len=256
+- Every linear projection is a `QuantizedLinear` layer supporting runtime precision switching
+- Embeddings and LayerNorm remain float32; only linear weights are quantized
+- Weight tying: LM head shares token embedding matrix
+- Noise-level conditioning: sinusoidal embedding of mask rate added to all positions
 
-All `QuantizedLinear` layers share one set of **full-precision master weights**
-(float32). During the forward pass, weights are quantised to the current
-precision level using the **Straight-Through Estimator (STE)**, so gradients
-flow back to the master weights unchanged.
+Quantization schemes (all simulated in float32 via STE):
+
+| bits | Scheme | Levels | Eff. bits |
+|---|---|---|---|
+| 1 | Binary | 2: {-1, +1} × mean(\|w\|) | 1.0 |
+| 2 | True 2-bit | 4: {-3,-1,+1,+3} × step | 2.0 |
+| 3 | True 3-bit | 8: {-7,...,+7} × step | 3.0 |
+| 4 | True 4-bit | 16: {-15,...,+15} × step | 4.0 |
+| 16 | FP32 | identity | 16.0 |
+| 0 | Ternary (optional) | 3: {-1,0,+1} × max(\|w\|) | ~1.585 |
 
 ---
 
-## How Progressive Precision Works
-
-### Weight Quantisation
-
-| Precision | Representation |
-|:-:|:-:|
-| **1-bit (binary)** | `sign(W)` → `{-1, +1}` × per-row `mean(|W|)` scale |
-| **2-bit** | Symmetric 3-level: `{-1, 0, +1}` × `max(|W|)` per row |
-| **4-bit** | Symmetric 15-level: codes `{-7…7}` × `max(|W|)/7` per row |
-| **16-bit** | Full-precision pass-through (baseline mode) |
-
-The 1-bit representation is **true binary {-1, +1}** — not ternary.
-Zero weights map to +1 by convention.
-
-### Straight-Through Estimator (STE)
-
-```python
-w_ste = w + stop_gradient(quantize(w) - w)
-# Forward:  w_ste = quantize(w)   ← uses quantised weights
-# Backward: dL/dw = dL/dw_ste    ← identity, gradient to latent weights
-```
-
-### Training
-
-For each batch:
-1. Sample mask rate `m ~ Uniform(0.1, 1.0)`
-2. Mask each token position with probability `m`
-3. Map `m` to a step index → look up precision from schedule
-4. Set all `QuantizedLinear` layers to that precision
-5. Run forward pass with quantised weights (STE active)
-6. Compute cross-entropy loss only at masked positions
-7. Backpropagate to master weights
-
-### Inference (Generation)
-
-Start from a fully masked sequence.  For step `i = 1 … T`:
-1. Set model precision to `schedule[i-1]`
-2. Predict token distributions at all masked positions
-3. Unmask the top-`k` highest-confidence positions (ordered by `max softmax`)
-4. Fix those tokens; repeat
-
----
-
-## How Diffusion Language Modelling Works
-
-This project uses **absorbing / masked diffusion** (similar to MDLM, BERT-style).
-
-- **Noise**: randomly replace tokens with `[MASK]` at rate `t ∈ [0,1]`
-- **Denoise**: train the model to predict the original token at every masked position
-- **Generation**: iteratively reveal tokens from fully masked → clean
-
-Unlike autoregressive models, ALL token positions are updated in parallel at each refinement step, enabling true parallel generation.
-
----
-
-## Why MLX
-
-- Native Apple Silicon / Metal acceleration
-- Unified memory — no CPU↔GPU copy overhead
-- Lazy evaluation graph enables efficient gradient computation
-- Runs on MacBook / Mac Mini with 16 GB memory without CUDA
-
----
-
-## Hardware Assumptions
-
-- **Tested on**: Apple Silicon M4, 16 GB unified memory, macOS
-- **Requirements**: macOS 13.5+ with Apple Silicon (M1/M2/M3/M4)
-- **Does not require**: CUDA, NVIDIA GPU, GGUF, llama.cpp
-
----
-
-## Installation
+## Quick Start
 
 ```bash
-git clone <repo>
-cd progressive-diffusion-lm
-python3 -m venv .venv
-source .venv/bin/activate
+# 1. Install
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-```
 
----
-
-## Quick Start — Smoke Test
-
-Runs the full pipeline end-to-end on a tiny dataset (~2–5 minutes):
-
-```bash
+# 2. End-to-end smoke test (2–5 minutes, verifies everything works)
 ./run_smoke_test.sh
-```
 
-This will:
-1. Train a BPE tokenizer on 500 Wikipedia articles
-2. Prepare a dataset from 100 articles
-3. Run all unit tests
-4. Train a baseline model (50 steps)
-5. Train the progressive model (50 steps)
-6. Compare their validation metrics
-7. Generate sample text
+# 3. Full training (requires prepared data — see below)
+python -m src.train --config configs/full_baseline.json
+python -m src.train --config configs/full_progressive_1_2_4.json
+```
 
 ---
 
 ## Step-by-Step Commands
 
-### 1. Train tokenizer
+### Prepare data
 
 ```bash
-# Small (smoke test)
-python scripts/train_tokenizer.py \
-    --vocab-size 16000 \
-    --max-articles 500 \
-    --max-bytes 5000000
+# Train BPE tokenizer (run once)
+python scripts/train_tokenizer.py --vocab-size 16000 --max-articles 500 --max-bytes 5000000
 
-# Larger (better coverage)
-python scripts/train_tokenizer.py \
-    --vocab-size 16000 \
-    --max-articles 10000 \
-    --max-bytes 100000000
+# Prepare dataset (50k articles, ~69M tokens, caches to data/cache/)
+python scripts/prepare_data.py --max-articles 50000 --max-bytes 500000000 --seq-len 256
 ```
 
-### 2. Prepare dataset
+### Train models
 
 ```bash
-# Tiny (fast validation)
-python scripts/prepare_data.py --max-articles 100 --max-bytes 1000000
+# Baseline (FP32, no quantization)
+python -m src.train --config configs/full_baseline.json
 
-# Medium (10k articles)
-python scripts/prepare_data.py --max-articles 10000 --max-bytes 100000000
+# Progressive precision [1-bit → 2-bit → 4-bit]
+python -m src.train --config configs/full_progressive_1_2_4.json
 
-# Large (requires patience and disk space)
-python scripts/prepare_data.py --max-articles 100000 --max-bytes 1000000000
+# Any custom config
+python -m src.train --config configs/<your_config>.json
 ```
 
-### 3. Run unit tests
+### Run the full ablation study
 
 ```bash
-python tests/test_quantization.py
-python tests/test_model.py
-python tests/test_diffusion.py
-python tests/test_training.py
+# Screening (3k steps × 18 runs, ~9h)
+python scripts/ablation_study.py --phase screen
+
+# Full ablation (10k steps × 18 runs, ~45h)
+python scripts/ablation_study.py --phase full --resume
+
+# Analysis only (requires existing results)
+python scripts/ablation_study.py --analyze-only --phase full
 ```
 
-### 4. Train baseline model
+### Reproduce the PTQ study (completed; commands below rerun it)
 
 ```bash
-# Smoke test (50 steps)
-python -m src.train --config configs/smoke_test_baseline.json
+# Full study: train 3 baselines + run PTQ evals (~6-7h)
+python scripts/ptq_study.py
 
-# Full training
-python -m src.train --config configs/baseline.json
+# Dry run: print plan without executing
+python scripts/ptq_study.py --dry-run
+
+# Skip training if baselines already trained
+python scripts/ptq_study.py --skip-training
 ```
 
-### 5. Train progressive model
+### Evaluate and generate
 
 ```bash
-# Smoke test (50 steps)
-python -m src.train --config configs/smoke_test.json
-
-# Full training
-python -m src.train --config configs/progressive_1_2_4.json
-```
-
-### 6. Compare models
-
-```bash
+# Compare baseline vs. progressive
 python -m src.evaluate \
-    --baseline   checkpoints/baseline/step_0010000.npz \
-    --progressive checkpoints/progressive_1_2_4/step_0010000.npz \
-    --config configs/progressive_1_2_4.json \
-    --eval-steps 100 \
-    --measure-speed
-```
+    --baseline checkpoints/full_baseline/step_0010000.npz \
+    --progressive checkpoints/full_progressive_1_2_4/step_0010000.npz \
+    --config configs/full_progressive_1_2_4.json --eval-steps 100
 
-### 7. Generate text
-
-```bash
+# Generate text
 python -m src.generate \
-    --checkpoint checkpoints/progressive_1_2_4/step_0010000.npz \
-    --config     configs/progressive_1_2_4.json \
-    --n-sequences 4 \
-    --seq-len 128
+    --checkpoint checkpoints/full_progressive_1_2_4/step_0010000.npz \
+    --config configs/full_progressive_1_2_4.json \
+    --n-sequences 4 --seq-len 128
 ```
 
 ---
 
-## Configuration
+## Project Status
 
-All configuration is in JSON files under `configs/`. Key parameters:
+| Experiment | Status | Runs |
+|---|---|---|
+| Smoke tests | DONE | 2 variants, 50 steps |
+| Short experiments (500 steps) | DONE | 3 variants, seed=42 |
+| Full initial comparison (10k steps) | DONE | 2 variants, seed=42 |
+| Ablation screening (3k steps) | DONE | 6 variants × 3 seeds = 18 runs |
+| **Full ablation (10k steps)** | **DONE** | **6 variants × 3 seeds = 18 runs** |
+| PTQ study | **DONE** | 18/18 Q1/Q2/Q3/Q4/FP32/ternary evaluations across 3 seeds |
 
-```json
-{
-  "model": {
-    "d_model": 512,
-    "n_layers": 6,
-    "n_heads": 8,
-    "d_ff": 2048,
-    "max_seq_len": 256,
-    "n_diffusion_steps": 8,
-    "precision_schedule": [1, 1, 1, 1, 2, 2, 4, 4],
-    "model_type": "progressive"
-  },
-  "data": {
-    "max_articles": 50000,
-    "max_text_bytes": 500000000,
-    "seq_len": 256
-  },
-  "train": {
-    "batch_size": 8,
-    "learning_rate": 3e-4,
-    "max_steps": 10000
-  }
-}
-```
-
-To change the precision schedule, edit `precision_schedule` in the config JSON — no code changes needed.
+See `PROJECT_DOCUMENTATION.md` for full technical documentation including all numerical results, quantization scheme details, methodological limitations, and research roadmap.
 
 ---
 
-## Project Structure
+## Requirements and Hardware
 
-```
-progressive-diffusion-lm/
-├── src/
-│   ├── config.py          Configuration dataclasses
-│   ├── quantization.py    QAT layers (1-bit/2-bit/4-bit + STE)
-│   ├── model.py           DiffusionLM Transformer architecture
-│   ├── diffusion.py       Masking, loss, and generation
-│   ├── data.py            Wikipedia streaming + cached dataset
-│   ├── train.py           Training loop with checkpointing
-│   ├── evaluate.py        Evaluation and model comparison
-│   └── generate.py        Text generation CLI
-├── scripts/
-│   ├── train_tokenizer.py BPE tokenizer training
-│   └── prepare_data.py    Dataset download/preprocessing
-├── configs/
-│   ├── smoke_test.json           Tiny progressive (50 steps)
-│   ├── smoke_test_baseline.json  Tiny baseline (50 steps)
-│   ├── progressive_1_2_4.json    Full progressive run
-│   └── baseline.json             Full baseline run
-├── tests/
-│   ├── test_quantization.py
-│   ├── test_model.py
-│   ├── test_diffusion.py
-│   └── test_training.py
-├── tokenizer/wiki_bpe/    Trained tokenizer (gitignored)
-├── data/cache/            Cached numpy token chunks (gitignored)
-├── checkpoints/           Model checkpoints (gitignored)
-├── run_smoke_test.sh      One-command end-to-end test
-├── requirements.txt
-└── README.md
-```
+- macOS 13.5+ with Apple Silicon (M1/M2/M3/M4)
+- 16 GB unified memory (tested on M4 16 GB)
+- No CUDA, no NVIDIA GPU required
+- Python dependencies: `mlx>=0.21.0`, `tokenizers`, `datasets`, `numpy`, `tqdm`
 
 ---
 
 ## Known Limitations
 
-### Critical (simulation vs. real hardware)
+**Most important**: All 1-bit, 2-bit, 3-bit, and 4-bit operations are **simulated in float32** via Straight-Through Estimation. No packed integer arithmetic is used. A packed Q1 `QuantizedLinear` weight tensor alone would be 32× smaller than FP32, but embeddings, normalization, biases, and other non-quantized parameters prevent that ratio from applying to the whole model. For the current progressive schedule, the storage report estimates only ~2.67× whole-model compression vs. FP32. None of this compression is realized by the current implementation, and wall-clock speed does NOT reflect real low-bit hardware performance.
 
-> **The most important limitation in this project:**
->
-> All 1-bit, 2-bit, and 4-bit operations are **SIMULATED using float32 MLX
-> operations** via the Straight-Through Estimator. Quantised weights are
-> computed as float32 approximations; no integer arithmetic is used.
->
-> This means:
-> - Theoretical storage savings (8× for 1-bit vs float32) are real if weights
->   were stored as packed integers.
-> - Wall-clock speed does **NOT** reflect real 1-bit hardware performance.
->   In fact, simulating 1-bit in float32 is *slower* than native float32.
-> - Real speedups require:
->   - Custom low-bit Metal shaders for Apple GPU
->   - Apple Neural Engine kernels supporting 1-bit MAC operations
->   - Or dedicated 1-bit hardware (e.g., 1-bit ASIC or NPU)
-
-### Model quality
-
-- 50-step smoke-test models are far from converged; generated text is incoherent.
-- Full training (10k+ steps on 50k+ articles) is needed for meaningful quality comparison.
-- The architecture is a research scaffold, not optimised for quality.
-
-### 2-bit has 3 levels (not 4)
-
-Due to symmetric signed integer rounding, the 2-bit mode produces 3 distinct
-levels `{-1, 0, +1} × scale` (≈ 1.58 effective bits). A 4-level 2-bit scheme
-without zero would require asymmetric quantisation, which is left as future work.
-
-### No ternary mode for 1-bit
-
-The project explicitly uses binary `{-1, +1}` 1-bit (not ternary). Per the
-research brief, ternary was intentionally not substituted as the primary mode.
-
-### Tokenizer MASK token is out-of-vocabulary
-
-The model's `[MASK]` token ID is `vocab_size` (one position past the tokenizer
-vocabulary). This is intentional: the tokenizer's `[MASK]` token (ID 2) is
-used in the tokenizer but the diffusion model uses a separate mask sentinel to
-avoid ambiguity with regular text.
-
-### Future extensions (designed but not implemented)
-
-The codebase is structured to support:
-- Confidence-based routing between precision levels
-- Early exit for certain token positions
-- Token freezing (fix high-confidence tokens early)
-- Adaptive 1-bit → 2-bit → 4-bit within a single refinement step
-- Temperature annealing during generation
+Other limitations:
+- Small model (~28M params) and dataset (~69M tokens) — findings may not generalize to production scale
+- The original full ablation has only 3 seeds; two later paired replications strengthen the baseline/Q1/progressive comparison but do not cover every precision variant
+- Apple Silicon non-determinism: same seed in different sessions may produce slightly different val_loss
+- const_4bit ablation used an old 15-level Q4 scheme; PTQ study uses the new 16-level scheme — Q4 comparisons carry a caveat
 
 ---
 
-## Theoretical Compression Summary
-
-| Model | Avg bits/step | Theoretical compression vs fp32 |
-|:-:|:-:|:-:|
-| Baseline | 16 | 1× (fp32 = fp32) |
-| Progressive 1→2→4 | 2.0 | **16×** |
-| Progressive 4→4→4 | 4.0 | 8× |
-
-*Compression applies to weight storage, not activations or master weights.*
-
----
-
-*This is experimental research software. No warranty is expressed or implied.*
+*Experimental research software. No warranty expressed or implied.*

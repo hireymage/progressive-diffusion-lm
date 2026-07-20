@@ -24,7 +24,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-ALLOWED_NODES = {"m1-256", "m1-512"}
+ALLOWED_NODES = {"m1-256", "m1-512", "m4-air"}
 RUN_ID_RE = re.compile(r"^\d{8}-\d{6}_[a-z0-9][a-z0-9-]*_s[a-z0-9-]+_[0-9a-f]{8}$")
 DEFAULT_LOCAL_ROOT = Path.home() / "Library/Application Support/ML-Experiments/progressive-diffusion-lm"
 SOURCE_EXCLUDES = {".git", ".venv", "checkpoints", "data", "results", "results.zip", "__pycache__", ".pytest_cache"}

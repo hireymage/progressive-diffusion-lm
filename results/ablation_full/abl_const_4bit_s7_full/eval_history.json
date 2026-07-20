@@ -1,0 +1,122 @@
+[
+  {
+    "step": 500,
+    "val_loss": 7.601126,
+    "val_accuracy": 0.037766,
+    "bits_used": 4
+  },
+  {
+    "step": 1000,
+    "val_loss": 7.561096,
+    "val_accuracy": 0.03693,
+    "bits_used": 4
+  },
+  {
+    "step": 1500,
+    "val_loss": 7.523588,
+    "val_accuracy": 0.032838,
+    "bits_used": 4
+  },
+  {
+    "step": 2000,
+    "val_loss": 7.533992,
+    "val_accuracy": 0.036429,
+    "bits_used": 4
+  },
+  {
+    "step": 2500,
+    "val_loss": 7.48946,
+    "val_accuracy": 0.034464,
+    "bits_used": 4
+  },
+  {
+    "step": 3000,
+    "val_loss": 7.498643,
+    "val_accuracy": 0.037804,
+    "bits_used": 4
+  },
+  {
+    "step": 3500,
+    "val_loss": 7.489567,
+    "val_accuracy": 0.036602,
+    "bits_used": 4
+  },
+  {
+    "step": 4000,
+    "val_loss": 7.508806,
+    "val_accuracy": 0.036315,
+    "bits_used": 4
+  },
+  {
+    "step": 4500,
+    "val_loss": 7.476034,
+    "val_accuracy": 0.0386,
+    "bits_used": 4
+  },
+  {
+    "step": 5000,
+    "val_loss": 7.481041,
+    "val_accuracy": 0.034049,
+    "bits_used": 4
+  },
+  {
+    "step": 5500,
+    "val_loss": 7.464886,
+    "val_accuracy": 0.040575,
+    "bits_used": 4
+  },
+  {
+    "step": 6000,
+    "val_loss": 7.473863,
+    "val_accuracy": 0.040925,
+    "bits_used": 4
+  },
+  {
+    "step": 6500,
+    "val_loss": 7.451904,
+    "val_accuracy": 0.043512,
+    "bits_used": 4
+  },
+  {
+    "step": 7000,
+    "val_loss": 7.45706,
+    "val_accuracy": 0.041584,
+    "bits_used": 4
+  },
+  {
+    "step": 7500,
+    "val_loss": 7.475806,
+    "val_accuracy": 0.040603,
+    "bits_used": 4
+  },
+  {
+    "step": 8000,
+    "val_loss": 7.4642,
+    "val_accuracy": 0.041046,
+    "bits_used": 4
+  },
+  {
+    "step": 8500,
+    "val_loss": 7.459188,
+    "val_accuracy": 0.042043,
+    "bits_used": 4
+  },
+  {
+    "step": 9000,
+    "val_loss": 7.455065,
+    "val_accuracy": 0.045212,
+    "bits_used": 4
+  },
+  {
+    "step": 9500,
+    "val_loss": 7.456848,
+    "val_accuracy": 0.044311,
+    "bits_used": 4
+  },
+  {
+    "step": 10000,
+    "val_loss": 7.44571,
+    "val_accuracy": 0.043417,
+    "bits_used": 4
+  }
+]

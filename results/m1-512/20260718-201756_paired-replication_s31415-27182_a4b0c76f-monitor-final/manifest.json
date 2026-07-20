@@ -1,0 +1,13 @@
+{
+  "supplement_id": "20260718-201756_paired-replication_s31415-27182_a4b0c76f-monitor-final",
+  "parent_run_id": "20260718-201756_paired-replication_s31415-27182_a4b0c76f",
+  "node": "m1-512",
+  "reason": "The campaign bundle was published before the external monitor appended its final completed sample.",
+  "samples": 478,
+  "first_timestamp_utc": "2026-07-18T20:20:49.363002+00:00",
+  "last_timestamp_utc": "2026-07-19T04:18:25.988680+00:00",
+  "last_campaign_status": "completed",
+  "memory_free_pct_min": 22,
+  "memory_free_pct_max": 72,
+  "memory_free_pct_last": 72
+}
