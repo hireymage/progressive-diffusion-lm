@@ -1,0 +1,20 @@
+[
+  {
+    "step": 999,
+    "val_loss": 7.455991,
+    "val_perplexity": 1730.198236,
+    "val_accuracy": 0.033092,
+    "generalization_gap": 0.024743,
+    "train_loss": 7.431248,
+    "bits_used": 8
+  },
+  {
+    "step": 1998,
+    "val_loss": 7.671446,
+    "val_perplexity": 2146.182253,
+    "val_accuracy": 0.035714,
+    "generalization_gap": 0.258884,
+    "train_loss": 7.412562,
+    "bits_used": 8
+  }
+]

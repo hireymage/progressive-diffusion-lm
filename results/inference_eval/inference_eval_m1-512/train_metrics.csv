@@ -1,0 +1,1 @@
+step,train_loss,gradient_norm,q1_residual_rms,injected_noise_rms,bits_used,lr,elapsed_s

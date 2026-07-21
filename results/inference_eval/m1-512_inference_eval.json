@@ -1,7 +1,7 @@
 {
   "node": "m1-512",
   "train_steps": 2000,
-  "gen_repeats": 5,
+  "gen_repeats": 3,
   "seq_len": 128,
   "precision_schedule": [
     1,
@@ -17,20 +17,16 @@
   "results": [
     {
       "mode": "standard",
-      "latency_mean_s": 0.2494,
-      "latency_min_s": 0.2011,
-      "latency_max_s": 0.4061,
+      "latency_mean_s": 0.1036,
+      "latency_min_s": 0.0729,
+      "latency_max_s": 0.1623,
       "latencies_s": [
-        0.4061,
-        0.2011,
-        0.2024,
-        0.2181,
-        0.2195
+        0.1623,
+        0.0729,
+        0.0758
       ],
       "steps_mean": 8.0,
       "steps_list": [
-        8,
-        8,
         8,
         8,
         8
@@ -173,20 +169,16 @@
     },
     {
       "mode": "incremental",
-      "latency_mean_s": 0.2131,
-      "latency_min_s": 0.1937,
-      "latency_max_s": 0.2318,
+      "latency_mean_s": 0.0911,
+      "latency_min_s": 0.087,
+      "latency_max_s": 0.0961,
       "latencies_s": [
-        0.2318,
-        0.1937,
-        0.2152,
-        0.2084,
-        0.2164
+        0.087,
+        0.0902,
+        0.0961
       ],
       "steps_mean": 8.0,
       "steps_list": [
-        8,
-        8,
         8,
         8,
         8
@@ -330,20 +322,16 @@
     },
     {
       "mode": "early_exit",
-      "latency_mean_s": 0.0435,
-      "latency_min_s": 0.0244,
-      "latency_max_s": 0.0511,
+      "latency_mean_s": 0.0196,
+      "latency_min_s": 0.0167,
+      "latency_max_s": 0.0252,
       "latencies_s": [
-        0.0483,
-        0.0498,
-        0.0511,
-        0.0441,
-        0.0244
+        0.0252,
+        0.0168,
+        0.0167
       ],
       "steps_mean": 1.0,
       "steps_list": [
-        1,
-        1,
         1,
         1,
         1
@@ -487,20 +475,16 @@
     },
     {
       "mode": "early_exit_incremental",
-      "latency_mean_s": 0.0506,
-      "latency_min_s": 0.0434,
-      "latency_max_s": 0.0587,
+      "latency_mean_s": 0.0192,
+      "latency_min_s": 0.0188,
+      "latency_max_s": 0.0196,
       "latencies_s": [
-        0.0587,
-        0.0559,
-        0.0434,
-        0.0475,
-        0.0473
+        0.0188,
+        0.0192,
+        0.0196
       ],
       "steps_mean": 1.0,
       "steps_list": [
-        1,
-        1,
         1,
         1,
         1
@@ -644,20 +628,16 @@
     },
     {
       "mode": "early_exit",
-      "latency_mean_s": 0.0523,
-      "latency_min_s": 0.0482,
-      "latency_max_s": 0.0584,
+      "latency_mean_s": 0.0177,
+      "latency_min_s": 0.0171,
+      "latency_max_s": 0.0182,
       "latencies_s": [
-        0.0509,
-        0.0524,
-        0.0482,
-        0.0518,
-        0.0584
+        0.0171,
+        0.0176,
+        0.0182
       ],
       "steps_mean": 1.0,
       "steps_list": [
-        1,
-        1,
         1,
         1,
         1
@@ -801,20 +781,16 @@
     },
     {
       "mode": "early_exit_incremental",
-      "latency_mean_s": 0.0498,
-      "latency_min_s": 0.0456,
-      "latency_max_s": 0.056,
+      "latency_mean_s": 0.0186,
+      "latency_min_s": 0.0182,
+      "latency_max_s": 0.0193,
       "latencies_s": [
-        0.0499,
-        0.0456,
-        0.0501,
-        0.056,
-        0.0476
+        0.0182,
+        0.0193,
+        0.0182
       ],
       "steps_mean": 1.0,
       "steps_list": [
-        1,
-        1,
         1,
         1,
         1
@@ -958,20 +934,16 @@
     },
     {
       "mode": "early_exit",
-      "latency_mean_s": 0.0483,
-      "latency_min_s": 0.0414,
-      "latency_max_s": 0.056,
+      "latency_mean_s": 0.0183,
+      "latency_min_s": 0.0176,
+      "latency_max_s": 0.0191,
       "latencies_s": [
-        0.0414,
-        0.0468,
-        0.056,
-        0.0427,
-        0.0545
+        0.0191,
+        0.0176,
+        0.0182
       ],
       "steps_mean": 1.0,
       "steps_list": [
-        1,
-        1,
         1,
         1,
         1
@@ -1115,20 +1087,16 @@
     },
     {
       "mode": "early_exit_incremental",
-      "latency_mean_s": 0.0444,
-      "latency_min_s": 0.0377,
-      "latency_max_s": 0.057,
+      "latency_mean_s": 0.0186,
+      "latency_min_s": 0.0181,
+      "latency_max_s": 0.0191,
       "latencies_s": [
-        0.0432,
-        0.057,
-        0.0446,
-        0.0377,
-        0.0396
+        0.0186,
+        0.0181,
+        0.0191
       ],
       "steps_mean": 1.0,
       "steps_list": [
-        1,
-        1,
         1,
         1,
         1
@@ -1272,20 +1240,16 @@
     },
     {
       "mode": "early_exit",
-      "latency_mean_s": 0.2027,
-      "latency_min_s": 0.1895,
-      "latency_max_s": 0.2116,
+      "latency_mean_s": 0.0934,
+      "latency_min_s": 0.0861,
+      "latency_max_s": 0.0984,
       "latencies_s": [
-        0.1964,
-        0.2116,
-        0.2109,
-        0.1895,
-        0.205
+        0.0956,
+        0.0861,
+        0.0984
       ],
       "steps_mean": 8.0,
       "steps_list": [
-        8,
-        8,
         8,
         8,
         8
@@ -1429,20 +1393,16 @@
     },
     {
       "mode": "early_exit_incremental",
-      "latency_mean_s": 0.2541,
-      "latency_min_s": 0.2178,
-      "latency_max_s": 0.2904,
+      "latency_mean_s": 0.0954,
+      "latency_min_s": 0.0938,
+      "latency_max_s": 0.0972,
       "latencies_s": [
-        0.2178,
-        0.2514,
-        0.2708,
-        0.2401,
-        0.2904
+        0.0938,
+        0.0972,
+        0.0954
       ],
       "steps_mean": 8.0,
       "steps_list": [
-        8,
-        8,
         8,
         8,
         8
@@ -1586,20 +1546,16 @@
     },
     {
       "mode": "early_exit",
-      "latency_mean_s": 0.2159,
-      "latency_min_s": 0.2079,
-      "latency_max_s": 0.2422,
+      "latency_mean_s": 0.0839,
+      "latency_min_s": 0.0833,
+      "latency_max_s": 0.0844,
       "latencies_s": [
-        0.2079,
-        0.2118,
-        0.2089,
-        0.2089,
-        0.2422
+        0.0839,
+        0.0833,
+        0.0844
       ],
       "steps_mean": 8.0,
       "steps_list": [
-        8,
-        8,
         8,
         8,
         8
@@ -1743,20 +1699,16 @@
     },
     {
       "mode": "early_exit_incremental",
-      "latency_mean_s": 0.2261,
-      "latency_min_s": 0.1945,
-      "latency_max_s": 0.251,
+      "latency_mean_s": 0.0951,
+      "latency_min_s": 0.0914,
+      "latency_max_s": 0.0971,
       "latencies_s": [
-        0.1945,
-        0.2355,
-        0.251,
-        0.2014,
-        0.248
+        0.0914,
+        0.0968,
+        0.0971
       ],
       "steps_mean": 8.0,
       "steps_list": [
-        8,
-        8,
         8,
         8,
         8
@@ -1900,20 +1852,16 @@
     },
     {
       "mode": "early_exit",
-      "latency_mean_s": 0.2012,
-      "latency_min_s": 0.1806,
-      "latency_max_s": 0.2189,
+      "latency_mean_s": 0.0868,
+      "latency_min_s": 0.0845,
+      "latency_max_s": 0.0882,
       "latencies_s": [
-        0.2189,
-        0.1806,
-        0.2003,
-        0.2001,
-        0.2064
+        0.0882,
+        0.0876,
+        0.0845
       ],
       "steps_mean": 8.0,
       "steps_list": [
-        8,
-        8,
         8,
         8,
         8
@@ -2057,20 +2005,16 @@
     },
     {
       "mode": "early_exit_incremental",
-      "latency_mean_s": 0.2325,
-      "latency_min_s": 0.214,
-      "latency_max_s": 0.2537,
+      "latency_mean_s": 0.0911,
+      "latency_min_s": 0.0902,
+      "latency_max_s": 0.0916,
       "latencies_s": [
-        0.2477,
-        0.2277,
-        0.2197,
-        0.214,
-        0.2537
+        0.0916,
+        0.0913,
+        0.0902
       ],
       "steps_mean": 8.0,
       "steps_list": [
-        8,
-        8,
         8,
         8,
         8
@@ -2213,5 +2157,5 @@
       "token_agreement_with_standard": 1.0
     }
   ],
-  "timestamp": "2026-07-21T14:58:07"
+  "timestamp": "2026-07-21T16:31:46"
 }
