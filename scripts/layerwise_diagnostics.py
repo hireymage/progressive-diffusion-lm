@@ -31,6 +31,7 @@ from src.data import load_tokenizer
 from src.layerwise_model import LayerwiseProgressiveLM, masked_deep_supervision_loss
 
 MASK_RATES = (0.15, 0.30, 0.50, 0.75, 1.00)
+PROGRESSIVE_PRECISIONS = ["q1"] * 5 + ["q2"] * 5 + ["q4"] * 5 + ["q8"] * 5 + ["fp16"] * 5
 
 # Each strategy sees exactly the same fixed 100 sequences and is evaluated on
 # the same 50% mask.  They differ only in the corruption curriculum (and C's
@@ -167,9 +168,15 @@ def frequency_summary(counts: np.ndarray, tokenizer, top_k: int) -> dict:
 
 
 def build_model(a, vocab_size: int) -> LayerwiseProgressiveLM:
+    if a.model_variant == "progressive":
+        if a.n_layers != 25:
+            raise ValueError("--model-variant progressive requires --n-layers 25")
+        precisions = PROGRESSIVE_PRECISIONS
+    else:
+        precisions = ["fp32"] * a.n_layers
     cfg = LayerwiseModelConfig(vocab_size=vocab_size, d_model=a.d_model, d_ff=a.d_ff,
         n_heads=a.n_heads, n_layers=a.n_layers, min_exit_layer=a.n_layers,
-        max_seq_len=256, layer_precisions=["fp32"] * a.n_layers)
+        max_seq_len=256, layer_precisions=precisions)
     return LayerwiseProgressiveLM(cfg)
 
 
@@ -226,6 +233,14 @@ def _overfit_loss(model, x, targets, mask, a):
     return masked_deep_supervision_loss(model, x, targets, mask, supervised_layers=exits, layer_weights=weights)
 
 
+def validate_resume_metadata(saved: dict, a) -> None:
+    """Reject a state whose deterministic data/model contract changed."""
+    if saved["schedule"] != [[r, n] for r, n in a.mask_schedule]:
+        raise ValueError("resume schedule differs from checkpoint metadata")
+    if saved.get("model_variant") != a.model_variant:
+        raise ValueError("resume model variant differs from checkpoint metadata")
+
+
 def run_overfit(a, train, tokenizer) -> dict:
     if len(train) < a.overfit_sequences:
         raise ValueError("cache has fewer rows than --overfit-sequences")
@@ -250,8 +265,7 @@ def run_overfit(a, train, tokenizer) -> dict:
         saved = _load_overfit_checkpoint(model, optimizer, resume_path)
         start_step, streak, best_accuracy = int(saved["step"]), int(saved["gate_streak"]), float(saved["best_accuracy"])
         history = saved.get("history", [])
-        if saved["schedule"] != [[r, n] for r, n in a.mask_schedule]:
-            raise ValueError("resume schedule differs from checkpoint metadata")
+        validate_resume_metadata(saved, a)
     start = time.time()
     for step in range(start_step + 1, a.steps + 1):
         # No random sampling: each contiguous batch cycles through the fixed 100.
@@ -275,11 +289,12 @@ def run_overfit(a, train, tokenizer) -> dict:
             history.append(metrics)
             metadata = {"step": step, "gate_streak": streak, "best_accuracy": best_accuracy,
                         "history": history, "schedule": [[r, n] for r, n in a.mask_schedule],
-                        "seed": a.seed, "batch_size": a.batch_size, "overfit_sequences": a.overfit_sequences}
+                        "seed": a.seed, "batch_size": a.batch_size, "overfit_sequences": a.overfit_sequences,
+                        "model_variant": a.model_variant}
             _overfit_checkpoint(model, optimizer, checkpoint_dir, "latest", metadata)
             if metrics["accuracy"] >= best_accuracy:
                 _overfit_checkpoint(model, optimizer, checkpoint_dir, "best", metadata)
-            partial = {"mode": "overfit", "status": "running", "history": history, "latest": metrics,
+            partial = {"mode": "overfit", "model_variant": a.model_variant, "status": "running", "history": history, "latest": metrics,
                        "checkpoint_dir": str(checkpoint_dir)}
             atomic_json_write(a.output, partial)
             if streak >= a.gate_reports:
@@ -294,7 +309,9 @@ def run_overfit(a, train, tokenizer) -> dict:
     final["quality_gate"] = {"threshold": a.gate_accuracy, "consecutive_reports_required": a.gate_reports,
         "consecutive_reports": streak, "passed": streak >= a.gate_reports,
         "meaning": "masked accuracy on a fixed mask over all fixed training sequences"}
-    return {"mode": "overfit", "architecture": {"d_model": a.d_model, "d_ff": a.d_ff, "n_heads": a.n_heads, "n_layers": a.n_layers},
+    return {"mode": "overfit", "model_variant": a.model_variant,
+            "architecture": {"d_model": a.d_model, "d_ff": a.d_ff, "n_heads": a.n_heads, "n_layers": a.n_layers,
+                             "layer_precisions": list(model.cfg.layer_precisions)},
             "fixed_sequence_indices": list(range(a.overfit_sequences)), "masking": {"schedule": a.mask_schedule, "gate_rate": a.gate_mask_rate, "seed": a.seed + 900_000},
             "steps": history[-1]["step"] if history else start_step, "max_steps": a.steps, "batch_size": a.batch_size,
             "processed_tokens": (history[-1]["processed_tokens"] if history else start_step * a.batch_size * fixed.shape[1]),
@@ -332,6 +349,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=20260804); p.add_argument("--top-k", type=int, default=20)
     p.add_argument("--d-model", type=int, default=64); p.add_argument("--d-ff", type=int, default=256)
     p.add_argument("--n-heads", type=int, default=4); p.add_argument("--n-layers", type=int, default=25)
+    p.add_argument("--model-variant", choices=("fp32", "progressive"), default="fp32")
     p.add_argument("--vocab-size", type=int, default=None, help="normally inferred from tokenizer")
     p.add_argument("--checkpoint", type=Path, help="FP32 layer-wise .npz required for mask-sweep")
     p.add_argument("--eval-sequences", type=int, default=32); p.add_argument("--eval-batch-size", type=int, default=2)

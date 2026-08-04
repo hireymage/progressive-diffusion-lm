@@ -8,7 +8,7 @@ import pytest
 from scripts.layerwise_diagnostics import (
     aggregate_masked_metrics, atomic_json_write, count_tokens, deterministic_mask,
     frequency_summary, gate_streak, parse_mask_schedule, schedule_rate,
-    run_overfit,
+    build_model, run_overfit, validate_resume_metadata,
 )
 
 
@@ -66,7 +66,7 @@ def test_atomic_report_is_complete_json_for_resume_monitoring(tmp_path):
 def test_run_overfit_smoke_exercises_disk_estimate_and_writes_checkpoint(tmp_path):
     """A one-step CPU/MLX smoke test catches missing checkpoint utility imports."""
     args = SimpleNamespace(
-        overfit_sequences=1, seed=11, vocab_size=16, d_model=8, d_ff=16,
+        overfit_sequences=1, seed=11, vocab_size=16, d_model=8, d_ff=16, model_variant="fp32",
         n_heads=2, n_layers=1, lr=1e-3, auxiliary_loss="final-only",
         milestone_weights=(), checkpoint_dir=tmp_path / "checkpoints",
         output=tmp_path / "report.json", min_free_gb=0.0, resume=False,
@@ -77,3 +77,19 @@ def test_run_overfit_smoke_exercises_disk_estimate_and_writes_checkpoint(tmp_pat
     assert result["steps"] == 1
     assert (args.checkpoint_dir / "latest.npz").exists()
     assert json.loads(args.output.read_text())["status"] == "running"
+
+
+def test_model_variant_builds_fp32_or_full_25_layer_progressive_schedule():
+    fp32 = build_model(SimpleNamespace(model_variant="fp32", d_model=8, d_ff=16, n_heads=2, n_layers=3), 16)
+    assert fp32.cfg.layer_precisions == ["fp32"] * 3
+    progressive = build_model(SimpleNamespace(model_variant="progressive", d_model=8, d_ff=16, n_heads=2, n_layers=25), 16)
+    assert progressive.cfg.layer_precisions == ["q1"] * 5 + ["q2"] * 5 + ["q4"] * 5 + ["q8"] * 5 + ["fp16"] * 5
+    with pytest.raises(ValueError, match="requires --n-layers 25"):
+        build_model(SimpleNamespace(model_variant="progressive", d_model=8, d_ff=16, n_heads=2, n_layers=24), 16)
+
+
+def test_resume_metadata_rejects_model_variant_mismatch():
+    args = SimpleNamespace(mask_schedule=((.5, 10),), model_variant="fp32")
+    validate_resume_metadata({"schedule": [[.5, 10]], "model_variant": "fp32"}, args)
+    with pytest.raises(ValueError, match="model variant"):
+        validate_resume_metadata({"schedule": [[.5, 10]], "model_variant": "progressive"}, args)
