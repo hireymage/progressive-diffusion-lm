@@ -10,7 +10,9 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -28,6 +30,51 @@ from src.data import load_tokenizer
 from src.layerwise_model import LayerwiseProgressiveLM, masked_deep_supervision_loss
 
 MASK_RATES = (0.15, 0.30, 0.50, 0.75, 1.00)
+
+# Each strategy sees exactly the same fixed 100 sequences and is evaluated on
+# the same 50% mask.  They differ only in the corruption curriculum (and C's
+# intentionally conservative learning rate).
+QUALITY_GATE_STRATEGIES = {
+    "A": {"schedule": "0.50:40000", "lr": 1e-3},
+    "B": {"schedule": "0.15:12000,0.30:12000,0.50:16000", "lr": 1e-3},
+    "C": {"schedule": "0.15:8000,0.30:8000,0.50:12000,0.75:12000", "lr": 7e-4},
+}
+
+
+def parse_mask_schedule(value: str) -> tuple[tuple[float, int], ...]:
+    """Parse ``RATE:STEPS,...`` with no implicit or random schedule state."""
+    try:
+        parts = tuple((float(rate), int(steps)) for rate, steps in
+                      (part.strip().split(":") for part in value.split(",")))
+    except (TypeError, ValueError) as exc:
+        raise ValueError("mask schedule must be RATE:STEPS[,RATE:STEPS...]") from exc
+    if not parts or any(not 0 < rate <= 1 or steps <= 0 for rate, steps in parts):
+        raise ValueError("schedule rates must be in (0, 1] and steps positive")
+    return parts
+
+
+def schedule_rate(schedule: tuple[tuple[float, int], ...], step: int) -> float:
+    if step < 1:
+        raise ValueError("step is one-indexed and must be positive")
+    for rate, duration in schedule:
+        if step <= duration:
+            return rate
+        step -= duration
+    return schedule[-1][0]
+
+
+def gate_streak(previous: int, accuracy: float, threshold: float) -> int:
+    """Consecutive reports satisfying the gate (small, testable early stop)."""
+    return previous + 1 if accuracy >= threshold else 0
+
+
+def atomic_json_write(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile("w", dir=path.parent, delete=False) as handle:
+        json.dump(payload, handle, indent=2)
+        handle.write("\n")
+        temporary = Path(handle.name)
+    os.replace(temporary, path)
 
 
 def deterministic_mask(shape: tuple[int, int], rate: float, seed: int) -> np.ndarray:
@@ -150,6 +197,34 @@ def run_frequency(a, train, val, tokenizer) -> dict:
                                     "note": "For position-independent masks, this equals masked accuracy in expectation."}}
 
 
+def _overfit_checkpoint(model, optimizer, directory: Path, kind: str, metadata: dict) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / f"{kind}.npz"
+    payload = dict(mlx.utils.tree_flatten(model.parameters()))
+    payload.update({"opt_" + k: v for k, v in mlx.utils.tree_flatten(optimizer.state)})
+    mx.savez(str(path), **payload)
+    atomic_json_write(directory / f"{kind}.json", metadata)
+
+
+def _load_overfit_checkpoint(model, optimizer, path: Path) -> dict:
+    data = mx.load(str(path))
+    model.load_weights([(k, v) for k, v in data.items() if not k.startswith("opt_")])
+    opt = [(k.removeprefix("opt_"), v) for k, v in data.items() if k.startswith("opt_")]
+    if not opt:
+        raise ValueError("overfit checkpoint has no optimizer state")
+    optimizer.state = mlx.utils.tree_unflatten(opt)
+    mx.eval(model.parameters(), optimizer.state)
+    return json.loads(path.with_suffix(".json").read_text())
+
+
+def _overfit_loss(model, x, targets, mask, a):
+    if a.auxiliary_loss == "final-only":
+        exits, weights = (a.n_layers,), None
+    else:
+        exits, weights = tuple(layer for layer, _ in a.milestone_weights), tuple(weight for _, weight in a.milestone_weights)
+    return masked_deep_supervision_loss(model, x, targets, mask, supervised_layers=exits, layer_weights=weights)
+
+
 def run_overfit(a, train, tokenizer) -> dict:
     if len(train) < a.overfit_sequences:
         raise ValueError("cache has fewer rows than --overfit-sequences")
@@ -157,37 +232,73 @@ def run_overfit(a, train, tokenizer) -> dict:
     mx.random.seed(a.seed)
     model = build_model(a, a.vocab_size)
     optimizer = optim.AdamW(learning_rate=a.lr)
-    grad_fn = nn.value_and_grad(model, lambda m, x, t, mask:
-        masked_deep_supervision_loss(m, x, t, mask, supervised_layers=(a.n_layers,)))
-    history = []
+    grad_fn = nn.value_and_grad(model, lambda m, x, t, mask: _overfit_loss(m, x, t, mask, a))
+    checkpoint_dir = a.checkpoint_dir
+    # Reserving two checkpoint files catches accidental long runs on a nearly
+    # full volume before any model state is written.
+    estimate = sum(np.asarray(v).nbytes for _, v in mlx.utils.tree_flatten(model.parameters())) * 4
+    free = __import__("shutil").disk_usage(a.output.parent).free
+    needed = int(a.min_free_gb * 1024**3) + 2 * estimate
+    if free < needed:
+        raise RuntimeError(f"disk budget guard: {free / 1024**3:.1f} GiB free, need {needed / 1024**3:.1f} GiB")
+    history, start_step, streak, best_accuracy = [], 0, 0, -1.0
+    if a.resume:
+        resume_path = checkpoint_dir / "latest.npz"
+        if not resume_path.exists():
+            raise FileNotFoundError(f"--resume requested but no checkpoint exists: {resume_path}")
+        saved = _load_overfit_checkpoint(model, optimizer, resume_path)
+        start_step, streak, best_accuracy = int(saved["step"]), int(saved["gate_streak"]), float(saved["best_accuracy"])
+        history = saved.get("history", [])
+        if saved["schedule"] != [[r, n] for r, n in a.mask_schedule]:
+            raise ValueError("resume schedule differs from checkpoint metadata")
     start = time.time()
-    for step in range(1, a.steps + 1):
+    for step in range(start_step + 1, a.steps + 1):
         # No random sampling: each contiguous batch cycles through the fixed 100.
         offset = ((step - 1) * a.batch_size) % len(fixed)
         indices = (np.arange(a.batch_size) + offset) % len(fixed)
         batch = fixed[indices]
-        x, targets, mask = corrupt(batch, model.cfg.mask_token_id(), a.overfit_mask_rate, a.seed + step)
+        train_rate = schedule_rate(a.mask_schedule, step)
+        x, targets, mask = corrupt(batch, model.cfg.mask_token_id(), train_rate, a.seed + step)
         loss, grads = grad_fn(model, x, targets, mask)
         optimizer.update(model, grads)
         mx.eval(loss, model.parameters())
         if step == 1 or step % a.report_every == 0 or step == a.steps:
             # Fixed evaluation masks make the reported curve comparable.
-            eval_mask = deterministic_mask(fixed.shape, a.overfit_mask_rate, a.seed + 900_000)
+            eval_mask = deterministic_mask(fixed.shape, a.gate_mask_rate, a.seed + 900_000)
             metrics, _ = evaluate_in_chunks(model, fixed, eval_mask, a.eval_batch_size)
-            metrics.update({"step": step, "train_objective": float(loss)})
+            streak = gate_streak(streak, metrics["accuracy"], a.gate_accuracy)
+            best_accuracy = max(best_accuracy, metrics["accuracy"])
+            metrics.update({"step": step, "train_objective": float(loss), "train_mask_rate": train_rate,
+                            "gate_streak": streak, "processed_tokens": step * a.batch_size * fixed.shape[1],
+                            "exposures_per_sequence": step * a.batch_size / len(fixed)})
             history.append(metrics)
-    eval_mask = deterministic_mask(fixed.shape, a.overfit_mask_rate, a.seed + 900_000)
+            metadata = {"step": step, "gate_streak": streak, "best_accuracy": best_accuracy,
+                        "history": history, "schedule": [[r, n] for r, n in a.mask_schedule],
+                        "seed": a.seed, "batch_size": a.batch_size, "overfit_sequences": a.overfit_sequences}
+            _overfit_checkpoint(model, optimizer, checkpoint_dir, "latest", metadata)
+            if metrics["accuracy"] >= best_accuracy:
+                _overfit_checkpoint(model, optimizer, checkpoint_dir, "best", metadata)
+            partial = {"mode": "overfit", "status": "running", "history": history, "latest": metrics,
+                       "checkpoint_dir": str(checkpoint_dir)}
+            atomic_json_write(a.output, partial)
+            if streak >= a.gate_reports:
+                break
+    eval_mask = deterministic_mask(fixed.shape, a.gate_mask_rate, a.seed + 900_000)
     final, reconstructions = evaluate_in_chunks(model, fixed, eval_mask, a.eval_batch_size, capture_reconstructions=2)
     decode = lambda ids: tokenizer.decode([int(i) for i in ids])
     # The all-position value is derived from the masked aggregate: unmasked
     # positions are copied exactly by construction.
     final["reconstruction_accuracy_all_positions"] = float(
         (final["accuracy"] * final["masked_tokens"] + (fixed.size - final["masked_tokens"])) / fixed.size)
-    final["quality_gate"] = {"threshold": a.gate_accuracy, "passed": final["accuracy"] >= a.gate_accuracy,
+    final["quality_gate"] = {"threshold": a.gate_accuracy, "consecutive_reports_required": a.gate_reports,
+        "consecutive_reports": streak, "passed": streak >= a.gate_reports,
         "meaning": "masked accuracy on a fixed mask over all fixed training sequences"}
     return {"mode": "overfit", "architecture": {"d_model": a.d_model, "d_ff": a.d_ff, "n_heads": a.n_heads, "n_layers": a.n_layers},
-            "fixed_sequence_indices": list(range(a.overfit_sequences)), "masking": {"rate": a.overfit_mask_rate, "seed": a.seed + 900_000},
-            "steps": a.steps, "batch_size": a.batch_size, "elapsed_seconds": time.time() - start,
+            "fixed_sequence_indices": list(range(a.overfit_sequences)), "masking": {"schedule": a.mask_schedule, "gate_rate": a.gate_mask_rate, "seed": a.seed + 900_000},
+            "steps": history[-1]["step"] if history else start_step, "max_steps": a.steps, "batch_size": a.batch_size,
+            "processed_tokens": (history[-1]["processed_tokens"] if history else start_step * a.batch_size * fixed.shape[1]),
+            "exposures_per_sequence": (history[-1]["exposures_per_sequence"] if history else start_step * a.batch_size / len(fixed)),
+            "checkpoint_policy": "latest+best including optimizer and metadata", "elapsed_seconds": time.time() - start,
             "history": history, "final": final,
             "examples": [{"target": decode(fixed[i]), "reconstruction": decode(reconstructions[i])} for i in range(len(reconstructions))]}
 
@@ -227,11 +338,37 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--batch-size", type=int, default=4); p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument("--overfit-mask-rate", type=float, default=.50); p.add_argument("--report-every", type=int, default=100)
     p.add_argument("--gate-accuracy", type=float, default=.95)
+    p.add_argument("--mask-schedule", help="training curriculum, e.g. 0.15:12000,0.30:12000,0.50:16000")
+    p.add_argument("--strategy", choices=tuple(QUALITY_GATE_STRATEGIES), help="bounded 100-sequence quality-gate preset A/B/C")
+    p.add_argument("--gate-mask-rate", type=float, default=.50, help="fixed evaluation corruption rate")
+    p.add_argument("--gate-reports", type=int, default=3, help="consecutive passing reports required to stop")
+    p.add_argument("--checkpoint-dir", type=Path, default=ROOT / "results/layerwise/overfit-checkpoints")
+    p.add_argument("--resume", action="store_true"); p.add_argument("--min-free-gb", type=float, default=10.0)
+    p.add_argument("--auxiliary-loss", choices=("final-only", "weighted-milestones"), default="final-only")
+    p.add_argument("--milestone-weights", default="5:0.1,10:0.2,15:0.3,20:0.4,25:1.0")
     return p
 
 
 def main() -> None:
     a = parser().parse_args()
+    if a.steps < 1 or a.steps > 40000:
+        raise ValueError("--steps must be in [1, 40000]")
+    if a.strategy:
+        preset = QUALITY_GATE_STRATEGIES[a.strategy]
+        if a.mask_schedule is None:
+            a.mask_schedule = preset["schedule"]
+        # A user-provided LR remains authoritative for reproducibility.
+        if a.lr == parser().get_default("lr"):
+            a.lr = preset["lr"]
+    a.mask_schedule = parse_mask_schedule(a.mask_schedule or f"{a.overfit_mask_rate}:{a.steps}")
+    try:
+        a.milestone_weights = tuple((int(layer), float(weight)) for layer, weight in
+                                    (part.split(":") for part in a.milestone_weights.split(",")))
+    except ValueError as exc:
+        raise ValueError("--milestone-weights must be LAYER:WEIGHT[,LAYER:WEIGHT...]") from exc
+    if a.auxiliary_loss == "weighted-milestones" and (not a.milestone_weights or
+            any(layer < 1 or layer > a.n_layers or weight <= 0 for layer, weight in a.milestone_weights)):
+        raise ValueError("milestone layers must be valid and weights positive")
     train, val, meta, meta_path = select_cache(a.cache_dir, seq_len=256)
     tokenizer = load_tokenizer(str(a.tokenizer))
     inferred_vocab = tokenizer.get_vocab_size()
@@ -245,8 +382,7 @@ def main() -> None:
     if a.mode == "frequency": result["result"] = run_frequency(a, train, val, tokenizer)
     elif a.mode == "overfit": result["result"] = run_overfit(a, train, tokenizer)
     else: result["result"] = run_mask_sweep(a, train, val, tokenizer)
-    a.output.parent.mkdir(parents=True, exist_ok=True)
-    a.output.write_text(json.dumps(result, indent=2))
+    atomic_json_write(a.output, result)
     print(json.dumps(result, indent=2))
 
 

@@ -226,6 +226,7 @@ def masked_deep_supervision_loss(
     model: LayerwiseProgressiveLM, token_ids: mx.array, targets: mx.array,
     masked_positions: mx.array, pad_mask: mx.array | None = None,
     supervised_layers: tuple[int, ...] | None = None,
+    layer_weights: tuple[float, ...] | None = None,
 ) -> mx.array:
     """Streaming masked CE over selected exits, without retaining 21 logits.
 
@@ -238,6 +239,10 @@ def masked_deep_supervision_loss(
     selected = set(supervised_layers or tuple(range(model.cfg.min_exit_layer, model.cfg.n_layers + 1)))
     if not selected or not selected.issubset(set(range(model.cfg.min_exit_layer, model.cfg.n_layers + 1))):
         raise ValueError("supervised_layers must be eligible, non-empty exit layers")
+    ordered_selected = tuple(sorted(selected))
+    if layer_weights is not None and (len(layer_weights) != len(ordered_selected) or any(weight <= 0 for weight in layer_weights)):
+        raise ValueError("layer_weights must be positive and match supervised_layers")
+    weights = dict(zip(ordered_selected, layer_weights or (1.0,) * len(ordered_selected)))
     batch, length = token_ids.shape
     if length > model.cfg.max_seq_len:
         raise ValueError("token sequence exceeds max_seq_len")
@@ -247,7 +252,7 @@ def masked_deep_supervision_loss(
     x = model.token_embed(token_ids) + model.pos_embed(mx.arange(length)[None, :])
     attention_mask = pad_mask[:, None, None, :] if pad_mask is not None else None
     total = mx.array(0.0)
-    count = 0
+    total_weight = 0.0
     for index, block in enumerate(model.blocks, start=1):
         x = block(x, attention_mask)
         if index in selected:
@@ -255,6 +260,7 @@ def masked_deep_supervision_loss(
             flat_logits = logits.reshape(-1, logits.shape[-1])
             log_probs = nn.log_softmax(flat_logits.astype(mx.float32), axis=-1)
             token_loss = -log_probs[mx.arange(flat_logits.shape[0]), flat_targets]
-            total = total + mx.sum(token_loss * flat_mask) / n_masked
-            count += 1
-    return total / count
+            weight = weights[index]
+            total = total + weight * mx.sum(token_loss * flat_mask) / n_masked
+            total_weight += weight
+    return total / total_weight
