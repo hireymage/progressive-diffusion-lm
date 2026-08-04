@@ -52,8 +52,8 @@ Poslední aktualizace: 2026-08-04
 ## 🔜 Přímé další kroky (doporučené)
 
 ### 1. Cleanup iCloud duplikátů
-- [ ] Smazat soubory `* 2.json`, `* 2.md`, `* 2.csv` z `results/` a `docs/`
-- [ ] Příčina: iCloud sync generuje kopie při konfliktu
+- [x] Smazat soubory `* 2.json`, `* 2.md`, `* 2.csv` z `results/` a `docs/`
+- [x] Příčina: iCloud sync generuje kopie při konfliktu
 
 ### 2. PTQ studie (checkpointy existují)
 - [ ] Porovnat Direct/Naive PTQ vs. native QAT (Q1, Q2, Q3, Q4)
