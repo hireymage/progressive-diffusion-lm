@@ -81,7 +81,9 @@ class ModelConfig:
         return self.vocab_size
 
 
-LAYERWISE_PRECISIONS = ("q1", "q2", "q4", "q8", "fp16")
+# ``fp32`` is deliberately explicit.  It is not the legacy ``bits=16``
+# shorthand, whose meaning belongs to the older diffusion prototype.
+LAYERWISE_PRECISIONS = ("q1", "q2", "q4", "q8", "fp16", "fp32")
 
 
 @dataclass

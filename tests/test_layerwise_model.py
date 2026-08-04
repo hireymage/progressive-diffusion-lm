@@ -50,6 +50,15 @@ def test_fp16_mode_uses_fp16_matmul_and_returns_finite_residual_dtype():
     assert np.isfinite(np.array(output)).all()
 
 
+def test_fp32_mode_is_an_actual_fp32_linear_path():
+    linear = LayerwiseLinear(8, 4, "fp32")
+    x = mx.random.normal((2, 8)).astype(mx.float16)
+    output = linear(x)
+    mx.eval(output)
+    assert output.dtype == mx.float32
+    np.testing.assert_allclose(np.array(output), np.array(x.astype(mx.float32) @ linear.weight.T + linear.bias), rtol=1e-5)
+
+
 def test_intermediate_shared_head_and_inside_group_exit():
     cfg = tiny_cfg()
     model = LayerwiseProgressiveLM(cfg)
@@ -59,6 +68,15 @@ def test_intermediate_shared_head_and_inside_group_exit():
     assert list(outputs) == [5, 6, 7, 8]
     assert all(logits.shape == (1, 6, cfg.vocab_size) for logits in outputs.values())
     assert model.proxy_cost(8) == 11
+
+
+def test_requested_intermediates_do_not_materialize_other_exit_logits():
+    cfg = tiny_cfg()
+    model = LayerwiseProgressiveLM(cfg)
+    outputs = model.forward_intermediates(mx.array([[1, 2, 3, 4, 5, 6]]), exit_layer=10,
+                                         requested_layers=(5, 10))
+    mx.eval(outputs)
+    assert list(outputs) == [5, 10]
 
 
 def test_early_exit_is_sequence_wide_and_can_stop_at_layer_eight():

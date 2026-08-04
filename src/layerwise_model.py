@@ -42,7 +42,7 @@ def fp32_reference_cost(n_layers: int) -> int:
 
 
 class LayerwiseLinear(nn.Module):
-    """QAT linear layer with explicit ``fp16`` execution mode.
+    """QAT linear layer with explicit FP16 and FP32 execution modes.
 
     Master weights and checkpoints remain FP32.  ``fp16`` casts both the
     activation and weight for the matmul, then returns FP32 for stable residual
@@ -54,7 +54,7 @@ class LayerwiseLinear(nn.Module):
     def __init__(self, in_features: int, out_features: int, precision: str,
                  bias: bool = True):
         super().__init__()
-        if precision not in PRECISION_PROXY_COSTS or precision == "fp32":
+        if precision not in PRECISION_PROXY_COSTS:
             raise ValueError(f"unsupported layer precision {precision!r}")
         bound = (6.0 / (in_features + out_features)) ** 0.5
         self.weight = mx.random.uniform(-bound, bound, (out_features, in_features))
@@ -66,6 +66,10 @@ class LayerwiseLinear(nn.Module):
             # This is deliberately not legacy bits=16: the matmul itself uses
             # fp16 operands.  Residual streams remain fp32 afterwards.
             out = self.fp16_matmul(x).astype(mx.float32)
+        elif self.precision == "fp32":
+            # Keep this a distinct, actual FP32 matmul path; it is the fair
+            # all-FP32 control for the layer-wise pilot.
+            out = x.astype(mx.float32) @ self.weight.astype(mx.float32).T
         else:
             out = x @ ste_quantize(self.weight, self._Q_BITS[self.precision]).T
         if self.bias is not None:
@@ -155,6 +159,7 @@ class LayerwiseProgressiveLM(nn.Module):
     def forward_intermediates(
         self, token_ids: mx.array, pad_mask: mx.array | None = None,
         exit_layer: int | None = None,
+        requested_layers: tuple[int, ...] | None = None,
     ) -> dict[int, mx.array]:
         """Return shared-head logits after all eligible executed layers."""
         batch, length = token_ids.shape
@@ -166,10 +171,13 @@ class LayerwiseProgressiveLM(nn.Module):
             raise ValueError("exit_layer must be from min_exit_layer through n_layers")
         x = self.token_embed(token_ids) + self.pos_embed(mx.arange(length)[None, :])
         attention_mask = pad_mask[:, None, None, :] if pad_mask is not None else None
+        requested = set(requested_layers) if requested_layers is not None else set(range(self.cfg.min_exit_layer, exit_layer + 1))
+        if not requested.issubset(set(range(self.cfg.min_exit_layer, exit_layer + 1))):
+            raise ValueError("requested_layers must be eligible executed exit layers")
         logits_by_layer: dict[int, mx.array] = {}
         for index, block in enumerate(self.blocks, start=1):
             x = block(x, attention_mask)
-            if index >= self.cfg.min_exit_layer:
+            if index in requested:
                 logits_by_layer[index] = self._head(x)
             if index == exit_layer:
                 break
@@ -217,16 +225,36 @@ class LayerwiseProgressiveLM(nn.Module):
 def masked_deep_supervision_loss(
     model: LayerwiseProgressiveLM, token_ids: mx.array, targets: mx.array,
     masked_positions: mx.array, pad_mask: mx.array | None = None,
+    supervised_layers: tuple[int, ...] | None = None,
 ) -> mx.array:
-    """Average masked reconstruction CE across every eligible intermediate exit."""
-    outputs = model.forward_intermediates(token_ids, pad_mask)
-    losses = []
+    """Streaming masked CE over selected exits, without retaining 21 logits.
+
+    The sum is constructed during the single forward pass.  This keeps only
+    the current vocab-logit tensor live from Python's point of view, unlike
+    ``forward_intermediates`` which is intentionally retained for analysis.
+    MLX still keeps the required autograd graph, so the peak is not identical
+    to inference; it does avoid an avoidable Python container of logits.
+    """
+    selected = set(supervised_layers or tuple(range(model.cfg.min_exit_layer, model.cfg.n_layers + 1)))
+    if not selected or not selected.issubset(set(range(model.cfg.min_exit_layer, model.cfg.n_layers + 1))):
+        raise ValueError("supervised_layers must be eligible, non-empty exit layers")
+    batch, length = token_ids.shape
+    if length > model.cfg.max_seq_len:
+        raise ValueError("token sequence exceeds max_seq_len")
     flat_mask = masked_positions.reshape(-1).astype(mx.float32)
     n_masked = mx.maximum(mx.sum(flat_mask), mx.array(1.0))
-    for logits in outputs.values():
-        flat_logits = logits.reshape(-1, logits.shape[-1])
-        flat_targets = targets.reshape(-1)
-        log_probs = nn.log_softmax(flat_logits, axis=-1)
-        token_loss = -log_probs[mx.arange(flat_logits.shape[0]), flat_targets]
-        losses.append(mx.sum(token_loss * flat_mask) / n_masked)
-    return sum(losses) / len(losses)
+    flat_targets = targets.reshape(-1)
+    x = model.token_embed(token_ids) + model.pos_embed(mx.arange(length)[None, :])
+    attention_mask = pad_mask[:, None, None, :] if pad_mask is not None else None
+    total = mx.array(0.0)
+    count = 0
+    for index, block in enumerate(model.blocks, start=1):
+        x = block(x, attention_mask)
+        if index in selected:
+            logits = model._head(x)
+            flat_logits = logits.reshape(-1, logits.shape[-1])
+            log_probs = nn.log_softmax(flat_logits.astype(mx.float32), axis=-1)
+            token_loss = -log_probs[mx.arange(flat_logits.shape[0]), flat_targets]
+            total = total + mx.sum(token_loss * flat_mask) / n_masked
+            count += 1
+    return total / count
