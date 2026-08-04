@@ -28,7 +28,8 @@ sys.path.insert(0, str(ROOT))
 from scripts.layerwise_pilot import select_cache
 from src.config import LayerwiseModelConfig
 from src.data import load_tokenizer
-from src.layerwise_model import LayerwiseProgressiveLM, masked_deep_supervision_loss
+from src.layerwise_model import (LayerwiseProgressiveLM, masked_deep_supervision_loss,
+                                 proxy_cost_for_schedule)
 
 MASK_RATES = (0.15, 0.30, 0.50, 0.75, 1.00)
 PROGRESSIVE_PRECISIONS = ["q1"] * 5 + ["q2"] * 5 + ["q4"] * 5 + ["q8"] * 5 + ["fp16"] * 5
@@ -118,7 +119,8 @@ def aggregate_masked_metrics(rows: list[dict]) -> dict:
 
 
 def evaluate_in_chunks(model: LayerwiseProgressiveLM, targets_np: np.ndarray, mask_np: np.ndarray,
-                       batch_size: int, capture_reconstructions: int = 0) -> tuple[dict, list[np.ndarray]]:
+                       batch_size: int, capture_reconstructions: int = 0,
+                       exit_layer: int | None = None) -> tuple[dict, list[np.ndarray]]:
     """Evaluate without materialising logits for more than one small batch.
 
     ``capture_reconstructions`` is deliberately capped by callers at two; the
@@ -133,7 +135,7 @@ def evaluate_in_chunks(model: LayerwiseProgressiveLM, targets_np: np.ndarray, ma
         x = mx.array(np.where(mask, model.cfg.mask_token_id(), target), dtype=mx.int32)
         targets = mx.array(target, dtype=mx.int32)
         mask_mx = mx.array(mask)
-        logits = model(x, exit_layer=model.cfg.n_layers)
+        logits = model(x, exit_layer=model.cfg.n_layers if exit_layer is None else exit_layer)
         rows.append(masked_metrics(logits, targets, mask_mx))
         needed = capture_reconstructions - len(reconstructions)
         if needed > 0:
@@ -192,6 +194,24 @@ def load_weights_only(model: LayerwiseProgressiveLM, checkpoint: Path) -> None:
     except TypeError:  # MLX versions before strict= support
         model.load_weights(weights)
     mx.eval(model.parameters())
+
+
+def build_exit_sweep_model(a, vocab_size: int) -> LayerwiseProgressiveLM:
+    """Build a progressive model whose requested exits are always eligible.
+
+    Checkpoint tensor shapes do not depend on ``min_exit_layer``.  This keeps
+    an evaluation sweep independent from whether the original run used an
+    auxiliary intermediate-loss objective.
+    """
+    if a.model_variant != "progressive" or a.n_layers != 25:
+        raise ValueError("exit-sweep requires --model-variant progressive and --n-layers 25")
+    layers = tuple(layer for layer, _ in a.milestone_weights)
+    if not layers or any(layer < 1 or layer > a.n_layers for layer in layers):
+        raise ValueError("exit-sweep milestone layers must be within the model")
+    cfg = LayerwiseModelConfig(vocab_size=vocab_size, d_model=a.d_model, d_ff=a.d_ff,
+        n_heads=a.n_heads, n_layers=a.n_layers, min_exit_layer=min(layers),
+        max_seq_len=256, layer_precisions=PROGRESSIVE_PRECISIONS)
+    return LayerwiseProgressiveLM(cfg)
 
 
 def run_frequency(a, train, val, tokenizer) -> dict:
@@ -343,9 +363,40 @@ def run_mask_sweep(a, train, val, tokenizer) -> dict:
             "limits": "This measures one supplied FP32 layer-wise checkpoint; it does not evaluate random initialization or legacy diffusion checkpoints."}
 
 
+def run_exit_sweep(a, train) -> dict:
+    """Measure fixed-mask reconstruction at selected progressive exits.
+
+    Each exit is evaluated in a separate chunked pass.  In particular, this
+    avoids keeping five [batch, sequence, vocab] logits tensors alive merely
+    to produce a layer comparison.
+    """
+    if a.eval_sequences < 1:
+        raise ValueError("--eval-sequences must be positive for exit-sweep")
+    sample = np.asarray(train[:min(a.eval_sequences, len(train))], dtype=np.int32)
+    if len(sample) < a.eval_sequences:
+        raise ValueError("cache has fewer rows than --eval-sequences")
+    model = build_exit_sweep_model(a, a.vocab_size)
+    load_weights_only(model, a.checkpoint)
+    mask_seed = a.seed + 900_000
+    mask_np = deterministic_mask(sample.shape, a.gate_mask_rate, mask_seed)
+    rows = []
+    for layer, _weight in a.milestone_weights:
+        metrics, _ = evaluate_in_chunks(model, sample, mask_np, a.eval_batch_size,
+                                        exit_layer=layer)
+        metrics.update({"layer": layer,
+                        "precision": model.cfg.layer_precisions[layer - 1],
+                        "proxy_cost": proxy_cost_for_schedule(model.cfg.layer_precisions, layer)})
+        rows.append(metrics)
+    return {"mode": "exit-sweep", "checkpoint": str(a.checkpoint), "checkpoint_loaded": True,
+            "eval_sequence_indices": list(range(a.eval_sequences)),
+            "masking": {"rate": a.gate_mask_rate, "seed": mask_seed},
+            "rows": rows,
+            "limits": "Each row uses the same fixed training sequences and exact mask; exits are evaluated in separate chunks."}
+
+
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--mode", required=True, choices=("frequency", "overfit", "mask-sweep"))
+    p.add_argument("--mode", required=True, choices=("frequency", "overfit", "mask-sweep", "exit-sweep"))
     p.add_argument("--cache-dir", type=Path, default=ROOT / "data/cache")
     p.add_argument("--tokenizer", type=Path, default=ROOT / "tokenizer/wiki_bpe")
     p.add_argument("--output", type=Path, default=ROOT / "results/layerwise/diagnostics.json")
@@ -354,7 +405,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--n-heads", type=int, default=4); p.add_argument("--n-layers", type=int, default=25)
     p.add_argument("--model-variant", choices=("fp32", "progressive"), default="fp32")
     p.add_argument("--vocab-size", type=int, default=None, help="normally inferred from tokenizer")
-    p.add_argument("--checkpoint", type=Path, help="FP32 layer-wise .npz required for mask-sweep")
+    p.add_argument("--checkpoint", type=Path, help="layer-wise .npz required for mask-sweep or exit-sweep")
     p.add_argument("--eval-sequences", type=int, default=32); p.add_argument("--eval-batch-size", type=int, default=2)
     p.add_argument("--overfit-sequences", type=int, default=100); p.add_argument("--steps", type=int, default=1000)
     p.add_argument("--batch-size", type=int, default=4); p.add_argument("--lr", type=float, default=1e-3)
@@ -371,8 +422,15 @@ def parser() -> argparse.ArgumentParser:
     return p
 
 
+def validate_mode_args(a) -> None:
+    """Validate mode-specific inputs before accessing cache or tokenizer."""
+    if a.mode in ("mask-sweep", "exit-sweep") and a.checkpoint is None:
+        raise ValueError(f"--checkpoint is required for {a.mode} (weights are never random)")
+
+
 def main() -> None:
     a = parser().parse_args()
+    validate_mode_args(a)
     if a.steps < 1 or a.steps > 40000:
         raise ValueError("--steps must be in [1, 40000]")
     if a.strategy:
@@ -397,13 +455,12 @@ def main() -> None:
     a.vocab_size = inferred_vocab if a.vocab_size is None else a.vocab_size
     if a.vocab_size != inferred_vocab:
         raise ValueError("--vocab-size must match the local tokenizer; checkpoint compatibility cannot be guessed")
-    if a.mode == "mask-sweep" and a.checkpoint is None:
-        raise ValueError("--checkpoint is required for mask-sweep (weights are never random)")
     result = {"offline_only": True, "cache_meta_path": str(meta_path), "cache_metadata": meta,
               "tokenizer": str(a.tokenizer), "seed": a.seed}
     if a.mode == "frequency": result["result"] = run_frequency(a, train, val, tokenizer)
     elif a.mode == "overfit": result["result"] = run_overfit(a, train, tokenizer)
-    else: result["result"] = run_mask_sweep(a, train, val, tokenizer)
+    elif a.mode == "mask-sweep": result["result"] = run_mask_sweep(a, train, val, tokenizer)
+    else: result["result"] = run_exit_sweep(a, train)
     atomic_json_write(a.output, result)
     print(json.dumps(result, indent=2))
 

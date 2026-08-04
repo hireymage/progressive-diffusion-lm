@@ -4,11 +4,13 @@ import json
 from types import SimpleNamespace
 
 import pytest
+import scripts.layerwise_diagnostics as diagnostics
 
 from scripts.layerwise_diagnostics import (
     aggregate_masked_metrics, atomic_json_write, count_tokens, deterministic_mask,
     frequency_summary, gate_streak, parse_mask_schedule, schedule_rate,
-    build_model, run_overfit, validate_resume_metadata,
+    build_exit_sweep_model, build_model, parser, run_exit_sweep, run_overfit,
+    validate_mode_args, validate_resume_metadata,
 )
 
 
@@ -112,3 +114,38 @@ def test_weighted_progressive_overfit_smoke_has_eligible_milestone_exits(tmp_pat
     assert result["architecture"]["layer_precisions"][:5] == ["q1"] * 5
     assert result["architecture"]["n_layers"] == 25
     assert (args.checkpoint_dir / "latest.npz").exists()
+
+
+def test_exit_sweep_uses_one_deterministic_mask_for_all_exits_and_default_costs(monkeypatch, tmp_path):
+    args = SimpleNamespace(
+        eval_sequences=2, vocab_size=16, d_model=8, d_ff=16, n_heads=2, n_layers=25,
+        model_variant="progressive", auxiliary_loss="final-only", seed=21,
+        gate_mask_rate=.5, eval_batch_size=1, checkpoint=tmp_path / "final-only.npz",
+        milestone_weights=((5, .1), (10, .2), (15, .3), (20, .4), (25, 1.0)),
+    )
+    masks, exits = [], []
+    monkeypatch.setattr(diagnostics, "load_weights_only", lambda model, checkpoint: None)
+    def fake_evaluate(model, targets, mask, batch_size, capture_reconstructions=0, exit_layer=None):
+        masks.append(mask.copy())
+        exits.append(exit_layer)
+        return ({"loss": float(exit_layer), "accuracy": .5, "masked_tokens": int(mask.sum())}, [])
+    monkeypatch.setattr(diagnostics, "evaluate_in_chunks", fake_evaluate)
+    result = run_exit_sweep(args, np.ones((2, 256), dtype=np.int32))
+    assert exits == [5, 10, 15, 20, 25]
+    assert all(np.array_equal(masks[0], mask) for mask in masks[1:])
+    assert result["masking"] == {"rate": .5, "seed": 900021}
+    assert [row["proxy_cost"] for row in result["rows"]] == [5, 15, 35, 75, 155]
+    assert [row["precision"] for row in result["rows"]] == ["q1", "q2", "q4", "q8", "fp16"]
+
+
+def test_exit_sweep_builder_enables_milestones_even_for_final_only_checkpoints():
+    args = SimpleNamespace(model_variant="progressive", n_layers=25, vocab_size=16,
+        d_model=8, d_ff=16, n_heads=2, auxiliary_loss="final-only",
+        milestone_weights=((5, .1), (10, .2), (15, .3), (20, .4), (25, 1.0)))
+    assert build_exit_sweep_model(args, 16).cfg.min_exit_layer == 5
+
+
+def test_exit_sweep_parser_and_checkpoint_requirement():
+    assert "exit-sweep" in parser()._option_string_actions["--mode"].choices
+    with pytest.raises(ValueError, match="--checkpoint is required for exit-sweep"):
+        validate_mode_args(SimpleNamespace(mode="exit-sweep", checkpoint=None))
