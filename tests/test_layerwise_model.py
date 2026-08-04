@@ -1,6 +1,7 @@
 """Focused tests for the separate layer-wise grouped-precision prototype."""
 
 import numpy as np
+import pytest
 import mlx.core as mx
 import mlx.nn as nn
 import mlx.optimizers as optim
@@ -9,7 +10,7 @@ import mlx.utils
 from src.config import LayerwiseModelConfig
 from src.layerwise_model import (
     LayerwiseLinear, LayerwiseProgressiveLM, fp32_reference_cost, masked_deep_supervision_loss,
-    proxy_cost_for_schedule,
+    build_layer_precision_schedule, proxy_cost_for_schedule,
 )
 
 
@@ -37,6 +38,77 @@ def test_precisions_are_assigned_to_the_actual_blocks():
     assert model.blocks[10].ff2.precision == "q4"
     assert model.blocks[15].attn.out_proj.precision == "q8"
     assert model.blocks[20].ff1.precision == "fp16"
+
+
+def test_q8_only_schedule_runs_every_layer_and_updates_proxy_cost():
+    model = LayerwiseProgressiveLM(tiny_cfg())
+    assert model.use_available_precisions(["q8"]) == ["q8"] * 25
+    assert model.cfg.layer_precisions == ["q8"] * 25
+    assert [block.precision for block in model.blocks] == ["q8"] * 25
+    assert model.proxy_cost(5) == 40
+    logits = model(mx.array([[1, 2, 3, 4, 5, 6]]))
+    result = model.early_exit(mx.array([[1, 2, 3, 4, 5, 6]]), margin_threshold=-1.0)
+    mx.eval(logits, result.logits)
+    assert logits.shape == (1, 6, model.cfg.vocab_size)
+    assert result.exit_layer == model.cfg.min_exit_layer
+    assert result.proxy_cost == 40
+
+
+def test_q8_and_fp16_split_preserves_master_weight_object_and_value():
+    model = LayerwiseProgressiveLM(tiny_cfg())
+    block = model.blocks[0]
+    linears = (block.attn.q_proj, block.attn.k_proj, block.attn.v_proj,
+               block.attn.out_proj, block.ff1, block.ff2)
+    weights = [linear.weight for linear in linears]
+    before = [np.array(weight) for weight in weights]
+    model.use_available_precisions(["fp16", "q8"])
+    assert model.cfg.layer_precisions == ["q8"] * 13 + ["fp16"] * 12
+    for linear, weight, value in zip(linears, weights, before):
+        assert linear.precision == "q8"
+        assert linear.weight is weight
+        np.testing.assert_array_equal(np.array(linear.weight), value)
+    late_block = model.blocks[13]
+    assert all(linear.precision == "fp16" for linear in
+               (late_block.attn.q_proj, late_block.attn.k_proj, late_block.attn.v_proj,
+                late_block.attn.out_proj, late_block.ff1, late_block.ff2))
+    tokens = mx.array([[1, 2, 3, 4, 5, 6]])
+    logits = model(tokens)
+    result = model.early_exit(tokens, margin_threshold=-1.0)
+    mx.eval(logits, result.logits)
+    assert logits.shape == (1, 6, model.cfg.vocab_size)
+    assert result.proxy_cost == 40
+
+
+def test_three_precision_schedule_and_explicit_schedule_switch():
+    assert build_layer_precision_schedule(10, ["fp16", "q8", "q2"]) == ["q2"] * 4 + ["q8"] * 3 + ["fp16"] * 3
+    with pytest.raises(ValueError, match="cannot exceed"):
+        build_layer_precision_schedule(2, ["q1", "q2", "q4"])
+    model = LayerwiseProgressiveLM(tiny_cfg(n_layers=10, min_exit_layer=1,
+                                             layer_precisions=["q8"] * 10))
+    explicit = ["q2", "q8"] * 5
+    model.set_layer_precisions(explicit)
+    assert model.cfg.layer_precisions == explicit
+    assert [block.precision for block in model.blocks] == explicit
+    assert model.proxy_cost(2) == 10
+
+
+def test_invalid_precision_switch_is_atomic_at_every_nested_linear():
+    model = LayerwiseProgressiveLM(tiny_cfg())
+    before = list(model.cfg.layer_precisions)
+    children = [(block.attn.q_proj, block.attn.k_proj, block.attn.v_proj,
+                 block.attn.out_proj, block.ff1, block.ff2) for block in model.blocks]
+    for invalid in (["q8"] * 24, ["q8"] * 24 + ["bogus"], ["q8"] * 24 + ["fp32"]):
+        with pytest.raises(ValueError):
+            model.set_layer_precisions(invalid)
+        assert model.cfg.layer_precisions == before
+        assert [block.precision for block in model.blocks] == before
+        assert all(all(child.precision == before[index] for child in block_children)
+                   for index, block_children in enumerate(children))
+
+
+def test_config_rejects_mixed_fp32_schedule():
+    with pytest.raises(ValueError, match="fp32"):
+        tiny_cfg(layer_precisions=["q8"] * 24 + ["fp32"])
 
 
 def test_fp16_mode_uses_fp16_matmul_and_returns_finite_residual_dtype():

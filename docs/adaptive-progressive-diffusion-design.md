@@ -11,6 +11,16 @@ Datum návrhu: 2026-08-04
 > zůstává historickým vedlejším experimentem, nikoli implementací cílové
 > architektury.
 
+> **Cílová modulární varianta:** Pevné skupiny jsou validační baseline, nikoli
+> konečný distribuční formát. Cílový model má sdílené master váhy a každá jeho
+> vrstva musí být trénovaná pro více přesností. Pokud je dostupná pouze Q8,
+> všech 25 vrstev poběží v Q8. Pokud jsou dostupné Q8 a FP16, hloubka se mezi
+> ně rozdělí (první výchozí politika rovnoměrně, později podle kalibrace a
+> hardwarového benchmarku). Model se musí při tréninku učit různé podporované
+> cesty; samotné přepnutí kvantizace při inference tuto zaměnitelnost
+> nezaručuje. Precision balíčky, manifest a hardwarový výběr cesty jsou další
+> milník po ověření učitelnosti pevné baseline.
+
 ## 1. Cíl
 
 Vytvořit difuzní jazykový model, který generuje blok více tokenů současně a
@@ -61,6 +71,26 @@ kernel. Do té doby měříme algoritmickou práci a simulovaný bitový rozpoč
 nikoli prokázané hardwarové zrychlení.
 
 ## 4. Navržená architektura
+
+### 4.0 Dvě oddělené experimentální úrovně
+
+1. **Pevná baseline:** 5× Q1 → 5× Q2 → 5× Q4 → 5× Q8 → 5× FP16. Slouží k
+   levnému ověření, že se progresivní hloubka a mezivýstupy vůbec naučí.
+2. **Precision-flexible model:** každá vrstva používá jednu z aktuálně
+   dostupných přesností. Jediný stupeň pokryje všechny vrstvy; více stupňů se
+   rozdělí přes hloubku podle zvolené runtime politiky.
+
+Příklady pro 100 vrstev:
+
+```text
+staženo Q8:              100× Q8
+staženo Q8 + FP16:        50× Q8 → 50× FP16
+staženo Q2 + Q8 + FP16:   Q2 → Q8 → FP16 v přibližně třetinách
+```
+
+Runtime přepnutí nad dnešními FP32 master vahami je pouze implementační základ.
+Tvrzení o kvalitě těchto cest bude platné až po společném tréninku se
+vzorkováním různých rozvrhů a po vyhodnocení každé podporované kombinace.
 
 ### 4.1 Základní denoiser
 

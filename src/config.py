@@ -116,6 +116,8 @@ class LayerwiseModelConfig:
         unsupported = sorted(set(self.layer_precisions) - set(LAYERWISE_PRECISIONS))
         if unsupported:
             raise ValueError(f"unsupported layer precisions: {unsupported}")
+        if "fp32" in self.layer_precisions and any(name != "fp32" for name in self.layer_precisions):
+            raise ValueError("fp32 is only supported as an all-layer reference schedule")
         if not 1 <= self.min_exit_layer <= self.n_layers:
             raise ValueError("min_exit_layer must be in [1, n_layers]")
         if self.d_model <= 0 or self.n_heads <= 0 or self.d_model % self.n_heads:

@@ -25,6 +25,36 @@ PRECISION_PROXY_COSTS: Mapping[str, int] = {
 }
 
 
+def build_layer_precision_schedule(n_layers: int, available_precisions: list[str] | tuple[str, ...]) -> list[str]:
+    """Build an even, contiguous low-to-high deployment precision schedule.
+
+    A single available precision therefore runs every layer.  With several
+    precisions, any remainder goes to the earlier (lower-cost) groups.  ``fp32``
+    is retained as a standalone reference mode, rather than a deployable mixed
+    mode, so it may not be combined with the quantized/FP16 choices.
+    """
+    if n_layers <= 0:
+        raise ValueError("n_layers must be positive")
+    precisions = list(available_precisions)
+    if not precisions:
+        raise ValueError("available_precisions must be non-empty")
+    if len(precisions) > n_layers:
+        raise ValueError("available_precisions cannot exceed n_layers")
+    if len(set(precisions)) != len(precisions):
+        raise ValueError("available_precisions must not contain duplicates")
+    unsupported = sorted(set(precisions) - set(PRECISION_PROXY_COSTS))
+    if unsupported:
+        raise ValueError(f"unsupported layer precisions: {unsupported}")
+    if "fp32" in precisions and len(precisions) != 1:
+        raise ValueError("fp32 is only supported as an all-layer reference schedule")
+    ordered = sorted(precisions, key=PRECISION_PROXY_COSTS.__getitem__)
+    base, remainder = divmod(n_layers, len(ordered))
+    schedule: list[str] = []
+    for index, precision in enumerate(ordered):
+        schedule.extend([precision] * (base + (index < remainder)))
+    return schedule
+
+
 def proxy_cost_for_schedule(precisions: list[str], exit_layer: int | None = None) -> int:
     """Cost proxy for executed 1-indexed layers (not packed-model storage)."""
     if exit_layer is None:
@@ -82,6 +112,11 @@ class LayerwiseLinear(nn.Module):
             raise ValueError("fp16_matmul is only valid for precision='fp16'")
         return x.astype(mx.float16) @ self.weight.astype(mx.float16).T
 
+    def set_precision(self, precision: str) -> None:
+        if precision not in PRECISION_PROXY_COSTS:
+            raise ValueError(f"unsupported layer precision {precision!r}")
+        self.precision = precision
+
 
 class LayerwiseAttention(nn.Module):
     def __init__(self, d_model: int, n_heads: int, precision: str, dropout: float):
@@ -108,6 +143,10 @@ class LayerwiseAttention(nn.Module):
         out = (attention @ v).transpose(0, 2, 1, 3).reshape(batch, length, d_model)
         return self.out_proj(out)
 
+    def set_precision(self, precision: str) -> None:
+        for projection in (self.q_proj, self.k_proj, self.v_proj, self.out_proj):
+            projection.set_precision(precision)
+
 
 class LayerwiseTransformerBlock(nn.Module):
     def __init__(self, cfg: LayerwiseModelConfig, precision: str):
@@ -122,6 +161,12 @@ class LayerwiseTransformerBlock(nn.Module):
     def __call__(self, x: mx.array, mask: mx.array | None = None) -> mx.array:
         x = x + self.attn(self.ln1(x), mask)
         return x + self.ff2(nn.gelu(self.ff1(self.ln2(x))))
+
+    def set_precision(self, precision: str) -> None:
+        self.attn.set_precision(precision)
+        self.ff1.set_precision(precision)
+        self.ff2.set_precision(precision)
+        self.precision = precision
 
 
 @dataclass
@@ -155,6 +200,31 @@ class LayerwiseProgressiveLM(nn.Module):
         if self.cfg.tie_word_embeddings:
             return hidden @ self.token_embed.weight[:self.cfg.vocab_size].T + self.lm_head_bias
         return self.lm_head(hidden)
+
+    def set_layer_precisions(self, schedule: list[str] | tuple[str, ...]) -> None:
+        """Activate an explicit per-layer schedule without replacing weights.
+
+        Validation finishes before any block/config mutation, making rejected
+        switches atomic.  This is runtime selection only; packing separate
+        checkpoints and sampling schedules during training remain future work.
+        """
+        validated = list(schedule)
+        if len(validated) != self.cfg.n_layers:
+            raise ValueError("layer precision schedule length must equal n_layers")
+        unsupported = sorted(set(validated) - set(PRECISION_PROXY_COSTS))
+        if unsupported:
+            raise ValueError(f"unsupported layer precisions: {unsupported}")
+        if "fp32" in validated and any(name != "fp32" for name in validated):
+            raise ValueError("fp32 is only supported as an all-layer reference schedule")
+        for block, precision in zip(self.blocks, validated):
+            block.set_precision(precision)
+        self.cfg.layer_precisions = validated
+
+    def use_available_precisions(self, available_precisions: list[str] | tuple[str, ...]) -> list[str]:
+        """Build and activate an even contiguous schedule for installed modes."""
+        schedule = build_layer_precision_schedule(self.cfg.n_layers, available_precisions)
+        self.set_layer_precisions(schedule)
+        return schedule
 
     def forward_intermediates(
         self, token_ids: mx.array, pad_mask: mx.array | None = None,
