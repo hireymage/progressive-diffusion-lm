@@ -295,3 +295,29 @@ První etapa je úspěšná, pokud:
 - výsledky drží napříč více seedy a nejsou odvozeny pouze z jednoho příkladu,
 - report jasně odděluje algoritmickou úsporu od skutečného hardwarového
   zrychlení.
+
+## 13. Implementace M0
+
+První evaluator je dostupný jako `scripts/oracle_m0.py`. Nad identickými
+deterministickými maskovanými vstupy porovnává Q1, Q2, Q4, Q8 a FP32, měří
+opravené i nově zavedené chyby a ukládá `summary.json` a kompaktní
+`per_token.csv`. Plné vocabulary logity se neukládají a při běhu se zpracovává
+vždy jen jedna fixture dávka, aby analýza neměla vysoké nároky na paměť.
+
+Příklad nad existujícím 10k FP32 checkpointem:
+
+```bash
+.venv/bin/python scripts/oracle_m0.py \
+  --config configs/full_baseline.json \
+  --checkpoint checkpoints/full_baseline/step_0010000.npz \
+  --validation-data data/cache/val_seq256_art50000_bytes500000000.npy \
+  --output-dir results/m0/<run-name> \
+  --eval-steps 20 \
+  --fixture-seed 20260804
+```
+
+Výstup rozlišuje konečnou zvolenou přesnost od kumulativní ceny všech
+navštívených stupňů. Wall-clock údaje popisují dnešní simulované plné přepočty,
+nikoli rychlost budoucích low-bit kernelů. Protože uvedený checkpoint byl učen
+ve FP32, jeho Q1/Q2/Q4/Q8 výsledky jsou pouze předběžná M0/PTQ sonda, nikoli test
+budoucího modelu učeného současně ve všech přesnostech.
