@@ -55,15 +55,19 @@ chybnou na správnou.
 
 ## Proxy výpočet
 
-Původní publikovaný souhrn v tomto pilotu nesprávně započítal interní
-identifikátor `16` jako 16bitový průchod. Ve skutečnosti jde o identity FP32
-cestu. Uložené výsledkové artefakty se zpětně nemění, proto zde původní hodnoty
-neinterpretujeme jako platné proxy náklady.
+Původní souhrn tohoto pilotu nesprávně započítal interní identifikátor `16`
+jako 16bitový průchod. Ve skutečnosti jde o identity FP32 cestu. Běhy byly proto
+zopakovány na opraveném commitu se stejnými vstupy a seedy. Všech 33 338
+per-token záznamů má shodné predikce a kvalitativní metriky; změnilo se pouze
+proxy účetnictví.
 
 - skutečně měřená ladder: Q1 → Q2 → Q4 → Q8 → FP32
 - správná plná proxy cena této ladder: 47 (`1 + 2 + 4 + 8 + 32`)
 - jeden FP32 referenční průchod: 32
 - zastavení po Q4 by stálo 7 (`1 + 2 + 4`)
+- opravený oracle průměr: 44,605 proxy jednotek na token
+- oracle úspora proti celé měřené ladder: 5,097 %
+- oracle cena proti jednomu FP32 průchodu: 1,394×, tedy přibližně o 39,4 % více
 
 Cílová budoucí ladder je Q1 → Q2 → Q4 → Q8 → FP16 s cenou 31 proti FP32=32.
 Skutečný FP16 stupeň však v tomto pilotu ani v M0 evaluatoru dosud neexistuje.

@@ -1,14 +1,15 @@
 {
   "oracle": {
-    "always_full_ladder_proxy_bits_per_token": 31,
-    "cumulative_proxy_cost_vs_full_ladder": 0.9468256413535714,
-    "cumulative_proxy_cost_vs_single_fp32": 1.8344746801225447,
-    "cumulative_proxy_savings_vs_full_ladder": 0.05317435864642861,
-    "cumulative_proxy_savings_vs_single_fp32": -0.8344746801225447,
-    "mean_cumulative_proxy_bits": 29.351594881960715,
+    "always_full_ladder_proxy_bits_per_token": 47,
+    "cumulative_proxy_cost_vs_full_ladder": 0.9460320625146182,
+    "cumulative_proxy_cost_vs_single_fp32": 1.3894845918183456,
+    "cumulative_proxy_savings_vs_full_ladder": 0.053967937485381756,
+    "cumulative_proxy_savings_vs_single_fp32": -0.3894845918183456,
+    "mean_cumulative_proxy_bits": 44.46350693818706,
     "mean_terminal_selected_bits": 15.175797440980357,
-    "note": "Terminal selected bits are a precision outcome, not compute. Cumulative proxy cost sums each visited precision level and assumes cost scales linearly with weight bits. M0 currently full-recomputes every level independently, so these are not measured wall-clock savings or residual-reuse costs.",
-    "quality_masked_accuracy": 0.05550549648585331
+    "note": "Internal precision 16 is the FP32 identity path, not FP16, and has proxy cost 32. Terminal selected bits are a precision outcome, not compute. Cumulative proxy cost sums explicit costs for each visited level. M0 currently full-recomputes every level independently, so these are not measured wall-clock savings or residual-reuse costs.",
+    "quality_masked_accuracy": 0.05550549648585331,
+    "single_fp32_proxy_bits_per_token": 32
   },
   "per_precision": {
     "1": {
@@ -59,6 +60,13 @@
     8,
     16
   ],
+  "precision_proxy_costs": {
+    "1": 1,
+    "16": 32,
+    "2": 2,
+    "4": 4,
+    "8": 8
+  },
   "run": {
     "batch_size": 8,
     "checkpoint_path": "checkpoints/full_baseline/step_0010000.npz",
@@ -68,33 +76,33 @@
     "fixture_batches": 10,
     "fixture_seed": 20260805,
     "full_logits_saved": false,
-    "git_commit": "b2c5802d1c7160d195dc07029164b0ac531dd817",
+    "git_commit": "38f2b2f20fabf99fe219c7a031595ba91d889828",
     "hostname": "Hozak--Mac-mini-2.local",
     "machine": "arm64",
     "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
     "simulated_wall_clock": {
       "1": {
-        "elapsed_seconds": 3.160907791228965,
-        "mean_batch_seconds": 0.3160907791228965
+        "elapsed_seconds": 1.8496385820908472,
+        "mean_batch_seconds": 0.18496385820908473
       },
       "16": {
-        "elapsed_seconds": 1.2929333748761564,
-        "mean_batch_seconds": 0.12929333748761565
+        "elapsed_seconds": 1.2021861667744815,
+        "mean_batch_seconds": 0.12021861667744815
       },
       "2": {
-        "elapsed_seconds": 1.6006467920960858,
-        "mean_batch_seconds": 0.1600646792096086
+        "elapsed_seconds": 1.5455523333512247,
+        "mean_batch_seconds": 0.15455523333512247
       },
       "4": {
-        "elapsed_seconds": 1.6963940410641953,
-        "mean_batch_seconds": 0.16963940410641953
+        "elapsed_seconds": 1.6370092500001192,
+        "mean_batch_seconds": 0.16370092500001193
       },
       "8": {
-        "elapsed_seconds": 1.7610241249203682,
-        "mean_batch_seconds": 0.17610241249203681
+        "elapsed_seconds": 1.6408321257913485,
+        "mean_batch_seconds": 0.16408321257913486
       }
     },
-    "utc_timestamp": "2026-08-04T07:38:09.404383+00:00",
+    "utc_timestamp": "2026-08-04T07:58:02.879479+00:00",
     "validation_data_path": "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/data/cache/val_seq256_art50000_bytes500000000.npy",
     "validation_data_sha256": "f691bc4100cd534271e2558b49a26365c1135e8c5f86c16fe5823e9a0a5fdb30",
     "validation_data_source": "explicit_npy",

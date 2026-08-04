@@ -1,3 +1,8 @@
+import json
+import subprocess
+import sys
+from pathlib import Path
+
 import pytest
 
 from scripts.aggregate_oracle_m0 import aggregate_summaries
@@ -55,3 +60,16 @@ def test_aggregate_oracle_rejects_legacy_proxy_accounting():
     del legacy["precision_proxy_costs"]
     with pytest.raises(ValueError, match="rerun oracle_m0.py"):
         aggregate_summaries([legacy])
+
+
+def test_aggregate_oracle_cli_runs_from_repository_root(tmp_path):
+    summary_path = tmp_path / "summary.json"
+    summary_path.write_text(json.dumps(_summary("a", 1, 10, 0.2, 2)))
+    output_path = tmp_path / "aggregate.json"
+    root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        [sys.executable, "scripts/aggregate_oracle_m0.py", str(summary_path), "--output", str(output_path)],
+        cwd=root, capture_output=True, text=True, check=True,
+    )
+    assert f"Wrote {output_path}" in result.stdout
+    assert json.loads(output_path.read_text())["total_runs"] == 1

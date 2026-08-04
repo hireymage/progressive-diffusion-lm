@@ -1,12 +1,12 @@
 {
   "across_run_ranges": {
     "oracle_cumulative_proxy_savings_vs_full_ladder": {
-      "max": 0.05317435864642861,
-      "min": 0.04811989242497339
+      "max": 0.053967937485381756,
+      "min": 0.04893216906195874
     },
     "oracle_cumulative_proxy_savings_vs_single_fp32": {
-      "max": -0.8344746801225447,
-      "min": -0.8442677084266141
+      "max": -0.3894845918183456,
+      "min": -0.3968808766902481
     },
     "oracle_quality_masked_accuracy": {
       "max": 0.05550549648585331,
@@ -40,7 +40,7 @@
     "checkpoint_sha256": "ce27e61d9d2c5dead5a819c991902c76acff04e52832038fecd1f8f1fdc02ba4",
     "checkpoint_step": 10000,
     "config_path": "configs/full_baseline.json",
-    "git_commit": "b2c5802d1c7160d195dc07029164b0ac531dd817",
+    "git_commit": "38f2b2f20fabf99fe219c7a031595ba91d889828",
     "precision_order": [
       1,
       2,
@@ -56,18 +56,19 @@
     "Hozak--MacBook-Air-2.local"
   ],
   "oracle": {
-    "always_full_ladder_proxy_bits_per_token": 31,
-    "cumulative_proxy_cost_vs_full_ladder": 0.9498528270558251,
-    "cumulative_proxy_cost_vs_single_fp32": 1.8403398524206611,
-    "cumulative_proxy_savings_vs_full_ladder": 0.05014717294417492,
-    "cumulative_proxy_savings_vs_single_fp32": -0.8403398524206611,
-    "mean_cumulative_proxy_bits": 29.445437638730578,
+    "always_full_ladder_proxy_bits_per_token": 47,
+    "cumulative_proxy_cost_vs_full_ladder": 0.949033943758512,
+    "cumulative_proxy_cost_vs_single_fp32": 1.3938936048953146,
+    "cumulative_proxy_savings_vs_full_ladder": 0.05096605624148798,
+    "cumulative_proxy_savings_vs_single_fp32": -0.39389360489531455,
+    "mean_cumulative_proxy_bits": 44.604595356650066,
     "mean_terminal_selected_bits": 15.222718819365289,
     "quality_masked_accuracy": 0.052552642630031794,
-    "reconstructed_cumulative_proxy_bits_sum": 981652.0,
+    "reconstructed_cumulative_proxy_bits_sum": 1487028.0,
     "reconstructed_oracle_correct_tokens": 1752.0,
     "reconstructed_terminal_selected_bits_sum": 507495.0,
-    "reconstruction_note": "Counts and sums are reconstructed as reported per-run mean \u00d7 masked-token count; floating-point roundoff is possible."
+    "reconstruction_note": "Counts and sums are reconstructed as reported per-run mean \u00d7 masked-token count; floating-point roundoff is possible.",
+    "single_fp32_proxy_bits_per_token": 32
   },
   "per_precision": {
     "1": {
@@ -118,6 +119,13 @@
     8,
     16
   ],
+  "precision_proxy_costs": {
+    "1": 1,
+    "16": 32,
+    "2": 2,
+    "4": 4,
+    "8": 8
+  },
   "seeds": [
     20260804,
     20260805,
@@ -131,98 +139,98 @@
   "timing_by_host": {
     "Hozak--Mac-mini-2.local": {
       "1": {
-        "max_batch_seconds": 0.3160907791228965,
-        "min_batch_seconds": 0.3160907791228965,
+        "max_batch_seconds": 0.18496385820908473,
+        "min_batch_seconds": 0.18496385820908473,
         "runs": 1,
-        "total_elapsed_seconds": 3.160907791228965
+        "total_elapsed_seconds": 1.8496385820908472
       },
       "16": {
-        "max_batch_seconds": 0.12929333748761565,
-        "min_batch_seconds": 0.12929333748761565,
+        "max_batch_seconds": 0.12021861667744815,
+        "min_batch_seconds": 0.12021861667744815,
         "runs": 1,
-        "total_elapsed_seconds": 1.2929333748761564
+        "total_elapsed_seconds": 1.2021861667744815
       },
       "2": {
-        "max_batch_seconds": 0.1600646792096086,
-        "min_batch_seconds": 0.1600646792096086,
+        "max_batch_seconds": 0.15455523333512247,
+        "min_batch_seconds": 0.15455523333512247,
         "runs": 1,
-        "total_elapsed_seconds": 1.6006467920960858
+        "total_elapsed_seconds": 1.5455523333512247
       },
       "4": {
-        "max_batch_seconds": 0.16963940410641953,
-        "min_batch_seconds": 0.16963940410641953,
+        "max_batch_seconds": 0.16370092500001193,
+        "min_batch_seconds": 0.16370092500001193,
         "runs": 1,
-        "total_elapsed_seconds": 1.6963940410641953
+        "total_elapsed_seconds": 1.6370092500001192
       },
       "8": {
-        "max_batch_seconds": 0.17610241249203681,
-        "min_batch_seconds": 0.17610241249203681,
+        "max_batch_seconds": 0.16408321257913486,
+        "min_batch_seconds": 0.16408321257913486,
         "runs": 1,
-        "total_elapsed_seconds": 1.7610241249203682
+        "total_elapsed_seconds": 1.6408321257913485
       }
     },
     "Hozak--Mac-mini.local": {
       "1": {
-        "max_batch_seconds": 0.4547924917016644,
-        "min_batch_seconds": 0.4547924917016644,
+        "max_batch_seconds": 0.43444565031095406,
+        "min_batch_seconds": 0.43444565031095406,
         "runs": 1,
-        "total_elapsed_seconds": 4.547924917016644
+        "total_elapsed_seconds": 4.344456503109541
       },
       "16": {
-        "max_batch_seconds": 0.1558263334154617,
-        "min_batch_seconds": 0.1558263334154617,
+        "max_batch_seconds": 0.16355384589987806,
+        "min_batch_seconds": 0.16355384589987806,
         "runs": 1,
-        "total_elapsed_seconds": 1.558263334154617
+        "total_elapsed_seconds": 1.6355384589987807
       },
       "2": {
-        "max_batch_seconds": 0.20786731239641085,
-        "min_batch_seconds": 0.20786731239641085,
+        "max_batch_seconds": 0.20339354999596254,
+        "min_batch_seconds": 0.20339354999596254,
         "runs": 1,
-        "total_elapsed_seconds": 2.0786731239641085
+        "total_elapsed_seconds": 2.0339354999596253
       },
       "4": {
-        "max_batch_seconds": 0.218836129095871,
-        "min_batch_seconds": 0.218836129095871,
+        "max_batch_seconds": 0.2269173124921508,
+        "min_batch_seconds": 0.2269173124921508,
         "runs": 1,
-        "total_elapsed_seconds": 2.18836129095871
+        "total_elapsed_seconds": 2.269173124921508
       },
       "8": {
-        "max_batch_seconds": 0.2117094624962192,
-        "min_batch_seconds": 0.2117094624962192,
+        "max_batch_seconds": 0.21992580850492233,
+        "min_batch_seconds": 0.21992580850492233,
         "runs": 1,
-        "total_elapsed_seconds": 2.117094624962192
+        "total_elapsed_seconds": 2.199258085049223
       }
     },
     "Hozak--MacBook-Air-2.local": {
       "1": {
-        "max_batch_seconds": 0.1773299041982682,
-        "min_batch_seconds": 0.1773299041982682,
+        "max_batch_seconds": 0.10156476669944822,
+        "min_batch_seconds": 0.10156476669944822,
         "runs": 1,
-        "total_elapsed_seconds": 1.773299041982682
+        "total_elapsed_seconds": 1.0156476669944823
       },
       "16": {
-        "max_batch_seconds": 0.06585667899998952,
-        "min_batch_seconds": 0.06585667899998952,
+        "max_batch_seconds": 0.06666471239950625,
+        "min_batch_seconds": 0.06666471239950625,
         "runs": 1,
-        "total_elapsed_seconds": 0.6585667899998953
+        "total_elapsed_seconds": 0.6666471239950624
       },
       "2": {
-        "max_batch_seconds": 0.09740622919998713,
-        "min_batch_seconds": 0.09740622919998713,
+        "max_batch_seconds": 0.09384427930053789,
+        "min_batch_seconds": 0.09384427930053789,
         "runs": 1,
-        "total_elapsed_seconds": 0.9740622919998714
+        "total_elapsed_seconds": 0.9384427930053789
       },
       "4": {
-        "max_batch_seconds": 0.09740621259988984,
-        "min_batch_seconds": 0.09740621259988984,
+        "max_batch_seconds": 0.09568539580068318,
+        "min_batch_seconds": 0.09568539580068318,
         "runs": 1,
-        "total_elapsed_seconds": 0.9740621259988984
+        "total_elapsed_seconds": 0.9568539580068318
       },
       "8": {
-        "max_batch_seconds": 0.09590142910092254,
-        "min_batch_seconds": 0.09590142910092254,
+        "max_batch_seconds": 0.09640259989973857,
+        "min_batch_seconds": 0.09640259989973857,
         "runs": 1,
-        "total_elapsed_seconds": 0.9590142910092254
+        "total_elapsed_seconds": 0.9640259989973856
       }
     }
   },
