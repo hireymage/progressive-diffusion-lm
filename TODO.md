@@ -63,13 +63,14 @@ Poslední aktualizace: 2026-08-04
 ### 1. M0 — funkční PD-LM baseline podle nového cíle
 - [x] Implementovat deterministický M0/oracle evaluator pro Q1/Q2/Q4/Q8/FP32
 - [x] Ověřit evaluator smoke testem na 10k `full_baseline` checkpointu
+- [x] Ověřit reprodukovatelný M0 inference běh na `m1-256`, `m1-512` a `m4-air`
 - [ ] Změřit kvalitu současného mask-diffusion generování a uložit ukázky
 - [ ] Oddělit metriky difuzních kroků, hloubky modelu a stupňů přesnosti
-- [ ] Ověřit reprodukovatelný inference běh na `m1-256`, `m1-512` a `m4-air`
 
 ### 2. Oracle analýza adaptivní přesnosti
 - [x] Připravit průběžné vyhodnocení stejných vstupů v Q1/Q2/Q4/Q8/FP32 bez ukládání plných logitů
-- [ ] Změřit opravené i nově zavedené chyby mezi stupni přesnosti
+- [x] Změřit opravené i nově zavedené chyby mezi stupni přesnosti na 3node pilotu
+- [x] Přidat provenance-safe agregaci distribuovaných M0 běhů
 - [ ] Vytvořit oracle Pareto křivku kvalita versus proxy výpočet
 - [ ] Ověřit prediktivní hodnotu entropy, top-1/top-2 marginu a stability top-1
 

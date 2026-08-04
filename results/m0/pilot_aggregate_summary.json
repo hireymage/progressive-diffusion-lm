@@ -1,0 +1,281 @@
+{
+  "across_run_ranges": {
+    "oracle_cumulative_proxy_savings_vs_full_ladder": {
+      "max": 0.05317435864642861,
+      "min": 0.04811989242497339
+    },
+    "oracle_cumulative_proxy_savings_vs_single_fp32": {
+      "max": -0.8344746801225447,
+      "min": -0.8442677084266141
+    },
+    "oracle_quality_masked_accuracy": {
+      "max": 0.05550549648585331,
+      "min": 0.050505955046118024
+    },
+    "per_precision_masked_accuracy": {
+      "1": {
+        "max": 0.05054964858533069,
+        "min": 0.04164054804334199
+      },
+      "16": {
+        "max": 0.051090286538114975,
+        "min": 0.0465095276799422
+      },
+      "2": {
+        "max": 0.05091007388718688,
+        "min": 0.044522712905265056
+      },
+      "4": {
+        "max": 0.051090286538114975,
+        "min": 0.04596766910503025
+      },
+      "8": {
+        "max": 0.051090286538114975,
+        "min": 0.0465095276799422
+      }
+    }
+  },
+  "aggregate_type": "oracle_m0_distributed",
+  "compatibility": {
+    "checkpoint_sha256": "ce27e61d9d2c5dead5a819c991902c76acff04e52832038fecd1f8f1fdc02ba4",
+    "checkpoint_step": 10000,
+    "config_path": "configs/full_baseline.json",
+    "git_commit": "b2c5802d1c7160d195dc07029164b0ac531dd817",
+    "precision_order": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "validation_data_sha256": "f691bc4100cd534271e2558b49a26365c1135e8c5f86c16fe5823e9a0a5fdb30"
+  },
+  "hosts": [
+    "Hozak--Mac-mini-2.local",
+    "Hozak--Mac-mini.local",
+    "Hozak--MacBook-Air-2.local"
+  ],
+  "oracle": {
+    "always_full_ladder_proxy_bits_per_token": 31,
+    "cumulative_proxy_cost_vs_full_ladder": 0.9498528270558251,
+    "cumulative_proxy_cost_vs_single_fp32": 1.8403398524206611,
+    "cumulative_proxy_savings_vs_full_ladder": 0.05014717294417492,
+    "cumulative_proxy_savings_vs_single_fp32": -0.8403398524206611,
+    "mean_cumulative_proxy_bits": 29.445437638730578,
+    "mean_terminal_selected_bits": 15.222718819365289,
+    "quality_masked_accuracy": 0.052552642630031794,
+    "reconstructed_cumulative_proxy_bits_sum": 981652.0,
+    "reconstructed_oracle_correct_tokens": 1752.0,
+    "reconstructed_terminal_selected_bits_sum": 507495.0,
+    "reconstruction_note": "Counts and sums are reconstructed as reported per-run mean \u00d7 masked-token count; floating-point roundoff is possible."
+  },
+  "per_precision": {
+    "1": {
+      "masked_accuracy": 0.04496370508128862,
+      "masked_loss": 7.75838587289712,
+      "masked_tokens": 33338,
+      "mean_confidence": 0.04270665814654132,
+      "mean_entropy": 7.210057820093061,
+      "mean_top1_top2_margin": 0.00491019337767461
+    },
+    "16": {
+      "masked_accuracy": 0.04805327254184414,
+      "masked_loss": 7.431405382287392,
+      "masked_tokens": 33338,
+      "mean_confidence": 0.042061266629903865,
+      "mean_entropy": 7.419790659480182,
+      "mean_top1_top2_margin": 0.008259389437966655
+    },
+    "2": {
+      "masked_accuracy": 0.04703341532185494,
+      "masked_loss": 7.436022027396801,
+      "masked_tokens": 33338,
+      "mean_confidence": 0.037277478166773036,
+      "mean_entropy": 7.57948297159469,
+      "mean_top1_top2_margin": 0.0072278598944792325
+    },
+    "4": {
+      "masked_accuracy": 0.04787329773831663,
+      "masked_loss": 7.431347629159568,
+      "masked_tokens": 33338,
+      "mean_confidence": 0.04218250299436174,
+      "mean_entropy": 7.4175043432444685,
+      "mean_top1_top2_margin": 0.008279598821151748
+    },
+    "8": {
+      "masked_accuracy": 0.04805327254184414,
+      "masked_loss": 7.431402535132014,
+      "masked_tokens": 33338,
+      "mean_confidence": 0.04208003582183819,
+      "mean_entropy": 7.418913579446762,
+      "mean_top1_top2_margin": 0.008253447527432222
+    }
+  },
+  "precision_order": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "seeds": [
+    20260804,
+    20260805,
+    20260806
+  ],
+  "sources": [
+    "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-256_s20260804/summary.json",
+    "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805/summary.json",
+    "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806/summary.json"
+  ],
+  "timing_by_host": {
+    "Hozak--Mac-mini-2.local": {
+      "1": {
+        "max_batch_seconds": 0.3160907791228965,
+        "min_batch_seconds": 0.3160907791228965,
+        "runs": 1,
+        "total_elapsed_seconds": 3.160907791228965
+      },
+      "16": {
+        "max_batch_seconds": 0.12929333748761565,
+        "min_batch_seconds": 0.12929333748761565,
+        "runs": 1,
+        "total_elapsed_seconds": 1.2929333748761564
+      },
+      "2": {
+        "max_batch_seconds": 0.1600646792096086,
+        "min_batch_seconds": 0.1600646792096086,
+        "runs": 1,
+        "total_elapsed_seconds": 1.6006467920960858
+      },
+      "4": {
+        "max_batch_seconds": 0.16963940410641953,
+        "min_batch_seconds": 0.16963940410641953,
+        "runs": 1,
+        "total_elapsed_seconds": 1.6963940410641953
+      },
+      "8": {
+        "max_batch_seconds": 0.17610241249203681,
+        "min_batch_seconds": 0.17610241249203681,
+        "runs": 1,
+        "total_elapsed_seconds": 1.7610241249203682
+      }
+    },
+    "Hozak--Mac-mini.local": {
+      "1": {
+        "max_batch_seconds": 0.4547924917016644,
+        "min_batch_seconds": 0.4547924917016644,
+        "runs": 1,
+        "total_elapsed_seconds": 4.547924917016644
+      },
+      "16": {
+        "max_batch_seconds": 0.1558263334154617,
+        "min_batch_seconds": 0.1558263334154617,
+        "runs": 1,
+        "total_elapsed_seconds": 1.558263334154617
+      },
+      "2": {
+        "max_batch_seconds": 0.20786731239641085,
+        "min_batch_seconds": 0.20786731239641085,
+        "runs": 1,
+        "total_elapsed_seconds": 2.0786731239641085
+      },
+      "4": {
+        "max_batch_seconds": 0.218836129095871,
+        "min_batch_seconds": 0.218836129095871,
+        "runs": 1,
+        "total_elapsed_seconds": 2.18836129095871
+      },
+      "8": {
+        "max_batch_seconds": 0.2117094624962192,
+        "min_batch_seconds": 0.2117094624962192,
+        "runs": 1,
+        "total_elapsed_seconds": 2.117094624962192
+      }
+    },
+    "Hozak--MacBook-Air-2.local": {
+      "1": {
+        "max_batch_seconds": 0.1773299041982682,
+        "min_batch_seconds": 0.1773299041982682,
+        "runs": 1,
+        "total_elapsed_seconds": 1.773299041982682
+      },
+      "16": {
+        "max_batch_seconds": 0.06585667899998952,
+        "min_batch_seconds": 0.06585667899998952,
+        "runs": 1,
+        "total_elapsed_seconds": 0.6585667899998953
+      },
+      "2": {
+        "max_batch_seconds": 0.09740622919998713,
+        "min_batch_seconds": 0.09740622919998713,
+        "runs": 1,
+        "total_elapsed_seconds": 0.9740622919998714
+      },
+      "4": {
+        "max_batch_seconds": 0.09740621259988984,
+        "min_batch_seconds": 0.09740621259988984,
+        "runs": 1,
+        "total_elapsed_seconds": 0.9740621259988984
+      },
+      "8": {
+        "max_batch_seconds": 0.09590142910092254,
+        "min_batch_seconds": 0.09590142910092254,
+        "runs": 1,
+        "total_elapsed_seconds": 0.9590142910092254
+      }
+    }
+  },
+  "total_masked_tokens": 33338,
+  "total_runs": 3,
+  "transitions": {
+    "q1_to_q2": {
+      "corrected": 200,
+      "correctness_unchanged": 33007,
+      "higher_bits": 2,
+      "lower_bits": 1,
+      "mean_entropy_when_corrected": 7.228823166105449,
+      "mean_low_confidence_when_corrected": 0.9675207246612983,
+      "mean_small_margin_when_corrected": 0.9989086398984146,
+      "prediction_changed": 5251,
+      "prediction_unchanged": 28087,
+      "regressed": 131
+    },
+    "q2_to_q4": {
+      "corrected": 74,
+      "correctness_unchanged": 33218,
+      "higher_bits": 4,
+      "lower_bits": 2,
+      "mean_entropy_when_corrected": 7.5921993415726075,
+      "mean_low_confidence_when_corrected": 0.9678973869266053,
+      "mean_small_margin_when_corrected": 0.9987635196964174,
+      "prediction_changed": 1964,
+      "prediction_unchanged": 31374,
+      "regressed": 46
+    },
+    "q4_to_q8": {
+      "corrected": 8,
+      "correctness_unchanged": 33328,
+      "higher_bits": 8,
+      "lower_bits": 4,
+      "mean_entropy_when_corrected": 7.441471935017284,
+      "mean_low_confidence_when_corrected": 0.9654291518800063,
+      "mean_small_margin_when_corrected": 0.999899826989519,
+      "prediction_changed": 144,
+      "prediction_unchanged": 33194,
+      "regressed": 2
+    },
+    "q8_to_q16": {
+      "corrected": 0,
+      "correctness_unchanged": 33338,
+      "higher_bits": 16,
+      "lower_bits": 8,
+      "mean_entropy_when_corrected": null,
+      "mean_low_confidence_when_corrected": null,
+      "mean_small_margin_when_corrected": null,
+      "prediction_changed": 18,
+      "prediction_unchanged": 33320,
+      "regressed": 0
+    }
+  }
+}

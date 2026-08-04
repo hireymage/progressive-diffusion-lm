@@ -68,6 +68,7 @@ def test_m0_fixtures_are_deterministic_and_artifacts_avoid_logits(tmp_path):
     assert json.loads((tmp_path / "summary.json").read_text())["oracle"]["cumulative_proxy_cost_vs_single_fp32"] > 0
     csv_text = (tmp_path / "per_token.csv").read_text()
     assert "logit" not in csv_text.lower()
+    assert "\r\n" not in csv_text
     assert list(csv.DictReader(csv_text.splitlines()))
 
 

@@ -1,0 +1,153 @@
+{
+  "oracle": {
+    "always_full_ladder_proxy_bits_per_token": 31,
+    "cumulative_proxy_cost_vs_full_ladder": 0.9518801075750266,
+    "cumulative_proxy_cost_vs_single_fp32": 1.8442677084266141,
+    "cumulative_proxy_savings_vs_full_ladder": 0.04811989242497339,
+    "cumulative_proxy_savings_vs_single_fp32": -0.8442677084266141,
+    "mean_cumulative_proxy_bits": 29.508283334825826,
+    "mean_terminal_selected_bits": 15.254141667412913,
+    "note": "Terminal selected bits are a precision outcome, not compute. Cumulative proxy cost sums each visited precision level and assumes cost scales linearly with weight bits. M0 currently full-recomputes every level independently, so these are not measured wall-clock savings or residual-reuse costs.",
+    "quality_masked_accuracy": 0.050505955046118024
+  },
+  "per_precision": {
+    "1": {
+      "masked_accuracy": 0.04164054804334199,
+      "masked_loss": 7.768087395642413,
+      "masked_tokens": 11167,
+      "mean_confidence": 0.04326828790458511,
+      "mean_entropy": 7.20914332166185,
+      "mean_top1_top2_margin": 0.005573135409289903
+    },
+    "16": {
+      "masked_accuracy": 0.046565774155995346,
+      "masked_loss": 7.4215398727621205,
+      "masked_tokens": 11167,
+      "mean_confidence": 0.042814351901365434,
+      "mean_entropy": 7.414769508835564,
+      "mean_top1_top2_margin": 0.009188113235204368
+    },
+    "2": {
+      "masked_accuracy": 0.04567027849914928,
+      "masked_loss": 7.423300322060827,
+      "masked_tokens": 11167,
+      "mean_confidence": 0.03844044783095358,
+      "mean_entropy": 7.5631999861807895,
+      "mean_top1_top2_margin": 0.008296394228712173
+    },
+    "4": {
+      "masked_accuracy": 0.046565774155995346,
+      "masked_loss": 7.421557771811528,
+      "masked_tokens": 11167,
+      "mean_confidence": 0.04294015182578583,
+      "mean_entropy": 7.412585221663842,
+      "mean_top1_top2_margin": 0.00922841639708758
+    },
+    "8": {
+      "masked_accuracy": 0.046565774155995346,
+      "masked_loss": 7.421534406359114,
+      "masked_tokens": 11167,
+      "mean_confidence": 0.042831991032460465,
+      "mean_entropy": 7.4139310337011075,
+      "mean_top1_top2_margin": 0.009181398419317534
+    }
+  },
+  "precision_order": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "run": {
+    "batch_size": 8,
+    "checkpoint_path": "checkpoints/full_baseline/step_0010000.npz",
+    "checkpoint_sha256": "ce27e61d9d2c5dead5a819c991902c76acff04e52832038fecd1f8f1fdc02ba4",
+    "checkpoint_step": 10000,
+    "config_path": "configs/full_baseline.json",
+    "fixture_batches": 10,
+    "fixture_seed": 20260804,
+    "full_logits_saved": false,
+    "git_commit": "b2c5802d1c7160d195dc07029164b0ac531dd817",
+    "hostname": "Hozak--Mac-mini.local",
+    "machine": "arm64",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "simulated_wall_clock": {
+      "1": {
+        "elapsed_seconds": 4.547924917016644,
+        "mean_batch_seconds": 0.4547924917016644
+      },
+      "16": {
+        "elapsed_seconds": 1.558263334154617,
+        "mean_batch_seconds": 0.1558263334154617
+      },
+      "2": {
+        "elapsed_seconds": 2.0786731239641085,
+        "mean_batch_seconds": 0.20786731239641085
+      },
+      "4": {
+        "elapsed_seconds": 2.18836129095871,
+        "mean_batch_seconds": 0.218836129095871
+      },
+      "8": {
+        "elapsed_seconds": 2.117094624962192,
+        "mean_batch_seconds": 0.2117094624962192
+      }
+    },
+    "utc_timestamp": "2026-08-04T07:36:38.085051+00:00",
+    "validation_data_path": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/data/cache/val_seq256_art50000_bytes500000000.npy",
+    "validation_data_sha256": "f691bc4100cd534271e2558b49a26365c1135e8c5f86c16fe5823e9a0a5fdb30",
+    "validation_data_source": "explicit_npy",
+    "wall_clock_note": "Simulated MLX wall clock for independent full recomputes; it is not a low-bit hardware or sequential-escalation speed measurement."
+  },
+  "transitions": {
+    "q1_to_q2": {
+      "corrected": 87,
+      "correctness_unchanged": 11038,
+      "higher_bits": 2,
+      "lower_bits": 1,
+      "mean_entropy_when_corrected": 7.236460049444326,
+      "mean_low_confidence_when_corrected": 0.966194145015474,
+      "mean_small_margin_when_corrected": 0.9989815151607466,
+      "prediction_changed": 2017,
+      "prediction_unchanged": 9150,
+      "regressed": 42
+    },
+    "q2_to_q4": {
+      "corrected": 12,
+      "correctness_unchanged": 11153,
+      "higher_bits": 4,
+      "lower_bits": 2,
+      "mean_entropy_when_corrected": 7.603187482320404,
+      "mean_low_confidence_when_corrected": 0.9689653187717018,
+      "mean_small_margin_when_corrected": 0.9989551869210754,
+      "prediction_changed": 244,
+      "prediction_unchanged": 10923,
+      "regressed": 2
+    },
+    "q4_to_q8": {
+      "corrected": 2,
+      "correctness_unchanged": 11163,
+      "higher_bits": 8,
+      "lower_bits": 4,
+      "mean_entropy_when_corrected": 7.426960739716542,
+      "mean_low_confidence_when_corrected": 0.9644191423433996,
+      "mean_small_margin_when_corrected": 0.9998621753568222,
+      "prediction_changed": 53,
+      "prediction_unchanged": 11114,
+      "regressed": 2
+    },
+    "q8_to_q16": {
+      "corrected": 0,
+      "correctness_unchanged": 11167,
+      "higher_bits": 16,
+      "lower_bits": 8,
+      "mean_entropy_when_corrected": null,
+      "mean_low_confidence_when_corrected": null,
+      "mean_small_margin_when_corrected": null,
+      "prediction_changed": 3,
+      "prediction_unchanged": 11164,
+      "regressed": 0
+    }
+  }
+}

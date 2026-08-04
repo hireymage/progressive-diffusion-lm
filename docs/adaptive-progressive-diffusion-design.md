@@ -321,3 +321,14 @@ navštívených stupňů. Wall-clock údaje popisují dnešní simulované plné
 nikoli rychlost budoucích low-bit kernelů. Protože uvedený checkpoint byl učen
 ve FP32, jeho Q1/Q2/Q4/Q8 výsledky jsou pouze předběžná M0/PTQ sonda, nikoli test
 budoucího modelu učeného současně ve všech přesnostech.
+
+Výsledky z více nodů se spojí pouze při shodné provenance:
+
+```bash
+.venv/bin/python scripts/aggregate_oracle_m0.py \
+  results/m0/<run-a> results/m0/<run-b> results/m0/<run-c> \
+  --output results/m0/aggregate_summary.json
+```
+
+Agregátor odmítne smíchat rozdílný commit, checkpoint, validační data,
+konfiguraci nebo pořadí přesností.

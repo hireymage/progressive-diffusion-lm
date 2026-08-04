@@ -436,7 +436,7 @@ def write_artifacts(output_dir: Path, summary: dict, token_rows: list[dict]) -> 
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     with (output_dir / "per_token.csv").open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(token_rows[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(token_rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(token_rows)
 
