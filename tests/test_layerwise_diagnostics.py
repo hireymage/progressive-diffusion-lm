@@ -80,12 +80,15 @@ def test_run_overfit_smoke_exercises_disk_estimate_and_writes_checkpoint(tmp_pat
 
 
 def test_model_variant_builds_fp32_or_full_25_layer_progressive_schedule():
-    fp32 = build_model(SimpleNamespace(model_variant="fp32", d_model=8, d_ff=16, n_heads=2, n_layers=3), 16)
+    fp32 = build_model(SimpleNamespace(model_variant="fp32", d_model=8, d_ff=16, n_heads=2, n_layers=3,
+                                       auxiliary_loss="final-only", milestone_weights=()), 16)
     assert fp32.cfg.layer_precisions == ["fp32"] * 3
-    progressive = build_model(SimpleNamespace(model_variant="progressive", d_model=8, d_ff=16, n_heads=2, n_layers=25), 16)
+    progressive = build_model(SimpleNamespace(model_variant="progressive", d_model=8, d_ff=16, n_heads=2, n_layers=25,
+                                              auxiliary_loss="final-only", milestone_weights=()), 16)
     assert progressive.cfg.layer_precisions == ["q1"] * 5 + ["q2"] * 5 + ["q4"] * 5 + ["q8"] * 5 + ["fp16"] * 5
     with pytest.raises(ValueError, match="requires --n-layers 25"):
-        build_model(SimpleNamespace(model_variant="progressive", d_model=8, d_ff=16, n_heads=2, n_layers=24), 16)
+        build_model(SimpleNamespace(model_variant="progressive", d_model=8, d_ff=16, n_heads=2, n_layers=24,
+                                    auxiliary_loss="final-only", milestone_weights=()), 16)
 
 
 def test_resume_metadata_rejects_model_variant_mismatch():
@@ -93,3 +96,19 @@ def test_resume_metadata_rejects_model_variant_mismatch():
     validate_resume_metadata({"schedule": [[.5, 10]], "model_variant": "fp32"}, args)
     with pytest.raises(ValueError, match="model variant"):
         validate_resume_metadata({"schedule": [[.5, 10]], "model_variant": "progressive"}, args)
+
+
+def test_weighted_progressive_overfit_smoke_has_eligible_milestone_exits(tmp_path):
+    args = SimpleNamespace(
+        overfit_sequences=1, seed=12, vocab_size=16, d_model=8, d_ff=16,
+        n_heads=2, n_layers=25, model_variant="progressive", lr=1e-3,
+        auxiliary_loss="weighted-milestones", milestone_weights=((5, .1), (10, .2), (15, .3), (20, .4), (25, 1.0)),
+        checkpoint_dir=tmp_path / "checkpoints", output=tmp_path / "report.json",
+        min_free_gb=0.0, resume=False, steps=1, batch_size=1,
+        mask_schedule=((.5, 1),), report_every=1, gate_mask_rate=.5,
+        gate_accuracy=2.0, gate_reports=1, eval_batch_size=1,
+    )
+    result = run_overfit(args, np.ones((1, 256), dtype=np.int32), TinyTokenizer())
+    assert result["architecture"]["layer_precisions"][:5] == ["q1"] * 5
+    assert result["architecture"]["n_layers"] == 25
+    assert (args.checkpoint_dir / "latest.npz").exists()

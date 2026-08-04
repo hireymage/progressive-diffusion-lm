@@ -174,8 +174,10 @@ def build_model(a, vocab_size: int) -> LayerwiseProgressiveLM:
         precisions = PROGRESSIVE_PRECISIONS
     else:
         precisions = ["fp32"] * a.n_layers
+    min_exit_layer = (min(layer for layer, _ in a.milestone_weights)
+                      if a.auxiliary_loss == "weighted-milestones" else a.n_layers)
     cfg = LayerwiseModelConfig(vocab_size=vocab_size, d_model=a.d_model, d_ff=a.d_ff,
-        n_heads=a.n_heads, n_layers=a.n_layers, min_exit_layer=a.n_layers,
+        n_heads=a.n_heads, n_layers=a.n_layers, min_exit_layer=min_exit_layer,
         max_seq_len=256, layer_precisions=precisions)
     return LayerwiseProgressiveLM(cfg)
 
@@ -229,7 +231,8 @@ def _overfit_loss(model, x, targets, mask, a):
     if a.auxiliary_loss == "final-only":
         exits, weights = (a.n_layers,), None
     else:
-        exits, weights = tuple(layer for layer, _ in a.milestone_weights), tuple(weight for _, weight in a.milestone_weights)
+        ordered = tuple(sorted(a.milestone_weights))
+        exits, weights = tuple(layer for layer, _ in ordered), tuple(weight for _, weight in ordered)
     return masked_deep_supervision_loss(model, x, targets, mask, supervised_layers=exits, layer_weights=weights)
 
 
