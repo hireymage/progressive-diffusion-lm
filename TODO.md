@@ -76,8 +76,10 @@ Poslední aktualizace: 2026-08-04
 - [x] Přidat masked deep supervision pro všechny mezivýstupy
 - [x] Umožnit sequence-wide early exit uvnitř precision skupiny
 - [x] Ověřit první tři rozdílné smoke testy na třech nodech
-- [ ] Napojit prototyp na reálný tokenizer a mask-diffusion dataset
-- [ ] Spustit první delší trénink a měřit kvalitu jednotlivých výstupních vrstev
+- [x] Napojit prototyp na reálný tokenizer a 69M-tokenový Wikipedia cache
+- [x] Spustit 5 000krokový FP32 a progressive pilot a změřit vrstvy 5/10/15/20/25
+- [ ] Odstranit kolaps k nejčastějším tokenům; hlubší výstupy zatím nezlepšují kvalitu
+- [ ] Spustit zbývajících pět kontrol až po úspěšném jazykovém quality gate
 - [ ] Kalibrovat early-exit práh na validačních datech bez leakage
 
 ### 2. Oracle analýza adaptivní přesnosti

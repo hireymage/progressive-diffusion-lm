@@ -1,0 +1,37 @@
+{
+  "date": "2026-08-04",
+  "source_commit": "223e71f",
+  "dataset_tokens": 69033984,
+  "training_steps": 5000,
+  "batch_size": 1,
+  "sequence_length": 256,
+  "validation_batches": 64,
+  "supervised_exit_layers": [5, 10, 15, 20, 25],
+  "fp32": {
+    "node": "m1-512",
+    "best_step": 3500,
+    "training_seconds": 841.289866,
+    "metrics": {
+      "5": {"loss": 7.427419, "accuracy": 0.044578, "perplexity": 1681.462527, "proxy_cost": 160},
+      "10": {"loss": 7.426710, "accuracy": 0.046577, "perplexity": 1680.269733, "proxy_cost": 320},
+      "15": {"loss": 7.429903, "accuracy": 0.043166, "perplexity": 1685.643368, "proxy_cost": 480},
+      "20": {"loss": 7.433165, "accuracy": 0.043166, "perplexity": 1691.150925, "proxy_cost": 640},
+      "25": {"loss": 7.434887, "accuracy": 0.043166, "perplexity": 1694.065520, "proxy_cost": 800}
+    }
+  },
+  "progressive": {
+    "node": "m4-air",
+    "best_step": 3500,
+    "training_seconds": 641.864467,
+    "metrics": {
+      "5": {"loss": 7.398640, "accuracy": 0.051870, "perplexity": 1633.760917, "proxy_cost": 5},
+      "10": {"loss": 7.405884, "accuracy": 0.046224, "perplexity": 1645.638297, "proxy_cost": 15},
+      "15": {"loss": 7.410327, "accuracy": 0.044343, "perplexity": 1652.967546, "proxy_cost": 35},
+      "20": {"loss": 7.405795, "accuracy": 0.044225, "perplexity": 1645.492582, "proxy_cost": 75},
+      "25": {"loss": 7.409433, "accuracy": 0.043990, "perplexity": 1651.490265, "proxy_cost": 155}
+    }
+  },
+  "verdict": "pipeline_passed_but_language_quality_failed",
+  "remaining_five_models_started": false,
+  "reason": "Both variants collapsed toward frequent tokens and later exits did not improve quality."
+}
