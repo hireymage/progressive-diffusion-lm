@@ -15,6 +15,10 @@ In practice, the target is a model that:
 
 This makes the model closer to a "coarse map to detailed map" process than to a one-way compression experiment.
 
+The proposed architecture, training stages, measurements, and decision gates
+for this direction are described in
+[`docs/adaptive-progressive-diffusion-design.md`](docs/adaptive-progressive-diffusion-design.md).
+
 ---
 
 ## Research Hypothesis

@@ -60,22 +60,35 @@ Poslední aktualizace: 2026-08-04
 
 ## 🔜 Přímé další kroky (doporučené)
 
-### 1. Cleanup iCloud duplikátů
-- [x] Smazat soubory `* 2.json`, `* 2.md`, `* 2.csv` z `results/` a `docs/`
-- [x] Příčina: iCloud sync generuje kopie při konfliktu
+### 1. M0 — funkční PD-LM baseline podle nového cíle
+- [ ] Změřit kvalitu současného mask-diffusion generování a uložit ukázky
+- [ ] Oddělit metriky difuzních kroků, hloubky modelu a stupňů přesnosti
+- [ ] Ověřit reprodukovatelný inference běh na `m1-256`, `m1-512` a `m4-air`
 
-### 2. PTQ studie (checkpointy existují)
+### 2. Oracle analýza adaptivní přesnosti
+- [ ] Na stejných maskovaných vstupech uložit logity Q1/Q2/Q4/Q8/FP16 nebo FP32
+- [ ] Změřit opravené i nově zavedené chyby mezi stupni přesnosti
+- [ ] Vytvořit oracle Pareto křivku kvalita versus proxy výpočet
+- [ ] Ověřit prediktivní hodnotu entropy, top-1/top-2 marginu a stability top-1
+
+### 3. M1 — minimální adaptivní inference
+- [ ] Implementovat rozhodnutí `commit / defer / escalate` po tokenových pozicích
+- [ ] Porovnat fixed schedule, pravidlový adaptive schedule a oracle
+- [ ] Logovat dosaženou přesnost a počet difuzních kroků pro každý token
+- [ ] Pokračovat k multi-precision tréninku pouze při pozitivní oracle analýze
+
+### 4. PTQ studie (historická větev, checkpointy existují)
 - [ ] Porovnat Direct/Naive PTQ vs. native QAT (Q1, Q2, Q3, Q4)
 - [ ] Spustit `python scripts/ptq_study.py` na checkpointech z Phase 1
 - [ ] Volitelně: `--include-ternary` pro ternary variantu
 - [ ] Pozor: native const_4bit používá staré schéma (15 úrovní) → Q4 srovnání je přibližné
 
-### 3. Více seedů pro Phase 2
+### 5. Více seedů pro Phase 2 (historická větev)
 - [ ] Phase 2 má pouze 2 seedy (s201, s203) — seed sensitivity je vysoká
 - [ ] Doporučeno: 5–10 seedů pro statisticky spolehlivé závěry
 - [ ] s201 dává téměř schedule-invariantní výsledky → možná špatný seed
 
-### 4. Delší trénink Phase 2
+### 6. Delší trénink Phase 2 (historická větev)
 - [ ] Phase 2 model trénován jen 2 000 kroků vs. 10 000 u ablationu
 - [ ] Rozšíření na 5 000–10 000 kroků pro spravedlivé srovnání
 
