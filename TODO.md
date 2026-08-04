@@ -12,6 +12,8 @@ Poslední aktualizace: 2026-08-04
 - Prakticky to znamená navrhnout novou strategii generování, vyjasnit potřebné komponenty a pak znovu poskládat experimenty podle tohoto cíle.
 - Jako užitečný mezikrok dává smysl vytvořit jednoduchý funkční PD model, který umí text skutečně generovat, i kdyby ještě nebyl finálně optimalizovaný.
 - Původní experimenty a výsledky zůstávají zachované jako historie projektu, ale nový vývoj se bude řídit tímto zpřesněným cílem.
+- Cílový první model mění přesnost **mezi skupinami Transformerových vrstev**, nikoli po celém průchodu modelem: 5× Q1, 5× Q2, 5× Q4, 5× Q8 a 5× FP16.
+- Od vrstvy 5 lze sekvenčně ukončit výpočet po libovolné další vrstvě, tedy i uvnitř skupiny (např. po vrstvě 8).
 
 ## ✅ Hotovo
 
@@ -67,11 +69,22 @@ Poslední aktualizace: 2026-08-04
 - [ ] Změřit kvalitu současného mask-diffusion generování a uložit ukázky
 - [ ] Oddělit metriky difuzních kroků, hloubky modelu a stupňů přesnosti
 
+### 1A. Layer-wise grouped-precision prototyp
+- [x] Oddělit nový 25vrstvý prototyp od legacy `DiffusionLM`
+- [x] Implementovat schedule 5× Q1/Q2/Q4/Q8/FP16 a skutečnou FP16 matmul cestu
+- [x] Přidat sdílený LM head po každé vrstvě od vrstvy 5
+- [x] Přidat masked deep supervision pro všechny mezivýstupy
+- [x] Umožnit sequence-wide early exit uvnitř precision skupiny
+- [x] Ověřit první tři rozdílné smoke testy na třech nodech
+- [ ] Napojit prototyp na reálný tokenizer a mask-diffusion dataset
+- [ ] Spustit první delší trénink a měřit kvalitu jednotlivých výstupních vrstev
+- [ ] Kalibrovat early-exit práh na validačních datech bez leakage
+
 ### 2. Oracle analýza adaptivní přesnosti
 - [x] Připravit průběžné vyhodnocení stejných vstupů v Q1/Q2/Q4/Q8/FP32 bez ukládání plných logitů
 - [x] Změřit opravené i nově zavedené chyby mezi stupni přesnosti na 3node pilotu
 - [x] Přidat provenance-safe agregaci distribuovaných M0 běhů
-- [ ] Implementovat skutečný FP16 stupeň pro cílovou ladder Q1/Q2/Q4/Q8/FP16; současné interní `bits=16` je FP32 identity cesta
+- [x] Implementovat skutečný FP16 stupeň v odděleném layer-wise prototypu; legacy interní `bits=16` zůstává FP32 identity cesta
 - [x] Vytvořit offline Pareto křivku kvalita versus proxy výpočet s kalibračním a held-out rozdělením
 - [x] Ověřit prediktivní hodnotu confidence, entropy, top-1/top-2 marginu a stability top-1
 - [x] Doplnit přímé precision baseline a párový cluster bootstrap bez held-out policy selection

@@ -2,6 +2,15 @@
 
 Datum návrhu: 2026-08-04
 
+> **Aktualizace cíle:** Primární experimentální větev už nepoužívá opakované
+> celé průchody Q1 → Q2 → Q4 → Q8. Jeden 25vrstvý Transformer má pevné skupiny
+> 5× Q1, 5× Q2, 5× Q4, 5× Q8 a 5× FP16. Od vrstvy 5 lze výpočet ukončit po
+> libovolné vrstvě, například po vrstvě 8 za cenu `5×Q1 + 3×Q2 = 11` proxy
+> jednotek. První verze ukončuje celou sekvenci; tokenové early-exit přijde až
+> po vyřešení vazeb přes self-attention. Starší full-pass M0 analýza níže
+> zůstává historickým vedlejším experimentem, nikoli implementací cílové
+> architektury.
+
 ## 1. Cíl
 
 Vytvořit difuzní jazykový model, který generuje blok více tokenů současně a
