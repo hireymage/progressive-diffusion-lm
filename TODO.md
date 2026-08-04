@@ -4,6 +4,15 @@ Poslední aktualizace: 2026-08-04
 
 ---
 
+## 🎯 Nový směr projektu
+
+- Cílem už není jen porovnávat progresivní kvantizaci jako fixed schedule.
+- Nový směr je vyvíjet difuzní jazykový model, který začne hrubým odhadem a postupně se zpřesňuje jen tam, kde je to ještě potřeba.
+- Model má umět generovat více tokenů najednou a při nejistotě přidávat další výpočetní krok nebo vyšší přesnost.
+- Prakticky to znamená navrhnout novou strategii generování, vyjasnit potřebné komponenty a pak znovu poskládat experimenty podle tohoto cíle.
+- Jako užitečný mezikrok dává smysl vytvořit jednoduchý funkční PD model, který umí text skutečně generovat, i kdyby ještě nebyl finálně optimalizovaný.
+- Původní experimenty a výsledky zůstávají zachované jako historie projektu, ale nový vývoj se bude řídit tímto zpřesněným cílem.
+
 ## ✅ Hotovo
 
 ### Infrastruktura a pipeline

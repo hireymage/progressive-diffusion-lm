@@ -2,13 +2,24 @@
 
 > **Experimental proof-of-concept** on Apple Silicon. Not a production chatbot.
 
-A research project investigating whether a masked diffusion language model can train effectively with extremely low-bit weight representations, and whether assigning lower precision to high-noise denoising steps and higher precision to fine-grained steps (a "progressive precision schedule") provides any benefit.
+## Project Goal
+
+The project is now being reframed around a diffusion language model that starts from a coarse prediction and progressively refines it only when needed. Instead of treating precision as something that is simply reduced or increased on a fixed schedule, the model should add more computation and higher precision step by step until the current token decision is precise enough.
+
+In practice, the target is a model that:
+
+- can generate text with a diffusion-style workflow over multiple tokens at once,
+- begins with a cheap, coarse pass,
+- adds more refinement only where uncertainty remains,
+- and stops increasing precision once the result is already good enough.
+
+This makes the model closer to a "coarse map to detailed map" process than to a one-way compression experiment.
 
 ---
 
 ## Research Hypothesis
 
-Early denoising steps (high noise, coarse structure) may only need binary (1-bit) weights. Late refinement steps (low noise, token disambiguation) benefit from higher precision (4-bit). A single set of FP32 master weights can be evaluated at different precisions across diffusion steps via runtime switching — no separate models needed.
+The working hypothesis is that a diffusion LM can be trained to operate across multiple precisions and use them as refinement stages during generation. Early, coarse passes may rely on low-bit computation, while later refinement passes can add more precision only where the current sequence is still ambiguous.
 
 **Key finding so far** (from 18 completed ablation runs, 6 variants × 3 seeds × 10k steps):
 - Binary (const_1bit) ranks first with mean best_val_loss 7.4336 vs. baseline 7.4434 (0.01 nats better)
