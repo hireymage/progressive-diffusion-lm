@@ -47,12 +47,32 @@ def test_m0_oracle_counts_transitions_and_selects_lowest_correct_precision():
     assert summary["oracle"]["quality_masked_accuracy"] == 1.0
     assert summary["oracle"]["mean_terminal_selected_bits"] == 4 / 3
     assert summary["oracle"]["mean_cumulative_proxy_bits"] == 5 / 3
-    assert summary["oracle"]["always_full_ladder_proxy_bits_per_token"] == 19
-    assert summary["oracle"]["cumulative_proxy_cost_vs_full_ladder"] == (5 / 3) / 19
-    assert summary["oracle"]["cumulative_proxy_cost_vs_single_fp32"] == (5 / 3) / 16
-    assert "FP16" not in summary["oracle"]["note"]
+    assert summary["oracle"]["always_full_ladder_proxy_bits_per_token"] == 35
+    assert summary["oracle"]["cumulative_proxy_cost_vs_full_ladder"] == (5 / 3) / 35
+    assert summary["oracle"]["single_fp32_proxy_bits_per_token"] == 32
+    assert summary["oracle"]["cumulative_proxy_cost_vs_single_fp32"] == (5 / 3) / 32
+    assert "not FP16" in summary["oracle"]["note"]
     assert "mean_entropy_when_corrected" in summary["transitions"]["q1_to_q2"]
     assert "q1_to_q2_signal_entropy" in rows[0]
+
+
+def test_m0_proxy_costs_distinguish_internal_fp32_identity_from_fp16_target():
+    fixture = MaskedFixture(
+        targets=np.array([[0]], dtype=np.int32), inputs=np.array([[4]], dtype=np.int32),
+        mask=np.array([[True]]), mask_rates=np.array([0.5], dtype=np.float32),
+    )
+    # Q4 is the first correct result, therefore the sequential cost is 1+2+4.
+    logits = {
+        1: [_logits_for_predictions([1])], 2: [_logits_for_predictions([1])],
+        4: [_logits_for_predictions([0])], 8: [_logits_for_predictions([0])],
+        16: [_logits_for_predictions([0])],
+    }
+    summary, rows = analyze_precision_logits(logits, [fixture])
+    assert rows[0]["oracle_bits"] == 4
+    assert rows[0]["oracle_cumulative_proxy_bits"] == 7
+    assert summary["precision_proxy_costs"] == {"1": 1, "2": 2, "4": 4, "8": 8, "16": 32}
+    assert summary["oracle"]["always_full_ladder_proxy_bits_per_token"] == 47
+    assert summary["oracle"]["single_fp32_proxy_bits_per_token"] == 32
 
 
 def test_m0_fixtures_are_deterministic_and_artifacts_avoid_logits(tmp_path):

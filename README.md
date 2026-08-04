@@ -50,7 +50,7 @@ Quantization schemes (all simulated in float32 via STE):
 | 2 | True 2-bit | 4: {-3,-1,+1,+3} × step | 2.0 |
 | 3 | True 3-bit | 8: {-7,...,+7} × step | 3.0 |
 | 4 | True 4-bit | 16: {-15,...,+15} × step | 4.0 |
-| 16 | FP32 | identity | 16.0 |
+| 16 (internal ID) | FP32 | identity; no quantization | 32.0 compute proxy |
 | 0 | Ternary (optional) | 3: {-1,0,+1} × max(\|w\|) | ~1.585 |
 
 ---

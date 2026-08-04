@@ -36,6 +36,24 @@ if str(PROJECT_ROOT) not in sys.path:
 
 
 DEFAULT_BITS = (1, 2, 4, 8, 16)
+# ``16`` is an internal compatibility identifier for the identity path.  That
+# path retains FP32 master weights and executes in FP32, so it must not be
+# treated as a 16-bit operation in cost accounting.
+PRECISION_PROXY_COSTS = {1: 1, 2: 2, 4: 4, 8: 8, 16: 32}
+FP32_PROXY_COST = 32
+
+
+def proxy_cost_for_precision(precision: int) -> int:
+    """Return the compute proxy for an internal precision identifier."""
+    try:
+        return PRECISION_PROXY_COSTS[precision]
+    except KeyError as error:
+        raise ValueError(f"No proxy cost configured for precision {precision}") from error
+
+
+def proxy_cost_mapping(ordered_bits: Iterable[int]) -> dict[str, int]:
+    """Serialize explicit proxy costs alongside compatible internal IDs."""
+    return {str(precision): proxy_cost_for_precision(precision) for precision in ordered_bits}
 
 
 @dataclass(frozen=True)
@@ -221,7 +239,9 @@ def analyze_precision_logits(logits_by_bits: Mapping[int, Iterable[np.ndarray]],
         # Sequential escalation executes every earlier level as well.  This is
         # intentionally a proxy only: the M0 implementation evaluates all
         # levels independently and does not yet reuse residual computation.
-        combined["oracle_cumulative_proxy_bits"] = sum(ordered_bits[:selected_index + 1])
+        combined["oracle_cumulative_proxy_bits"] = sum(
+            proxy_cost_for_precision(precision) for precision in ordered_bits[:selected_index + 1]
+        )
         for lower, higher in zip(ordered_bits, ordered_bits[1:]):
             lo, hi = rows_by_bits[lower][index], rows_by_bits[higher][index]
             prefix = f"q{lower}_to_q{higher}"
@@ -254,9 +274,10 @@ def analyze_precision_logits(logits_by_bits: Mapping[int, Iterable[np.ndarray]],
     oracle_accuracy = sum(row["oracle_correct"] for row in token_rows) / len(token_rows)
     mean_selected_bits = sum(row["oracle_bits"] for row in token_rows) / len(token_rows)
     mean_cumulative_cost = sum(row["oracle_cumulative_proxy_bits"] for row in token_rows) / len(token_rows)
-    full_ladder_cost = sum(ordered_bits)
+    full_ladder_cost = sum(proxy_cost_for_precision(precision) for precision in ordered_bits)
     return {
         "precision_order": ordered_bits,
+        "precision_proxy_costs": proxy_cost_mapping(ordered_bits),
         "per_precision": per_precision,
         "transitions": transitions,
         "oracle": {
@@ -266,9 +287,10 @@ def analyze_precision_logits(logits_by_bits: Mapping[int, Iterable[np.ndarray]],
             "always_full_ladder_proxy_bits_per_token": full_ladder_cost,
             "cumulative_proxy_cost_vs_full_ladder": mean_cumulative_cost / full_ladder_cost,
             "cumulative_proxy_savings_vs_full_ladder": 1.0 - mean_cumulative_cost / full_ladder_cost,
-            "cumulative_proxy_cost_vs_single_fp32": mean_cumulative_cost / 16.0,
-            "cumulative_proxy_savings_vs_single_fp32": 1.0 - mean_cumulative_cost / 16.0,
-            "note": "Terminal selected bits are a precision outcome, not compute. Cumulative proxy cost sums each visited precision level and assumes cost scales linearly with weight bits. M0 currently full-recomputes every level independently, so these are not measured wall-clock savings or residual-reuse costs.",
+            "single_fp32_proxy_bits_per_token": FP32_PROXY_COST,
+            "cumulative_proxy_cost_vs_single_fp32": mean_cumulative_cost / FP32_PROXY_COST,
+            "cumulative_proxy_savings_vs_single_fp32": 1.0 - mean_cumulative_cost / FP32_PROXY_COST,
+            "note": "Internal precision 16 is the FP32 identity path, not FP16, and has proxy cost 32. Terminal selected bits are a precision outcome, not compute. Cumulative proxy cost sums explicit costs for each visited level. M0 currently full-recomputes every level independently, so these are not measured wall-clock savings or residual-reuse costs.",
         },
     }, token_rows
 
@@ -330,7 +352,7 @@ def aggregate_fixture_analyses(analyses: Iterable[tuple[dict, list[dict]]]) -> t
             "mean_entropy_when_corrected": _conditional_mean(token_rows, f"{prefix}_signal_entropy", f"{prefix}_corrected"),
             "mean_small_margin_when_corrected": _conditional_mean(token_rows, f"{prefix}_signal_small_margin", f"{prefix}_corrected"),
         }
-    full_ladder_cost = sum(precision_order)
+    full_ladder_cost = sum(proxy_cost_for_precision(precision) for precision in precision_order)
     mean_cumulative_cost = sum(row["oracle_cumulative_proxy_bits"] for row in token_rows) / total_tokens
     oracle = {
         "quality_masked_accuracy": sum(row["oracle_correct"] for row in token_rows) / total_tokens,
@@ -339,11 +361,12 @@ def aggregate_fixture_analyses(analyses: Iterable[tuple[dict, list[dict]]]) -> t
         "always_full_ladder_proxy_bits_per_token": full_ladder_cost,
         "cumulative_proxy_cost_vs_full_ladder": mean_cumulative_cost / full_ladder_cost,
         "cumulative_proxy_savings_vs_full_ladder": 1.0 - mean_cumulative_cost / full_ladder_cost,
-        "cumulative_proxy_cost_vs_single_fp32": mean_cumulative_cost / 16.0,
-        "cumulative_proxy_savings_vs_single_fp32": 1.0 - mean_cumulative_cost / 16.0,
+        "single_fp32_proxy_bits_per_token": FP32_PROXY_COST,
+        "cumulative_proxy_cost_vs_single_fp32": mean_cumulative_cost / FP32_PROXY_COST,
+        "cumulative_proxy_savings_vs_single_fp32": 1.0 - mean_cumulative_cost / FP32_PROXY_COST,
         "note": analyses[0][0]["oracle"]["note"],
     }
-    return {"precision_order": precision_order, "per_precision": per_precision,
+    return {"precision_order": precision_order, "precision_proxy_costs": proxy_cost_mapping(precision_order), "per_precision": per_precision,
             "transitions": transitions, "oracle": oracle}, token_rows
 
 

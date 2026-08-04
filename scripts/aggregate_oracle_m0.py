@@ -11,6 +11,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Iterable
 
+from scripts.oracle_m0 import FP32_PROXY_COST, proxy_cost_mapping
+
 
 COMPATIBILITY_FIELDS = (
     "precision_order", "git_commit", "checkpoint_sha256", "validation_data_sha256",
@@ -71,6 +73,18 @@ def _weighted_mean(records: list[tuple[float, float]]) -> float | None:
 def aggregate_summaries(summaries: list[dict]) -> dict:
     verify_compatible(summaries)
     order = summaries[0]["precision_order"]
+    expected_proxy_costs = proxy_cost_mapping(order)
+    proxy_costs_present = [summary.get("precision_proxy_costs") for summary in summaries]
+    # Pre-correction artifacts omit this field. Their already-recorded
+    # cumulative means used internal ID 16 as a cost of 16 and cannot be
+    # reconstructed from a compact summary, so never publish invalid ratios.
+    if any(costs is None for costs in proxy_costs_present):
+        raise ValueError(
+            "Legacy proxy accounting detected: every input must include "
+            "precision_proxy_costs; rerun oracle_m0.py before aggregation"
+        )
+    if any(costs is not None and costs != expected_proxy_costs for costs in proxy_costs_present):
+        raise ValueError("Incompatible precision_proxy_costs")
     token_counts = [summary["per_precision"][str(order[0])]["masked_tokens"] for summary in summaries]
     if any(count <= 0 for count in token_counts):
         raise ValueError("Every run must have a positive masked-token count")
@@ -117,8 +131,9 @@ def aggregate_summaries(summaries: list[dict]) -> dict:
         "always_full_ladder_proxy_bits_per_token": ladder_cost,
         "cumulative_proxy_cost_vs_full_ladder": mean_cumulative / ladder_cost,
         "cumulative_proxy_savings_vs_full_ladder": 1.0 - mean_cumulative / ladder_cost,
-        "cumulative_proxy_cost_vs_single_fp32": mean_cumulative / 16.0,
-        "cumulative_proxy_savings_vs_single_fp32": 1.0 - mean_cumulative / 16.0,
+        "single_fp32_proxy_bits_per_token": FP32_PROXY_COST,
+        "cumulative_proxy_cost_vs_single_fp32": mean_cumulative / FP32_PROXY_COST,
+        "cumulative_proxy_savings_vs_single_fp32": 1.0 - mean_cumulative / FP32_PROXY_COST,
         "reconstruction_note": "Counts and sums are reconstructed as reported per-run mean × masked-token count; floating-point roundoff is possible.",
     }
     ranges = {
@@ -134,6 +149,7 @@ def aggregate_summaries(summaries: list[dict]) -> dict:
         "aggregate_type": "oracle_m0_distributed",
         "total_runs": len(summaries), "total_masked_tokens": total_tokens,
         "precision_order": order,
+        "precision_proxy_costs": expected_proxy_costs,
         "compatibility": {field: _compatibility_value(summaries[0], field) for field in COMPATIBILITY_FIELDS},
         "seeds": sorted({summary["run"].get("fixture_seed") for summary in summaries}),
         "hosts": sorted({summary["run"].get("hostname") for summary in summaries}),

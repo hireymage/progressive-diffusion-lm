@@ -6,6 +6,7 @@ from scripts.aggregate_oracle_m0 import aggregate_summaries
 def _summary(host, seed, tokens, accuracy, corrected, confidence=0.5):
     return {
         "precision_order": [1, 16],
+        "precision_proxy_costs": {"1": 1, "16": 32},
         "per_precision": {
             "1": {"masked_tokens": tokens, "masked_loss": 2.0, "masked_accuracy": accuracy,
                   "mean_confidence": confidence, "mean_entropy": 1.0, "mean_top1_top2_margin": 0.2},
@@ -18,9 +19,10 @@ def _summary(host, seed, tokens, accuracy, corrected, confidence=0.5):
             "mean_low_confidence_when_corrected": confidence,
             "mean_entropy_when_corrected": 1.0, "mean_small_margin_when_corrected": 0.8}},
         "oracle": {"quality_masked_accuracy": 0.95, "mean_terminal_selected_bits": 2.0,
-            "mean_cumulative_proxy_bits": 3.0, "always_full_ladder_proxy_bits_per_token": 17,
-            "cumulative_proxy_savings_vs_full_ladder": 1 - 3 / 17,
-            "cumulative_proxy_savings_vs_single_fp32": 1 - 3 / 16},
+            "mean_cumulative_proxy_bits": 3.0, "always_full_ladder_proxy_bits_per_token": 33,
+            "cumulative_proxy_savings_vs_full_ladder": 1 - 3 / 33,
+            "single_fp32_proxy_bits_per_token": 32,
+            "cumulative_proxy_savings_vs_single_fp32": 1 - 3 / 32},
         "run": {"git_commit": "abc", "checkpoint_sha256": "ckpt", "validation_data_sha256": "val",
             "checkpoint_step": 7, "config_path": "configs/a.json", "fixture_seed": seed, "hostname": host,
             "simulated_wall_clock": {"1": {"elapsed_seconds": 2.0, "mean_batch_seconds": 1.0}}},
@@ -36,6 +38,8 @@ def test_aggregate_oracle_weights_metrics_reconstructs_counts_and_keeps_host_tim
     assert result["transitions"]["q1_to_q16"]["mean_low_confidence_when_corrected"] == pytest.approx(0.65)
     assert result["oracle"]["reconstructed_oracle_correct_tokens"] == 38.0
     assert result["oracle"]["reconstructed_cumulative_proxy_bits_sum"] == 120.0
+    assert result["oracle"]["single_fp32_proxy_bits_per_token"] == 32
+    assert result["precision_proxy_costs"] == {"1": 1, "16": 32}
     assert set(result["timing_by_host"]) == {"a", "b"}
 
 
@@ -44,3 +48,10 @@ def test_aggregate_oracle_rejects_provenance_mismatch():
     right["run"]["checkpoint_sha256"] = "other"
     with pytest.raises(ValueError, match="checkpoint_sha256"):
         aggregate_summaries([left, right])
+
+
+def test_aggregate_oracle_rejects_legacy_proxy_accounting():
+    legacy = _summary("a", 1, 10, 0.2, 2)
+    del legacy["precision_proxy_costs"]
+    with pytest.raises(ValueError, match="rerun oracle_m0.py"):
+        aggregate_summaries([legacy])

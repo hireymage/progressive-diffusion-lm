@@ -322,6 +322,13 @@ nikoli rychlost budoucích low-bit kernelů. Protože uvedený checkpoint byl u�
 ve FP32, jeho Q1/Q2/Q4/Q8 výsledky jsou pouze předběžná M0/PTQ sonda, nikoli test
 budoucího modelu učeného současně ve všech přesnostech.
 
+V současném evaluatoru je interní identifikátor `16` kompatibilní označení pro
+identity FP32 cestu: používá FP32 master weights i FP32 výpočet a má proxy cenu
+32, nikoli 16. Měřená ladder Q1 → Q2 → Q4 → Q8 → FP32 proto stojí 47 jednotek
+(`1 + 2 + 4 + 8 + 32`); zastavení na Q4 stojí 7. Cílová, dosud
+neimplementovaná ladder Q1 → Q2 → Q4 → Q8 → FP16 by stála 31 proti 32 pro jeden
+FP32 průchod. M0 zatím skutečný FP16 stupeň neobsahuje.
+
 Výsledky z více nodů se spojí pouze při shodné provenance:
 
 ```bash

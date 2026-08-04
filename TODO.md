@@ -71,6 +71,7 @@ Poslední aktualizace: 2026-08-04
 - [x] Připravit průběžné vyhodnocení stejných vstupů v Q1/Q2/Q4/Q8/FP32 bez ukládání plných logitů
 - [x] Změřit opravené i nově zavedené chyby mezi stupni přesnosti na 3node pilotu
 - [x] Přidat provenance-safe agregaci distribuovaných M0 běhů
+- [ ] Implementovat skutečný FP16 stupeň pro cílovou ladder Q1/Q2/Q4/Q8/FP16; současné interní `bits=16` je FP32 identity cesta
 - [ ] Vytvořit oracle Pareto křivku kvalita versus proxy výpočet
 - [ ] Ověřit prediktivní hodnotu entropy, top-1/top-2 marginu a stability top-1
 

@@ -55,10 +55,18 @@ chybnou na správnou.
 
 ## Proxy výpočet
 
-- plná ladder: 31 proxy bitů na token (`1 + 2 + 4 + 8 + 16`)
-- oracle průměr: 29,445 proxy bitů na token
-- oracle úspora proti plné ladder: 5,015 %
-- oracle cena proti jednomu FP32 průchodu: 1,840×
+Původní publikovaný souhrn v tomto pilotu nesprávně započítal interní
+identifikátor `16` jako 16bitový průchod. Ve skutečnosti jde o identity FP32
+cestu. Uložené výsledkové artefakty se zpětně nemění, proto zde původní hodnoty
+neinterpretujeme jako platné proxy náklady.
+
+- skutečně měřená ladder: Q1 → Q2 → Q4 → Q8 → FP32
+- správná plná proxy cena této ladder: 47 (`1 + 2 + 4 + 8 + 32`)
+- jeden FP32 referenční průchod: 32
+- zastavení po Q4 by stálo 7 (`1 + 2 + 4`)
+
+Cílová budoucí ladder je Q1 → Q2 → Q4 → Q8 → FP16 s cenou 31 proti FP32=32.
+Skutečný FP16 stupeň však v tomto pilotu ani v M0 evaluatoru dosud neexistuje.
 
 Proxy metrika předpokládá cenu úměrnou bitové šířce. Dnešní MLX implementace
 provádí simulované plné přepočty a nepoužívá packed low-bit kernely ani skutečné
@@ -69,7 +77,7 @@ reziduální reuse. Čísla proto nejsou tvrzením o reálném hardwarovém zryc
 1. Nepoužívat tento FP32 checkpoint jako důkaz, že adaptivní inference bude
    efektivní.
 2. Použít per-token pilotní data k návrhu první Pareto analýzy prahů.
-3. Připravit malý model učený společně v Q1/Q2/Q4/Q8/FP32.
+3. Připravit malý model učený společně v Q1/Q2/Q4/Q8/FP16 (s FP32 master/reference).
 4. Stejnou M0 sondu zopakovat nad multi-precision checkpointem.
 5. Pokračovat k naučenému řadiči až tehdy, když vyšší přesnosti opraví podstatně
    více chyb, než kolik jich zavedou, a oracle ukáže smysluplnou cenu vůči FP32.
