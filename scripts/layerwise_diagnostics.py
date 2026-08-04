@@ -32,6 +32,7 @@ from src.layerwise_model import (LayerwiseProgressiveLM, masked_deep_supervision
                                  proxy_cost_for_schedule)
 
 MASK_RATES = (0.15, 0.30, 0.50, 0.75, 1.00)
+POLICY_CONFIDENCE_THRESHOLDS = (0.50, 0.70, 0.80, 0.90, 0.95, 0.99)
 PROGRESSIVE_PRECISIONS = ["q1"] * 5 + ["q2"] * 5 + ["q4"] * 5 + ["q8"] * 5 + ["fp16"] * 5
 
 # Each strategy sees exactly the same fixed 100 sequences and is evaluated on
@@ -394,9 +395,133 @@ def run_exit_sweep(a, train) -> dict:
             "limits": "Each row uses the same fixed training sequences and exact mask; exits are evaluated in separate chunks."}
 
 
+def collect_masked_predictions(model: LayerwiseProgressiveLM, targets_np: np.ndarray,
+                               mask_np: np.ndarray, batch_size: int, exit_layer: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Collect only compact masked-token outputs for one exit layer.
+
+    Vocab-sized logits are consumed within each batch, then released.  The
+    returned arrays are one prediction, confidence, and target per masked token.
+    """
+    if batch_size <= 0:
+        raise ValueError("--eval-batch-size must be positive")
+    predictions, confidences, truths = [], [], []
+    for start in range(0, len(targets_np), batch_size):
+        target = targets_np[start:start + batch_size]
+        mask = mask_np[start:start + batch_size]
+        x = mx.array(np.where(mask, model.cfg.mask_token_id(), target), dtype=mx.int32)
+        logits = model(x, exit_layer=exit_layer).astype(mx.float32)
+        log_probs = nn.log_softmax(logits, axis=-1)
+        predicted = np.asarray(mx.argmax(log_probs, axis=-1))
+        confidence = np.asarray(mx.exp(mx.max(log_probs, axis=-1)))
+        mx.eval(log_probs)
+        predictions.append(predicted[mask])
+        confidences.append(confidence[mask])
+        truths.append(target[mask])
+    return (np.concatenate(predictions), np.concatenate(confidences), np.concatenate(truths))
+
+
+def summarize_routing(exit_indices: np.ndarray, predictions: list[np.ndarray], truths: np.ndarray,
+                      layers: tuple[int, ...], costs: tuple[float, ...]) -> dict:
+    """Summarize a token-wise simulated route; indices name milestone entries."""
+    if len(exit_indices) != len(truths):
+        raise ValueError("routing and target sizes differ")
+    if len(exit_indices) == 0:
+        raise ValueError("policy simulation needs at least one masked token")
+    if np.any(exit_indices < 0) or np.any(exit_indices >= len(layers)):
+        raise ValueError("routing chose an unknown milestone")
+    selected = np.asarray([predictions[i][j] for j, i in enumerate(exit_indices)])
+    counts = np.bincount(exit_indices, minlength=len(layers))
+    mean_cost = float(np.mean(np.asarray(costs)[exit_indices]))
+    full_cost = float(costs[-1])
+    return {"accuracy": float(np.mean(selected == truths)), "mean_proxy_cost": mean_cost,
+            "savings_vs_full": float(1.0 - mean_cost / full_cost),
+            "exit_distribution": [{"layer": int(layer), "count": int(count)}
+                                  for layer, count in zip(layers, counts)],
+            "masked_tokens": int(len(truths))}
+
+
+def simulate_stable_confidence_policy(predictions: list[np.ndarray], confidences: list[np.ndarray],
+                                      truths: np.ndarray, layers: tuple[int, ...], costs: tuple[float, ...],
+                                      threshold: float) -> dict:
+    """Route to earliest stable confident exit, with final-layer fallback.
+
+    The first milestone has no earlier prediction to compare, so it cannot be a
+    stable exit under this policy.  This deliberately conservative convention
+    makes the stated "stability versus previous milestone" condition literal.
+    """
+    route = np.full(len(truths), len(layers) - 1, dtype=np.int32)
+    unresolved = np.ones(len(truths), dtype=bool)
+    for index in range(1, len(layers)):
+        eligible = unresolved & (confidences[index] >= threshold) & (predictions[index] == predictions[index - 1])
+        route[eligible] = index
+        unresolved[eligible] = False
+    result = summarize_routing(route, predictions, truths, layers, costs)
+    result["confidence_threshold"] = float(threshold)
+    return result
+
+
+def simulate_oracle_earliest_correct(predictions: list[np.ndarray], truths: np.ndarray,
+                                     layers: tuple[int, ...], costs: tuple[float, ...]) -> dict:
+    """Ground-truth upper bound; intentionally not a deployable controller."""
+    route = np.full(len(truths), len(layers) - 1, dtype=np.int32)
+    unresolved = np.ones(len(truths), dtype=bool)
+    for index, prediction in enumerate(predictions):
+        correct = unresolved & (prediction == truths)
+        route[correct] = index
+        unresolved[correct] = False
+    result = summarize_routing(route, predictions, truths, layers, costs)
+    result["label"] = "ground-truth oracle earliest-correct upper bound (non-deployable)"
+    return result
+
+
+def run_policy_sweep(a, train) -> dict:
+    """Evaluate an algorithmic token-wise early-exit policy on a fixed mask."""
+    if a.eval_sequences < 1:
+        raise ValueError("--eval-sequences must be positive for policy-sweep")
+    if len(train) < a.eval_sequences:
+        raise ValueError("cache has fewer rows than --eval-sequences")
+    layers = tuple(layer for layer, _ in a.milestone_weights)
+    if layers != tuple(sorted(set(layers))) or not layers or layers[-1] != a.n_layers:
+        raise ValueError("policy-sweep milestones must be strictly increasing and end at --n-layers for fallback")
+    sample = np.asarray(train[:a.eval_sequences], dtype=np.int32)
+    model = build_exit_sweep_model(a, a.vocab_size)
+    load_weights_only(model, a.checkpoint)
+    costs = tuple(float(proxy_cost_for_schedule(model.cfg.layer_precisions, layer)) for layer in layers)
+    mask_seed = a.seed + 900_000
+    mask_np = deterministic_mask(sample.shape, a.gate_mask_rate, mask_seed)
+    predictions, confidences, truths = [], [], None
+    for layer in layers:
+        pred, confidence, current_truths = collect_masked_predictions(model, sample, mask_np, a.eval_batch_size, layer)
+        predictions.append(pred)
+        confidences.append(confidence)
+        if truths is None:
+            truths = current_truths
+        elif not np.array_equal(truths, current_truths):
+            raise RuntimeError("masked targets changed between milestone passes")
+    fixed_exits = []
+    for index, layer in enumerate(layers):
+        route = np.full(len(truths), index, dtype=np.int32)
+        row = summarize_routing(route, predictions, truths, layers, costs)
+        row["layer"] = int(layer)
+        fixed_exits.append(row)
+    return {"mode": "policy-sweep", "checkpoint": str(a.checkpoint), "checkpoint_loaded": True,
+            "eval_sequence_indices": list(range(a.eval_sequences)),
+            "masking": {"rate": a.gate_mask_rate, "seed": mask_seed},
+            "milestones": [{"layer": int(layer), "precision": model.cfg.layer_precisions[layer - 1], "proxy_cost": cost}
+                           for layer, cost in zip(layers, costs)],
+            "policy": {"kind": "token-wise simulated stable-confidence routing",
+                       "confidence_metric": "top-1 softmax probability",
+                       "thresholds": list(POLICY_CONFIDENCE_THRESHOLDS),
+                       "rows": [simulate_stable_confidence_policy(predictions, confidences, truths, layers, costs, threshold)
+                                for threshold in POLICY_CONFIDENCE_THRESHOLDS]},
+            "fixed_exits": fixed_exits,
+            "oracle": simulate_oracle_earliest_correct(predictions, truths, layers, costs),
+            "limits": "Algorithmic token-wise/oracle simulation only: it is not an executable sparse speedup or current sequence-wide controller. Proxy-cost savings are simulated per-token accounting, not measured runtime savings."}
+
+
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--mode", required=True, choices=("frequency", "overfit", "mask-sweep", "exit-sweep"))
+    p.add_argument("--mode", required=True, choices=("frequency", "overfit", "mask-sweep", "exit-sweep", "policy-sweep"))
     p.add_argument("--cache-dir", type=Path, default=ROOT / "data/cache")
     p.add_argument("--tokenizer", type=Path, default=ROOT / "tokenizer/wiki_bpe")
     p.add_argument("--output", type=Path, default=ROOT / "results/layerwise/diagnostics.json")
@@ -405,7 +530,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--n-heads", type=int, default=4); p.add_argument("--n-layers", type=int, default=25)
     p.add_argument("--model-variant", choices=("fp32", "progressive"), default="fp32")
     p.add_argument("--vocab-size", type=int, default=None, help="normally inferred from tokenizer")
-    p.add_argument("--checkpoint", type=Path, help="layer-wise .npz required for mask-sweep or exit-sweep")
+    p.add_argument("--checkpoint", type=Path, help="layer-wise .npz required for mask-sweep, exit-sweep, or policy-sweep")
     p.add_argument("--eval-sequences", type=int, default=32); p.add_argument("--eval-batch-size", type=int, default=2)
     p.add_argument("--overfit-sequences", type=int, default=100); p.add_argument("--steps", type=int, default=1000)
     p.add_argument("--batch-size", type=int, default=4); p.add_argument("--lr", type=float, default=1e-3)
@@ -424,7 +549,7 @@ def parser() -> argparse.ArgumentParser:
 
 def validate_mode_args(a) -> None:
     """Validate mode-specific inputs before accessing cache or tokenizer."""
-    if a.mode in ("mask-sweep", "exit-sweep") and a.checkpoint is None:
+    if a.mode in ("mask-sweep", "exit-sweep", "policy-sweep") and a.checkpoint is None:
         raise ValueError(f"--checkpoint is required for {a.mode} (weights are never random)")
 
 
@@ -460,7 +585,8 @@ def main() -> None:
     if a.mode == "frequency": result["result"] = run_frequency(a, train, val, tokenizer)
     elif a.mode == "overfit": result["result"] = run_overfit(a, train, tokenizer)
     elif a.mode == "mask-sweep": result["result"] = run_mask_sweep(a, train, val, tokenizer)
-    else: result["result"] = run_exit_sweep(a, train)
+    elif a.mode == "exit-sweep": result["result"] = run_exit_sweep(a, train)
+    else: result["result"] = run_policy_sweep(a, train)
     atomic_json_write(a.output, result)
     print(json.dumps(result, indent=2))
 

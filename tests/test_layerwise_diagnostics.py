@@ -10,7 +10,8 @@ from scripts.layerwise_diagnostics import (
     aggregate_masked_metrics, atomic_json_write, count_tokens, deterministic_mask,
     frequency_summary, gate_streak, parse_mask_schedule, schedule_rate,
     build_exit_sweep_model, build_model, parser, run_exit_sweep, run_overfit,
-    validate_mode_args, validate_resume_metadata,
+    simulate_oracle_earliest_correct, simulate_stable_confidence_policy,
+    summarize_routing, validate_mode_args, validate_resume_metadata,
 )
 
 
@@ -149,3 +150,30 @@ def test_exit_sweep_parser_and_checkpoint_requirement():
     assert "exit-sweep" in parser()._option_string_actions["--mode"].choices
     with pytest.raises(ValueError, match="--checkpoint is required for exit-sweep"):
         validate_mode_args(SimpleNamespace(mode="exit-sweep", checkpoint=None))
+
+
+def test_policy_routing_requires_stability_and_falls_back_to_final_layer():
+    predictions = [np.array([1, 2, 3, 4]), np.array([1, 8, 3, 9]), np.array([1, 8, 7, 9])]
+    confidences = [np.array([.99, .99, .99, .99]), np.array([.9, .9, .6, .9]), np.array([.9, .9, .9, .4])]
+    result = simulate_stable_confidence_policy(predictions, confidences, np.array([1, 8, 7, 4]),
+                                                (5, 10, 25), (5.0, 15.0, 155.0), .8)
+    # Token 0 exits at 10; token 1 at 25; 2 is unstable until 25; 3 falls back.
+    assert result["exit_distribution"] == [{"layer": 5, "count": 0}, {"layer": 10, "count": 1}, {"layer": 25, "count": 3}]
+    assert result["accuracy"] == .75
+    assert result["mean_proxy_cost"] == 120.0
+    assert result["savings_vs_full"] == pytest.approx(1 - 120 / 155)
+    assert sum(row["count"] for row in result["exit_distribution"]) == result["masked_tokens"]
+
+
+def test_policy_oracle_is_explicitly_non_deployable_and_uses_earliest_correct():
+    predictions = [np.array([1, 2]), np.array([3, 4]), np.array([3, 5])]
+    result = simulate_oracle_earliest_correct(predictions, np.array([3, 5]), (5, 10, 25), (5., 15., 155.))
+    assert result["label"] == "ground-truth oracle earliest-correct upper bound (non-deployable)"
+    assert result["accuracy"] == 1.0
+    assert result["exit_distribution"] == [{"layer": 5, "count": 0}, {"layer": 10, "count": 1}, {"layer": 25, "count": 1}]
+
+
+def test_policy_sweep_parser_and_checkpoint_requirement():
+    assert "policy-sweep" in parser()._option_string_actions["--mode"].choices
+    with pytest.raises(ValueError, match="--checkpoint is required for policy-sweep"):
+        validate_mode_args(SimpleNamespace(mode="policy-sweep", checkpoint=None))
