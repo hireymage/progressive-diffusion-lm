@@ -19,6 +19,7 @@ from pathlib import Path
 import mlx.core as mx
 import mlx.nn as nn
 import mlx.optimizers as optim
+from mlx.utils import tree_flatten, tree_unflatten
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -200,8 +201,8 @@ def run_frequency(a, train, val, tokenizer) -> dict:
 def _overfit_checkpoint(model, optimizer, directory: Path, kind: str, metadata: dict) -> None:
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"{kind}.npz"
-    payload = dict(mlx.utils.tree_flatten(model.parameters()))
-    payload.update({"opt_" + k: v for k, v in mlx.utils.tree_flatten(optimizer.state)})
+    payload = dict(tree_flatten(model.parameters()))
+    payload.update({"opt_" + k: v for k, v in tree_flatten(optimizer.state)})
     mx.savez(str(path), **payload)
     atomic_json_write(directory / f"{kind}.json", metadata)
 
@@ -212,7 +213,7 @@ def _load_overfit_checkpoint(model, optimizer, path: Path) -> dict:
     opt = [(k.removeprefix("opt_"), v) for k, v in data.items() if k.startswith("opt_")]
     if not opt:
         raise ValueError("overfit checkpoint has no optimizer state")
-    optimizer.state = mlx.utils.tree_unflatten(opt)
+    optimizer.state = tree_unflatten(opt)
     mx.eval(model.parameters(), optimizer.state)
     return json.loads(path.with_suffix(".json").read_text())
 
@@ -236,7 +237,7 @@ def run_overfit(a, train, tokenizer) -> dict:
     checkpoint_dir = a.checkpoint_dir
     # Reserving two checkpoint files catches accidental long runs on a nearly
     # full volume before any model state is written.
-    estimate = sum(np.asarray(v).nbytes for _, v in mlx.utils.tree_flatten(model.parameters())) * 4
+    estimate = sum(np.asarray(v).nbytes for _, v in tree_flatten(model.parameters())) * 4
     free = __import__("shutil").disk_usage(a.output.parent).free
     needed = int(a.min_free_gb * 1024**3) + 2 * estimate
     if free < needed:

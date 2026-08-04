@@ -1,12 +1,14 @@
 import numpy as np
 
 import json
+from types import SimpleNamespace
 
 import pytest
 
 from scripts.layerwise_diagnostics import (
     aggregate_masked_metrics, atomic_json_write, count_tokens, deterministic_mask,
     frequency_summary, gate_streak, parse_mask_schedule, schedule_rate,
+    run_overfit,
 )
 
 
@@ -59,3 +61,19 @@ def test_atomic_report_is_complete_json_for_resume_monitoring(tmp_path):
     report = tmp_path / "report.json"
     atomic_json_write(report, {"step": 7, "schedule": [[.5, 10]], "gate_streak": 2})
     assert json.loads(report.read_text()) == {"step": 7, "schedule": [[.5, 10]], "gate_streak": 2}
+
+
+def test_run_overfit_smoke_exercises_disk_estimate_and_writes_checkpoint(tmp_path):
+    """A one-step CPU/MLX smoke test catches missing checkpoint utility imports."""
+    args = SimpleNamespace(
+        overfit_sequences=1, seed=11, vocab_size=16, d_model=8, d_ff=16,
+        n_heads=2, n_layers=1, lr=1e-3, auxiliary_loss="final-only",
+        milestone_weights=(), checkpoint_dir=tmp_path / "checkpoints",
+        output=tmp_path / "report.json", min_free_gb=0.0, resume=False,
+        steps=1, batch_size=1, mask_schedule=((.5, 1),), report_every=1,
+        gate_mask_rate=.5, gate_accuracy=2.0, gate_reports=1, eval_batch_size=1,
+    )
+    result = run_overfit(args, np.ones((1, 256), dtype=np.int32), TinyTokenizer())
+    assert result["steps"] == 1
+    assert (args.checkpoint_dir / "latest.npz").exists()
+    assert json.loads(args.output.read_text())["status"] == "running"
