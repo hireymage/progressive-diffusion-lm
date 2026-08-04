@@ -1,0 +1,47 @@
+{
+  "date": "2026-08-04",
+  "source_commit": "a3d41ed",
+  "frequency": {
+    "node": "m1-256",
+    "train_tokens": 65582080,
+    "top1_id": 167,
+    "top1_token": "\n",
+    "train_frequency": 0.0368820873,
+    "validation_accuracy": 0.0374286191
+  },
+  "overfit_100_sequences": {
+    "node": "m1-512",
+    "steps": 1000,
+    "batch_size": 4,
+    "approximate_exposures_per_sequence": 40,
+    "initial_loss": 9.886821,
+    "final_loss": 7.019600,
+    "final_masked_accuracy": 0.036467728,
+    "quality_gate_95_percent": false
+  },
+  "overfit_1_sequence": {
+    "node": "m1-512",
+    "steps": 5000,
+    "approximate_exposures_per_sequence": 5000,
+    "initial_loss": 9.596776,
+    "step_1000_loss": 1.291210,
+    "step_1000_masked_accuracy": 0.582089552,
+    "first_gate_pass_step": 1500,
+    "final_loss": 0.000718074,
+    "final_masked_accuracy": 1.0,
+    "quality_gate_95_percent": true
+  },
+  "fp32_mask_sweep": {
+    "node": "m4-air",
+    "checkpoint_best_step": 3500,
+    "rows": [
+      {"mask_rate": 0.15, "loss": 7.528468, "accuracy": 0.037617555, "constant_top1_accuracy": 0.037617555},
+      {"mask_rate": 0.30, "loss": 7.483407, "accuracy": 0.046632124, "constant_top1_accuracy": 0.046632124},
+      {"mask_rate": 0.50, "loss": 7.517838, "accuracy": 0.040145103, "constant_top1_accuracy": 0.040145103},
+      {"mask_rate": 0.75, "loss": 7.522548, "accuracy": 0.038449059, "constant_top1_accuracy": 0.038449059},
+      {"mask_rate": 1.00, "loss": 7.516076, "accuracy": 0.040161133, "constant_top1_accuracy": 0.040161133}
+    ]
+  },
+  "verdict": "implementation_learns_but_pilots_are_severely_undertrained",
+  "next_gate": "Repeat the 95 percent gate on 100 fixed sequences with comparable exposures per sequence."
+}

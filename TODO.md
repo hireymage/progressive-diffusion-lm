@@ -79,6 +79,12 @@ Poslední aktualizace: 2026-08-04
 - [x] Napojit prototyp na reálný tokenizer a 69M-tokenový Wikipedia cache
 - [x] Spustit 5 000krokový FP32 a progressive pilot a změřit vrstvy 5/10/15/20/25
 - [ ] Odstranit kolaps k nejčastějším tokenům; hlubší výstupy zatím nezlepšují kvalitu
+- [x] Změřit constant-token baseline: nový řádek = 3,743 % validation accuracy
+- [x] Potvrdit mask sweepem, že 5k FP32 checkpoint přesně kopíruje tuto baseline
+- [x] Ověřit schopnost učení na jedné sekvenci: 59,7 % po 1 000 expozicích
+- [x] Dokončit one-sequence overfit: 100 % masked accuracy, loss 0,000718
+- [ ] Zopakovat 95% gate na 100 sekvencích s dostatečným počtem expozic
+- [ ] Přidat mask-rate curriculum 15 % → 30 % → 50 % → 75 % → 100 %
 - [ ] Spustit zbývajících pět kontrol až po úspěšném jazykovém quality gate
 - [ ] Kalibrovat early-exit práh na validačních datech bez leakage
 
