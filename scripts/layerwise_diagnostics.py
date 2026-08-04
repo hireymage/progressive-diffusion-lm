@@ -29,7 +29,7 @@ from scripts.layerwise_pilot import select_cache
 from src.config import LayerwiseModelConfig
 from src.data import load_tokenizer
 from src.layerwise_model import (LayerwiseProgressiveLM, masked_deep_supervision_loss,
-                                 proxy_cost_for_schedule)
+                                 build_layer_precision_schedule, proxy_cost_for_schedule)
 
 MASK_RATES = (0.15, 0.30, 0.50, 0.75, 1.00)
 POLICY_CONFIDENCE_THRESHOLDS = (0.50, 0.70, 0.80, 0.90, 0.95, 0.99)
@@ -175,6 +175,12 @@ def build_model(a, vocab_size: int) -> LayerwiseProgressiveLM:
         if a.n_layers != 25:
             raise ValueError("--model-variant progressive requires --n-layers 25")
         precisions = PROGRESSIVE_PRECISIONS
+    elif a.model_variant == "flexible":
+        if a.n_layers != 25:
+            raise ValueError("--model-variant flexible requires --n-layers 25")
+        # The schedule is switched at runtime; this canonical route is also
+        # restored after multi-route evaluation.
+        precisions = flexible_route_pool(a.n_layers)["q8_only"]
     else:
         precisions = ["fp32"] * a.n_layers
     min_exit_layer = (min(layer for layer, _ in a.milestone_weights)
@@ -183,6 +189,41 @@ def build_model(a, vocab_size: int) -> LayerwiseProgressiveLM:
         n_heads=a.n_heads, n_layers=a.n_layers, min_exit_layer=min_exit_layer,
         max_seq_len=256, layer_precisions=precisions)
     return LayerwiseProgressiveLM(cfg)
+
+
+def flexible_route_pool(n_layers: int) -> dict[str, list[str]]:
+    """The fixed deployment routes for the shared-master flexible experiment."""
+    if n_layers != 25:
+        raise ValueError("flexible route pool requires 25 layers")
+    return {
+        "q8_only": ["q8"] * n_layers,
+        "q8_fp16": build_layer_precision_schedule(n_layers, ["q8", "fp16"]),
+        "q2_q8_fp16": build_layer_precision_schedule(n_layers, ["q2", "q8", "fp16"]),
+    }
+
+
+def route_for_training_step(route_pool: dict[str, list[str]], step: int) -> tuple[str, list[str]]:
+    """Choose one route per one-indexed update, with no random route state."""
+    if step < 1:
+        raise ValueError("step is one-indexed and must be positive")
+    name = tuple(route_pool)[(step - 1) % len(route_pool)]
+    return name, route_pool[name]
+
+
+def evaluate_routes(model, targets_np, mask_np, batch_size, route_pool: dict[str, list[str]]) -> dict:
+    """Evaluate every flexible route against exactly one caller-owned mask."""
+    rows = {}
+    for name, schedule in route_pool.items():
+        model.set_layer_precisions(schedule)
+        metrics, _ = evaluate_in_chunks(model, targets_np, mask_np, batch_size)
+        metrics["proxy_full_cost"] = proxy_cost_for_schedule(schedule)
+        rows[name] = metrics
+    # Gate values are intentionally pessimistic: a passing report means each
+    # independently executable route passed on the same masked tokens.
+    return {"per_route": rows,
+            "loss": max(row["loss"] for row in rows.values()),
+            "accuracy": min(row["accuracy"] for row in rows.values()),
+            "masked_tokens": min(row["masked_tokens"] for row in rows.values())}
 
 
 def load_weights_only(model: LayerwiseProgressiveLM, checkpoint: Path) -> None:
@@ -263,6 +304,10 @@ def validate_resume_metadata(saved: dict, a) -> None:
         raise ValueError("resume schedule differs from checkpoint metadata")
     if saved.get("model_variant") != a.model_variant:
         raise ValueError("resume model variant differs from checkpoint metadata")
+    if a.model_variant == "flexible":
+        expected = flexible_route_pool(a.n_layers)
+        if saved.get("route_pool") != expected:
+            raise ValueError("resume route pool differs from checkpoint metadata")
 
 
 def run_overfit(a, train, tokenizer) -> dict:
@@ -271,6 +316,7 @@ def run_overfit(a, train, tokenizer) -> dict:
     fixed = np.asarray(train[:a.overfit_sequences], dtype=np.int32)
     mx.random.seed(a.seed)
     model = build_model(a, a.vocab_size)
+    route_pool = flexible_route_pool(a.n_layers) if a.model_variant == "flexible" else None
     optimizer = optim.AdamW(learning_rate=a.lr)
     grad_fn = nn.value_and_grad(model, lambda m, x, t, mask: _overfit_loss(m, x, t, mask, a))
     checkpoint_dir = a.checkpoint_dir
@@ -298,23 +344,37 @@ def run_overfit(a, train, tokenizer) -> dict:
         batch = fixed[indices]
         train_rate = schedule_rate(a.mask_schedule, step)
         x, targets, mask = corrupt(batch, model.cfg.mask_token_id(), train_rate, a.seed + step)
+        train_route = None
+        if route_pool is not None:
+            train_route, schedule = route_for_training_step(route_pool, step)
+            model.set_layer_precisions(schedule)
         loss, grads = grad_fn(model, x, targets, mask)
         optimizer.update(model, grads)
         mx.eval(loss, model.parameters())
         if step == 1 or step % a.report_every == 0 or step == a.steps:
             # Fixed evaluation masks make the reported curve comparable.
             eval_mask = deterministic_mask(fixed.shape, a.gate_mask_rate, a.seed + 900_000)
-            metrics, _ = evaluate_in_chunks(model, fixed, eval_mask, a.eval_batch_size)
+            if route_pool is None:
+                metrics, _ = evaluate_in_chunks(model, fixed, eval_mask, a.eval_batch_size)
+            else:
+                metrics = evaluate_routes(model, fixed, eval_mask, a.eval_batch_size, route_pool)
+                # Evaluation finishes on the last route, so explicitly restore
+                # the next deterministic training schedule before continuing.
+                next_route, next_schedule = route_for_training_step(route_pool, step + 1)
+                model.set_layer_precisions(next_schedule)
+                metrics["next_training_route"] = next_route
             streak = gate_streak(streak, metrics["accuracy"], a.gate_accuracy)
             best_accuracy = max(best_accuracy, metrics["accuracy"])
             metrics.update({"step": step, "train_objective": float(loss), "train_mask_rate": train_rate,
                             "gate_streak": streak, "processed_tokens": step * a.batch_size * fixed.shape[1],
                             "exposures_per_sequence": step * a.batch_size / len(fixed)})
+            if train_route is not None:
+                metrics["training_route"] = train_route
             history.append(metrics)
             metadata = {"step": step, "gate_streak": streak, "best_accuracy": best_accuracy,
                         "history": history, "schedule": [[r, n] for r, n in a.mask_schedule],
                         "seed": a.seed, "batch_size": a.batch_size, "overfit_sequences": a.overfit_sequences,
-                        "model_variant": a.model_variant}
+                        "model_variant": a.model_variant, "route_pool": route_pool}
             _overfit_checkpoint(model, optimizer, checkpoint_dir, "latest", metadata)
             if metrics["accuracy"] >= best_accuracy:
                 _overfit_checkpoint(model, optimizer, checkpoint_dir, "best", metadata)
@@ -324,7 +384,14 @@ def run_overfit(a, train, tokenizer) -> dict:
             if streak >= a.gate_reports:
                 break
     eval_mask = deterministic_mask(fixed.shape, a.gate_mask_rate, a.seed + 900_000)
-    final, reconstructions = evaluate_in_chunks(model, fixed, eval_mask, a.eval_batch_size, capture_reconstructions=2)
+    if route_pool is None:
+        final, reconstructions = evaluate_in_chunks(model, fixed, eval_mask, a.eval_batch_size, capture_reconstructions=2)
+    else:
+        final = evaluate_routes(model, fixed, eval_mask, a.eval_batch_size, route_pool)
+        # Capture examples from the canonical all-Q8 route, preserving the
+        # existing examples schema while reporting all route metrics above.
+        model.set_layer_precisions(route_pool["q8_only"])
+        _canonical, reconstructions = evaluate_in_chunks(model, fixed, eval_mask, a.eval_batch_size, capture_reconstructions=2)
     decode = lambda ids: tokenizer.decode([int(i) for i in ids])
     # The all-position value is derived from the masked aggregate: unmasked
     # positions are copied exactly by construction.
@@ -335,7 +402,8 @@ def run_overfit(a, train, tokenizer) -> dict:
         "meaning": "masked accuracy on a fixed mask over all fixed training sequences"}
     return {"mode": "overfit", "model_variant": a.model_variant,
             "architecture": {"d_model": a.d_model, "d_ff": a.d_ff, "n_heads": a.n_heads, "n_layers": a.n_layers,
-                             "layer_precisions": list(model.cfg.layer_precisions)},
+                             "layer_precisions": list(model.cfg.layer_precisions),
+                             **({"route_pool": route_pool, "active_schedule": list(model.cfg.layer_precisions)} if route_pool is not None else {})},
             "fixed_sequence_indices": list(range(a.overfit_sequences)), "masking": {"schedule": a.mask_schedule, "gate_rate": a.gate_mask_rate, "seed": a.seed + 900_000},
             "steps": history[-1]["step"] if history else start_step, "max_steps": a.steps, "batch_size": a.batch_size,
             "processed_tokens": (history[-1]["processed_tokens"] if history else start_step * a.batch_size * fixed.shape[1]),
@@ -528,7 +596,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=20260804); p.add_argument("--top-k", type=int, default=20)
     p.add_argument("--d-model", type=int, default=64); p.add_argument("--d-ff", type=int, default=256)
     p.add_argument("--n-heads", type=int, default=4); p.add_argument("--n-layers", type=int, default=25)
-    p.add_argument("--model-variant", choices=("fp32", "progressive"), default="fp32")
+    p.add_argument("--model-variant", choices=("fp32", "progressive", "flexible"), default="fp32")
     p.add_argument("--vocab-size", type=int, default=None, help="normally inferred from tokenizer")
     p.add_argument("--checkpoint", type=Path, help="layer-wise .npz required for mask-sweep, exit-sweep, or policy-sweep")
     p.add_argument("--eval-sequences", type=int, default=32); p.add_argument("--eval-batch-size", type=int, default=2)

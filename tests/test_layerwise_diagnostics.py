@@ -10,6 +10,7 @@ from scripts.layerwise_diagnostics import (
     aggregate_masked_metrics, atomic_json_write, count_tokens, deterministic_mask,
     frequency_summary, gate_streak, parse_mask_schedule, schedule_rate,
     build_exit_sweep_model, build_model, parser, run_exit_sweep, run_overfit,
+    flexible_route_pool, route_for_training_step, evaluate_routes,
     simulate_oracle_earliest_correct, simulate_stable_confidence_policy,
     summarize_routing, validate_mode_args, validate_resume_metadata,
 )
@@ -101,6 +102,42 @@ def test_resume_metadata_rejects_model_variant_mismatch():
         validate_resume_metadata({"schedule": [[.5, 10]], "model_variant": "progressive"}, args)
 
 
+def test_flexible_route_pool_definitions_costs_and_deterministic_cycle():
+    routes = flexible_route_pool(25)
+    assert list(routes) == ["q8_only", "q8_fp16", "q2_q8_fp16"]
+    assert routes["q8_only"] == ["q8"] * 25
+    assert all(len(schedule) == 25 for schedule in routes.values())
+    assert [diagnostics.proxy_cost_for_schedule(schedule) for schedule in routes.values()] == [200, 296, 210]
+    assert [route_for_training_step(routes, step)[0] for step in range(1, 5)] == [
+        "q8_only", "q8_fp16", "q2_q8_fp16", "q8_only"]
+
+
+def test_flexible_route_evaluation_uses_worst_route_gate_values(monkeypatch):
+    routes = flexible_route_pool(25)
+    seen = []
+    class Model:
+        def set_layer_precisions(self, schedule): seen.append(schedule)
+    values = iter([(.98, .1), (.96, .2), (.97, .3)])
+    def fake_evaluate(*_args, **_kwargs):
+        accuracy, loss = next(values)
+        return {"accuracy": accuracy, "loss": loss, "masked_tokens": 11}, []
+    monkeypatch.setattr(diagnostics, "evaluate_in_chunks", fake_evaluate)
+    result = evaluate_routes(Model(), None, np.ones((1, 1), dtype=bool), 1, routes)
+    assert len(seen) == 3
+    assert result["accuracy"] == .96 and result["loss"] == .3
+    assert gate_streak(2, result["accuracy"], .95) == 3
+    assert set(result["per_route"]) == set(routes)
+
+
+def test_flexible_resume_rejects_incompatible_route_pool():
+    args = SimpleNamespace(mask_schedule=((.5, 10),), model_variant="flexible", n_layers=25)
+    saved = {"schedule": [[.5, 10]], "model_variant": "flexible", "route_pool": flexible_route_pool(25)}
+    validate_resume_metadata(saved, args)
+    saved["route_pool"]["q8_only"] = ["q2"] * 25
+    with pytest.raises(ValueError, match="route pool"):
+        validate_resume_metadata(saved, args)
+
+
 def test_weighted_progressive_overfit_smoke_has_eligible_milestone_exits(tmp_path):
     args = SimpleNamespace(
         overfit_sequences=1, seed=12, vocab_size=16, d_model=8, d_ff=16,
@@ -114,6 +151,22 @@ def test_weighted_progressive_overfit_smoke_has_eligible_milestone_exits(tmp_pat
     result = run_overfit(args, np.ones((1, 256), dtype=np.int32), TinyTokenizer())
     assert result["architecture"]["layer_precisions"][:5] == ["q1"] * 5
     assert result["architecture"]["n_layers"] == 25
+    assert (args.checkpoint_dir / "latest.npz").exists()
+
+
+def test_flexible_weighted_overfit_smoke_writes_all_route_metrics(tmp_path):
+    args = SimpleNamespace(
+        overfit_sequences=1, seed=13, vocab_size=16, d_model=8, d_ff=16,
+        n_heads=2, n_layers=25, model_variant="flexible", lr=1e-3,
+        auxiliary_loss="weighted-milestones", milestone_weights=((5, .1), (10, .2), (15, .3), (20, .4), (25, 1.0)),
+        checkpoint_dir=tmp_path / "checkpoints", output=tmp_path / "report.json",
+        min_free_gb=0.0, resume=False, steps=1, batch_size=1,
+        mask_schedule=((.5, 1),), report_every=1, gate_mask_rate=.5,
+        gate_accuracy=2.0, gate_reports=1, eval_batch_size=1,
+    )
+    result = run_overfit(args, np.ones((1, 256), dtype=np.int32), TinyTokenizer())
+    assert set(result["history"][0]["per_route"]) == set(flexible_route_pool(25))
+    assert result["architecture"]["route_pool"] == flexible_route_pool(25)
     assert (args.checkpoint_dir / "latest.npz").exists()
 
 
