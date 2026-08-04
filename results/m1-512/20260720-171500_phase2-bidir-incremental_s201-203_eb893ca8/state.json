@@ -1,0 +1,191 @@
+{
+  "run_id": "20260720-171500_phase2-bidir-incremental_s201-203_eb893ca8",
+  "campaign": "phase2-bidir-incremental",
+  "node": "m1-512",
+  "status": "completed",
+  "tasks": {
+    "m1-512-progressive-up-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-progressive-up-s201.json"
+      ],
+      "started_at_utc": "2026-07-20T17:17:17.165031+00:00",
+      "finished_at_utc": "2026-07-20T19:08:46.260253+00:00"
+    },
+    "m1-512-progressive-up-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-progressive-up-s203.json"
+      ],
+      "started_at_utc": "2026-07-20T19:08:46.261769+00:00",
+      "finished_at_utc": "2026-07-20T20:41:20.909213+00:00"
+    },
+    "m1-512-progressive-down-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-progressive-down-s201.json"
+      ],
+      "started_at_utc": "2026-07-20T20:41:20.910789+00:00",
+      "finished_at_utc": "2026-07-20T22:12:27.952466+00:00"
+    },
+    "m1-512-progressive-down-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-progressive-down-s203.json"
+      ],
+      "started_at_utc": "2026-07-20T22:12:27.954860+00:00",
+      "finished_at_utc": "2026-07-20T23:43:34.583635+00:00"
+    },
+    "m1-512-constant-1b-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-constant-1b-s201.json"
+      ],
+      "started_at_utc": "2026-07-20T23:43:34.585555+00:00",
+      "finished_at_utc": "2026-07-21T01:10:18.019923+00:00"
+    },
+    "m1-512-constant-1b-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-constant-1b-s203.json"
+      ],
+      "started_at_utc": "2026-07-21T01:10:18.021710+00:00",
+      "finished_at_utc": "2026-07-21T02:36:54.132326+00:00"
+    },
+    "m1-512-constant-2b-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-constant-2b-s201.json"
+      ],
+      "started_at_utc": "2026-07-21T02:36:54.134267+00:00",
+      "finished_at_utc": "2026-07-21T04:07:21.620763+00:00"
+    },
+    "m1-512-constant-2b-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-constant-2b-s203.json"
+      ],
+      "started_at_utc": "2026-07-21T04:07:21.622333+00:00",
+      "finished_at_utc": "2026-07-21T05:37:48.019139+00:00"
+    },
+    "m1-512-constant-4b-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-constant-4b-s201.json"
+      ],
+      "started_at_utc": "2026-07-21T05:37:48.021447+00:00",
+      "finished_at_utc": "2026-07-21T07:09:14.970139+00:00"
+    },
+    "m1-512-constant-4b-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-constant-4b-s203.json"
+      ],
+      "started_at_utc": "2026-07-21T07:09:14.971885+00:00",
+      "finished_at_utc": "2026-07-21T08:40:41.368005+00:00"
+    },
+    "m1-512-constant-8b-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-constant-8b-s201.json"
+      ],
+      "started_at_utc": "2026-07-21T08:40:41.370358+00:00",
+      "finished_at_utc": "2026-07-21T10:12:00.786187+00:00"
+    },
+    "m1-512-constant-8b-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-constant-8b-s203.json"
+      ],
+      "started_at_utc": "2026-07-21T10:12:00.788217+00:00",
+      "finished_at_utc": "2026-07-21T11:43:21.379446+00:00"
+    },
+    "m1-512-baseline-fp16-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-baseline-fp16-s201.json"
+      ],
+      "started_at_utc": "2026-07-21T11:43:21.381274+00:00",
+      "finished_at_utc": "2026-07-21T13:10:04.656988+00:00"
+    },
+    "m1-512-baseline-fp16-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m1-512-baseline-fp16-s203.json"
+      ],
+      "started_at_utc": "2026-07-21T13:10:04.659476+00:00",
+      "finished_at_utc": "2026-07-21T14:31:29.325920+00:00"
+    }
+  },
+  "completed_at_utc": "2026-07-21T14:31:29.327222+00:00"
+}

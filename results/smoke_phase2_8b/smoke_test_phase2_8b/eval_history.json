@@ -1,0 +1,11 @@
+[
+  {
+    "step": 50,
+    "val_loss": 8.141078,
+    "val_perplexity": 3432.614582,
+    "val_accuracy": 0.04115,
+    "generalization_gap": 0.102974,
+    "train_loss": 8.038104,
+    "bits_used": 8
+  }
+]

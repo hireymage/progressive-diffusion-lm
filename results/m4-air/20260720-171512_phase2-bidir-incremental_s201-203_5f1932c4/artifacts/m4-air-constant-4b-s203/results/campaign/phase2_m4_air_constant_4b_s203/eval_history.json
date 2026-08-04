@@ -1,0 +1,182 @@
+[
+  {
+    "step": 500,
+    "val_loss": 7.61541,
+    "val_perplexity": 2029.226724,
+    "val_accuracy": 0.033607,
+    "generalization_gap": -0.009905,
+    "train_loss": 7.625315,
+    "bits_used": 4
+  },
+  {
+    "step": 1000,
+    "val_loss": 7.545887,
+    "val_perplexity": 1892.941128,
+    "val_accuracy": 0.034472,
+    "generalization_gap": 0.002958,
+    "train_loss": 7.54293,
+    "bits_used": 4
+  },
+  {
+    "step": 1500,
+    "val_loss": 7.540054,
+    "val_perplexity": 1881.932467,
+    "val_accuracy": 0.033737,
+    "generalization_gap": 0.045013,
+    "train_loss": 7.495041,
+    "bits_used": 4
+  },
+  {
+    "step": 2000,
+    "val_loss": 7.504555,
+    "val_perplexity": 1816.296549,
+    "val_accuracy": 0.036387,
+    "generalization_gap": 0.013922,
+    "train_loss": 7.490633,
+    "bits_used": 4
+  },
+  {
+    "step": 2500,
+    "val_loss": 7.500536,
+    "val_perplexity": 1809.011342,
+    "val_accuracy": 0.035493,
+    "generalization_gap": -0.026339,
+    "train_loss": 7.526874,
+    "bits_used": 4
+  },
+  {
+    "step": 3000,
+    "val_loss": 7.488429,
+    "val_perplexity": 1787.241971,
+    "val_accuracy": 0.036599,
+    "generalization_gap": -0.033674,
+    "train_loss": 7.522103,
+    "bits_used": 4
+  },
+  {
+    "step": 3500,
+    "val_loss": 7.504646,
+    "val_perplexity": 1816.462151,
+    "val_accuracy": 0.032594,
+    "generalization_gap": 0.022827,
+    "train_loss": 7.481819,
+    "bits_used": 4
+  },
+  {
+    "step": 4000,
+    "val_loss": 7.481096,
+    "val_perplexity": 1774.183913,
+    "val_accuracy": 0.038772,
+    "generalization_gap": -0.025831,
+    "train_loss": 7.506926,
+    "bits_used": 4
+  },
+  {
+    "step": 4500,
+    "val_loss": 7.483236,
+    "val_perplexity": 1777.985457,
+    "val_accuracy": 0.037192,
+    "generalization_gap": 0.038899,
+    "train_loss": 7.444337,
+    "bits_used": 4
+  },
+  {
+    "step": 5000,
+    "val_loss": 7.497422,
+    "val_perplexity": 1803.388159,
+    "val_accuracy": 0.038993,
+    "generalization_gap": 0.014193,
+    "train_loss": 7.483229,
+    "bits_used": 4
+  },
+  {
+    "step": 5500,
+    "val_loss": 7.470644,
+    "val_perplexity": 1755.736626,
+    "val_accuracy": 0.04194,
+    "generalization_gap": 0.016871,
+    "train_loss": 7.453773,
+    "bits_used": 4
+  },
+  {
+    "step": 6000,
+    "val_loss": 7.456953,
+    "val_perplexity": 1731.862628,
+    "val_accuracy": 0.043254,
+    "generalization_gap": 0.054728,
+    "train_loss": 7.402225,
+    "bits_used": 4
+  },
+  {
+    "step": 6500,
+    "val_loss": 7.444527,
+    "val_perplexity": 1710.475314,
+    "val_accuracy": 0.043785,
+    "generalization_gap": 0.017531,
+    "train_loss": 7.426996,
+    "bits_used": 4
+  },
+  {
+    "step": 7000,
+    "val_loss": 7.44861,
+    "val_perplexity": 1717.474885,
+    "val_accuracy": 0.046447,
+    "generalization_gap": 0.027074,
+    "train_loss": 7.421537,
+    "bits_used": 4
+  },
+  {
+    "step": 7500,
+    "val_loss": 7.429848,
+    "val_perplexity": 1685.551589,
+    "val_accuracy": 0.044788,
+    "generalization_gap": -0.019223,
+    "train_loss": 7.449071,
+    "bits_used": 4
+  },
+  {
+    "step": 8000,
+    "val_loss": 7.442812,
+    "val_perplexity": 1707.544555,
+    "val_accuracy": 0.048182,
+    "generalization_gap": 0.026441,
+    "train_loss": 7.41637,
+    "bits_used": 4
+  },
+  {
+    "step": 8500,
+    "val_loss": 7.41085,
+    "val_perplexity": 1653.831294,
+    "val_accuracy": 0.046896,
+    "generalization_gap": 0.037881,
+    "train_loss": 7.372969,
+    "bits_used": 4
+  },
+  {
+    "step": 9000,
+    "val_loss": 7.404529,
+    "val_perplexity": 1643.410865,
+    "val_accuracy": 0.047423,
+    "generalization_gap": 0.018685,
+    "train_loss": 7.385845,
+    "bits_used": 4
+  },
+  {
+    "step": 9500,
+    "val_loss": 7.427649,
+    "val_perplexity": 1681.848746,
+    "val_accuracy": 0.046272,
+    "generalization_gap": 0.015444,
+    "train_loss": 7.412205,
+    "bits_used": 4
+  },
+  {
+    "step": 10000,
+    "val_loss": 7.394615,
+    "val_perplexity": 1627.198621,
+    "val_accuracy": 0.046504,
+    "generalization_gap": 0.019693,
+    "train_loss": 7.374922,
+    "bits_used": 4
+  }
+]

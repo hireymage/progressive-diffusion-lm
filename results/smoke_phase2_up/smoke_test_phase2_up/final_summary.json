@@ -1,0 +1,90 @@
+{
+  "experiment_name": "smoke_test_phase2_up",
+  "model_type": "progressive",
+  "weight_noise_mode": "none",
+  "seed": 42,
+  "precision_schedule": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "tie_word_embeddings": true,
+  "max_steps": 50,
+  "best_val_loss": 8.1459,
+  "total_training_seconds": 3.0,
+  "storage": {
+    "total_params": 2534272,
+    "q_linear_weight_params": 393216,
+    "q_linear_scale_params": 2304,
+    "non_quantized_params": 2141056,
+    "fp32_total_bytes": 10137088,
+    "fp32_total_mb": 10.137088,
+    "bf16_total_bytes": 5068544,
+    "bf16_total_mb": 5.068544,
+    "actual_model_bytes": 10137088,
+    "actual_model_mb": 10.137088,
+    "actual_compression_vs_fp32": 1.0,
+    "average_step_weight_bits": 3.75,
+    "hypothetical_packed_bytes": null,
+    "hypothetical_packed_mb": null,
+    "hypothetical_packed_compression_vs_fp32": null,
+    "theoretical_q_bytes": 10137088,
+    "theoretical_q_mb": 10.137088,
+    "effective_avg_bits": 3.75,
+    "compression_vs_fp32": 1.0,
+    "compression_vs_bf16": 0.5,
+    "training_memory_estimate_mb": 40.548352
+  },
+  "config": {
+    "model": {
+      "vocab_size": 16000,
+      "pad_token_id": 0,
+      "d_model": 128,
+      "n_layers": 2,
+      "n_heads": 4,
+      "d_ff": 512,
+      "max_seq_len": 64,
+      "dropout": 0.0,
+      "tie_word_embeddings": true,
+      "n_diffusion_steps": 4,
+      "precision_schedule": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "model_type": "progressive",
+      "weight_noise_mode": "none",
+      "weight_noise_multiplier": 1.0
+    },
+    "train": {
+      "batch_size": 4,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0,
+      "max_steps": 50,
+      "warmup_steps": 10,
+      "grad_clip": 1.0,
+      "checkpoint_dir": "checkpoints/smoke",
+      "checkpoint_every": 999999,
+      "resume_from": null,
+      "eval_every": 50,
+      "eval_steps": 10,
+      "log_every": 10,
+      "results_dir": "results/smoke_phase2_up",
+      "save_checkpoints": false,
+      "seed": 42
+    },
+    "data": {
+      "dataset_name": "wikimedia/wikipedia",
+      "dataset_config": "20231101.en",
+      "dataset_revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+      "max_articles": 100,
+      "max_text_bytes": 500000,
+      "seq_len": 64,
+      "tokenizer_path": "tokenizer/wiki_bpe",
+      "data_cache_dir": "data/cache",
+      "train_split": 0.95
+    }
+  }
+}

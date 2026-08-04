@@ -1,0 +1,14 @@
+{
+  "captured_at_utc": "2026-07-20T17:15:12.824374+00:00",
+  "node": "m4-air",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.14.5 (main, May 10 2026, 10:21:34) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "executable": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+  "physical_memory_bytes": 17179869184,
+  "physical_memory_gib": 16.0,
+  "source_git_head": "92da5d11a812567335da710c131f10a729089a3a",
+  "environment": {
+    "TMPDIR": "/var/folders/qn/w3gs3y4j1vv4f__2hf340qg00000gn/T/"
+  }
+}
