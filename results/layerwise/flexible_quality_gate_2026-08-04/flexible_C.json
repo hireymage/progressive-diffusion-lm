@@ -1,0 +1,1698 @@
+{
+  "offline_only": true,
+  "cache_meta_path": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/data/cache/meta_seq256_c4a40531c04a048e.json",
+  "cache_metadata": {
+    "dataset_name": "wikimedia/wikipedia",
+    "dataset_config": "20231101.en",
+    "dataset_revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+    "tokenizer_sha256": "344c822c8014a67827590390733b32ee940d43d4f589191e11abcc6faf332b66",
+    "seq_len": 256,
+    "max_articles": 50000,
+    "max_text_bytes": 500000000,
+    "train_split": 0.95,
+    "seed": 42,
+    "n_train_chunks": 256180,
+    "n_val_chunks": 13484,
+    "total_tokens": 69033984,
+    "train_sha256": "963d492e55f499f3bb2d7f37d9a8bf87b5c25c8f0541a425608aec3f7c3fe3d8",
+    "val_sha256": "f691bc4100cd534271e2558b49a26365c1135e8c5f86c16fe5823e9a0a5fdb30"
+  },
+  "tokenizer": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/tokenizer/wiki_bpe",
+  "seed": 20260804,
+  "result": {
+    "mode": "overfit",
+    "model_variant": "flexible",
+    "architecture": {
+      "d_model": 64,
+      "d_ff": 256,
+      "n_heads": 4,
+      "n_layers": 25,
+      "layer_precisions": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8"
+      ],
+      "route_pool": {
+        "q8_only": [
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8"
+        ],
+        "q8_fp16": [
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16"
+        ],
+        "q2_q8_fp16": [
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16"
+        ]
+      },
+      "active_schedule": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8"
+      ]
+    },
+    "fixed_sequence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "masking": {
+      "schedule": [
+        [
+          0.15,
+          8000
+        ],
+        [
+          0.3,
+          8000
+        ],
+        [
+          0.5,
+          12000
+        ],
+        [
+          0.75,
+          12000
+        ]
+      ],
+      "gate_rate": 0.5,
+      "seed": 21160804
+    },
+    "steps": 40000,
+    "max_steps": 40000,
+    "batch_size": 4,
+    "processed_tokens": 40960000,
+    "exposures_per_sequence": 1600.0,
+    "checkpoint_policy": "latest+best including optimizer and metadata",
+    "elapsed_seconds": 6694.635323762894,
+    "history": [
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 9.887635765706928,
+            "accuracy": 0.00533291506548506,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 9.887441358774954,
+            "accuracy": 0.004627088071523802,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 9.856676079770478,
+            "accuracy": 0.0003137008862050035,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 9.887635765706928,
+        "accuracy": 0.0003137008862050035,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 1,
+        "train_objective": 10.249626159667969,
+        "train_mask_rate": 0.15,
+        "gate_streak": 0,
+        "processed_tokens": 1024,
+        "exposures_per_sequence": 0.04,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 6.989960452265183,
+            "accuracy": 0.048623637361775544,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 6.98996392632174,
+            "accuracy": 0.048623637361775544,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 7.000910962444129,
+            "accuracy": 0.04658458160144303,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 7.000910962444129,
+        "accuracy": 0.04658458160144303,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 1000,
+        "train_objective": 7.605624198913574,
+        "train_mask_rate": 0.15,
+        "gate_streak": 0,
+        "processed_tokens": 1024000,
+        "exposures_per_sequence": 40.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 6.640382118949085,
+            "accuracy": 0.05991686926515567,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 6.640346300591675,
+            "accuracy": 0.05983844404360442,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 6.679905831509969,
+            "accuracy": 0.05842679005568191,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 6.679905831509969,
+        "accuracy": 0.05842679005568191,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 2000,
+        "train_objective": 6.571974754333496,
+        "train_mask_rate": 0.15,
+        "gate_streak": 0,
+        "processed_tokens": 2048000,
+        "exposures_per_sequence": 80.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 6.0947596231223775,
+            "accuracy": 0.06783781664183201,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 6.094749571211095,
+            "accuracy": 0.06783781664183201,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 6.236922888239358,
+            "accuracy": 0.05991686926515567,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 6.236922888239358,
+        "accuracy": 0.05991686926515567,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 3000,
+        "train_objective": 6.021568298339844,
+        "train_mask_rate": 0.15,
+        "gate_streak": 0,
+        "processed_tokens": 3072000,
+        "exposures_per_sequence": 120.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 5.550496255114596,
+            "accuracy": 0.08250333307191593,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 5.55055856267178,
+            "accuracy": 0.08250333307191593,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 5.782629012276206,
+            "accuracy": 0.06932789585130578,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 5.782629012276206,
+        "accuracy": 0.06932789585130578,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 4000,
+        "train_objective": 4.7986860275268555,
+        "train_mask_rate": 0.15,
+        "gate_streak": 0,
+        "processed_tokens": 4096000,
+        "exposures_per_sequence": 160.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 5.060979173376218,
+            "accuracy": 0.10548192298643244,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 5.060909847476119,
+            "accuracy": 0.10540349776488118,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 5.45310300487171,
+            "accuracy": 0.08179750607795468,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 5.45310300487171,
+        "accuracy": 0.08179750607795468,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 5000,
+        "train_objective": 4.183449745178223,
+        "train_mask_rate": 0.15,
+        "gate_streak": 0,
+        "processed_tokens": 5120000,
+        "exposures_per_sequence": 200.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 4.658197539187947,
+            "accuracy": 0.13630303505607402,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 4.658085162121122,
+            "accuracy": 0.13583248372676654,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 5.149580523805257,
+            "accuracy": 0.09889420437612736,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 5.149580523805257,
+        "accuracy": 0.09889420437612736,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 6000,
+        "train_objective": 4.666563034057617,
+        "train_mask_rate": 0.15,
+        "gate_streak": 0,
+        "processed_tokens": 6144000,
+        "exposures_per_sequence": 240.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 4.228248034446494,
+            "accuracy": 0.1831228923221708,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 4.22845393146742,
+            "accuracy": 0.18288761665751704,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 4.889736828958462,
+            "accuracy": 0.12061799074582386,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 4.889736828958462,
+        "accuracy": 0.12061799074582386,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 7000,
+        "train_objective": 3.090137004852295,
+        "train_mask_rate": 0.15,
+        "gate_streak": 0,
+        "processed_tokens": 7168000,
+        "exposures_per_sequence": 280.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 3.827149894525281,
+            "accuracy": 0.23684416908477768,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 3.8270825453061104,
+            "accuracy": 0.23668731864167517,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 4.682339538958351,
+            "accuracy": 0.13677358638538153,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 4.682339538958351,
+        "accuracy": 0.13677358638538153,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 8000,
+        "train_objective": 2.574042320251465,
+        "train_mask_rate": 0.15,
+        "gate_streak": 0,
+        "processed_tokens": 8192000,
+        "exposures_per_sequence": 320.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 2.963441636700526,
+            "accuracy": 0.3476590071366952,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 2.963252284575253,
+            "accuracy": 0.34734530625049015,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 4.125739585202438,
+            "accuracy": 0.18422084542388834,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 4.125739585202438,
+        "accuracy": 0.18422084542388834,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 9000,
+        "train_objective": 3.498549699783325,
+        "train_mask_rate": 0.3,
+        "gate_streak": 0,
+        "processed_tokens": 9216000,
+        "exposures_per_sequence": 360.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 2.3671740443834968,
+            "accuracy": 0.46263038193082895,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 2.367194673742241,
+            "accuracy": 0.46310093326013646,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 3.582076584401855,
+            "accuracy": 0.25409771782605284,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 3.582076584401855,
+        "accuracy": 0.25409771782605284,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 10000,
+        "train_objective": 1.8959071636199951,
+        "train_mask_rate": 0.3,
+        "gate_streak": 0,
+        "processed_tokens": 10240000,
+        "exposures_per_sequence": 400.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 1.931277184830059,
+            "accuracy": 0.5562700964630225,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 1.9310820926433356,
+            "accuracy": 0.5557211199121638,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 3.338104042106774,
+            "accuracy": 0.28993804407497453,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 3.338104042106774,
+        "accuracy": 0.28993804407497453,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 11000,
+        "train_objective": 1.2927756309509277,
+        "train_mask_rate": 0.3,
+        "gate_streak": 0,
+        "processed_tokens": 11264000,
+        "exposures_per_sequence": 440.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 1.523227997877375,
+            "accuracy": 0.6452827229236923,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 1.5228114547556348,
+            "accuracy": 0.6453611481452435,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 2.928413160753553,
+            "accuracy": 0.354482001411654,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 2.928413160753553,
+        "accuracy": 0.354482001411654,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 12000,
+        "train_objective": 2.60622501373291,
+        "train_mask_rate": 0.3,
+        "gate_streak": 0,
+        "processed_tokens": 12288000,
+        "exposures_per_sequence": 480.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 1.1758558753331252,
+            "accuracy": 0.7166496745353306,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 1.175873359468215,
+            "accuracy": 0.7157869970982668,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 2.6302460665684495,
+            "accuracy": 0.39855697592345696,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 2.6302460665684495,
+        "accuracy": 0.39855697592345696,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 13000,
+        "train_objective": 0.857473611831665,
+        "train_mask_rate": 0.3,
+        "gate_streak": 0,
+        "processed_tokens": 13312000,
+        "exposures_per_sequence": 520.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.9834499895811062,
+            "accuracy": 0.7609599247117873,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.983089167710314,
+            "accuracy": 0.7614304760410948,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 2.3839077010415375,
+            "accuracy": 0.45133715002744884,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 2.3839077010415375,
+        "accuracy": 0.45133715002744884,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 14000,
+        "train_objective": 0.7555649280548096,
+        "train_mask_rate": 0.3,
+        "gate_streak": 0,
+        "processed_tokens": 14336000,
+        "exposures_per_sequence": 560.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.8379561364272091,
+            "accuracy": 0.7991530076072465,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.8380121752875672,
+            "accuracy": 0.7985256058348364,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 2.384520610326244,
+            "accuracy": 0.4587091208532664,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 2.384520610326244,
+        "accuracy": 0.4587091208532664,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 15000,
+        "train_objective": 2.06162166595459,
+        "train_mask_rate": 0.3,
+        "gate_streak": 0,
+        "processed_tokens": 15360000,
+        "exposures_per_sequence": 600.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.7348776486665817,
+            "accuracy": 0.8215826209709043,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.7343155724115441,
+            "accuracy": 0.8214257705278017,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 2.1628660792117493,
+            "accuracy": 0.49698062897027684,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 2.1628660792117493,
+        "accuracy": 0.49698062897027684,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 16000,
+        "train_objective": 0.4955662786960602,
+        "train_mask_rate": 0.3,
+        "gate_streak": 0,
+        "processed_tokens": 16384000,
+        "exposures_per_sequence": 640.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.29577559676906867,
+            "accuracy": 0.9331817112383343,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.2954871182326812,
+            "accuracy": 0.9331817112383343,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 1.445214235748032,
+            "accuracy": 0.6210493294643558,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 1.445214235748032,
+        "accuracy": 0.6210493294643558,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 17000,
+        "train_objective": 0.6104006767272949,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 17408000,
+        "exposures_per_sequence": 680.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.18374568023825896,
+            "accuracy": 0.9609442396674771,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.1835714929935306,
+            "accuracy": 0.9608658144459258,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 1.082148270138235,
+            "accuracy": 0.7102972315896793,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 1.082148270138235,
+        "accuracy": 0.7102972315896793,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 18000,
+        "train_objective": 1.8325200080871582,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 18432000,
+        "exposures_per_sequence": 720.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.13207673980883594,
+            "accuracy": 0.9729432985648184,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.13203874005132,
+            "accuracy": 0.9729432985648184,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 1.0845351500208635,
+            "accuracy": 0.7091992784879617,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 1.0845351500208635,
+        "accuracy": 0.7091992784879617,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 19000,
+        "train_objective": 0.5038325190544128,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 19456000,
+        "exposures_per_sequence": 760.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.0922226300354252,
+            "accuracy": 0.9822758999294173,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.09209572966887983,
+            "accuracy": 0.9819621990432122,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.9408928863011793,
+            "accuracy": 0.7422947219825896,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.9408928863011793,
+        "accuracy": 0.7422947219825896,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 20000,
+        "train_objective": 0.3869229555130005,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 20480000,
+        "exposures_per_sequence": 800.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.06726396135222154,
+            "accuracy": 0.9871382636655949,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.06731016023586885,
+            "accuracy": 0.9874519645517998,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.7227600278802764,
+            "accuracy": 0.8020547408046428,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.7227600278802764,
+        "accuracy": 0.8020547408046428,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 21000,
+        "train_objective": 1.3077139854431152,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 21504000,
+        "exposures_per_sequence": 840.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.057767247909998605,
+            "accuracy": 0.9898831464198886,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.05772214952504838,
+            "accuracy": 0.9898047211983374,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.760509726604044,
+            "accuracy": 0.7915457611167751,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.760509726604044,
+        "accuracy": 0.7915457611167751,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 22000,
+        "train_objective": 0.3528076112270355,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 22528000,
+        "exposures_per_sequence": 880.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.03625590769125148,
+            "accuracy": 0.9944318092698612,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.03621069377709074,
+            "accuracy": 0.9945102344914124,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.5726012796848374,
+            "accuracy": 0.8415810524664732,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.5726012796848374,
+        "accuracy": 0.8415810524664732,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 23000,
+        "train_objective": 0.27267909049987793,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 23552000,
+        "exposures_per_sequence": 920.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.03394528736183105,
+            "accuracy": 0.9939612579405537,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.03385238772655934,
+            "accuracy": 0.9939612579405537,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.5226436566183702,
+            "accuracy": 0.8524821582620971,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.5226436566183702,
+        "accuracy": 0.8524821582620971,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 24000,
+        "train_objective": 0.8753896951675415,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 24576000,
+        "exposures_per_sequence": 960.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.026016657961950695,
+            "accuracy": 0.9963140145870912,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.025981197656986036,
+            "accuracy": 0.9963140145870912,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.39912367408840843,
+            "accuracy": 0.8860481530860325,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.39912367408840843,
+        "accuracy": 0.8860481530860325,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 25000,
+        "train_objective": 0.24347330629825592,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 25600000,
+        "exposures_per_sequence": 1000.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.02624000400664439,
+            "accuracy": 0.9959218884793349,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.026234287732740134,
+            "accuracy": 0.9960003137008862,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.511875860170424,
+            "accuracy": 0.8559328680103522,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.511875860170424,
+        "accuracy": 0.8559328680103522,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 26000,
+        "train_objective": 0.236322283744812,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 26624000,
+        "exposures_per_sequence": 1040.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.020013317688515143,
+            "accuracy": 0.9972551172457063,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.019974203402900025,
+            "accuracy": 0.9971766920241549,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.3159497323730171,
+            "accuracy": 0.913732256293624,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.3159497323730171,
+        "accuracy": 0.913732256293624,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 27000,
+        "train_objective": 0.8155143857002258,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 27648000,
+        "exposures_per_sequence": 1080.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.015048499326048907,
+            "accuracy": 0.997804093796565,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.015026272991816777,
+            "accuracy": 0.9979609442396675,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.26714864339375344,
+            "accuracy": 0.9261234412987217,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.26714864339375344,
+        "accuracy": 0.9261234412987217,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 28000,
+        "train_objective": 0.19292300939559937,
+        "train_mask_rate": 0.5,
+        "gate_streak": 0,
+        "processed_tokens": 28672000,
+        "exposures_per_sequence": 1120.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.0734588110685213,
+            "accuracy": 0.9832170025880324,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.07342634694981637,
+            "accuracy": 0.9834522782526861,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.5913940786230882,
+            "accuracy": 0.8352286095208219,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.5913940786230882,
+        "accuracy": 0.8352286095208219,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 29000,
+        "train_objective": 0.34348341822624207,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 29696000,
+        "exposures_per_sequence": 1160.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.052818374889139874,
+            "accuracy": 0.9880009411026586,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.05272834950698824,
+            "accuracy": 0.9880793663242099,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.32254749267730104,
+            "accuracy": 0.9083209160065877,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.32254749267730104,
+        "accuracy": 0.9083209160065877,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 30000,
+        "train_objective": 0.8596875667572021,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 30720000,
+        "exposures_per_sequence": 1200.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.05014025708484459,
+            "accuracy": 0.9898047211983374,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.050090460259382345,
+            "accuracy": 0.9897262959767862,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.41192714603879704,
+            "accuracy": 0.8829895694455336,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.41192714603879704,
+        "accuracy": 0.8829895694455336,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 31000,
+        "train_objective": 0.23425596952438354,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 31744000,
+        "exposures_per_sequence": 1240.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.03160544732273964,
+            "accuracy": 0.9938828327190025,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.03159472476235243,
+            "accuracy": 0.9938044074974511,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.2333741213046245,
+            "accuracy": 0.934985491334013,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.2333741213046245,
+        "accuracy": 0.934985491334013,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 32000,
+        "train_objective": 0.21011285483837128,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 32768000,
+        "exposures_per_sequence": 1280.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.047643796185022916,
+            "accuracy": 0.9883146419888637,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.047559751937874775,
+            "accuracy": 0.9883930672104149,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.39063493515844766,
+            "accuracy": 0.8911457924868638,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.39063493515844766,
+        "accuracy": 0.8911457924868638,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 33000,
+        "train_objective": 1.7268489599227905,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 33792000,
+        "exposures_per_sequence": 1320.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.031185816720220964,
+            "accuracy": 0.9928633048388362,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.031162002184003553,
+            "accuracy": 0.9927064543957337,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.23494623824176897,
+            "accuracy": 0.9345149400047055,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.23494623824176897,
+        "accuracy": 0.9345149400047055,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 34000,
+        "train_objective": 0.21765711903572083,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 34816000,
+        "exposures_per_sequence": 1360.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.031876321040525124,
+            "accuracy": 0.9931770057250412,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.0318689732139289,
+            "accuracy": 0.9930985805034899,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.2529418588697831,
+            "accuracy": 0.9283977727237079,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.2529418588697831,
+        "accuracy": 0.9283977727237079,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 35000,
+        "train_objective": 0.24383573234081268,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 35840000,
+        "exposures_per_sequence": 1400.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.04374188204027806,
+            "accuracy": 0.9902752725276449,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.04378356806559627,
+            "accuracy": 0.9900399968629912,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.3182687655753897,
+            "accuracy": 0.9129480040781115,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.3182687655753897,
+        "accuracy": 0.9129480040781115,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 36000,
+        "train_objective": 0.8922441601753235,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 36864000,
+        "exposures_per_sequence": 1440.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.021602896624217358,
+            "accuracy": 0.9958434632577837,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.02152911148786851,
+            "accuracy": 0.9959218884793349,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.11275104149906096,
+            "accuracy": 0.9686299113794996,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.11275104149906096,
+        "accuracy": 0.9686299113794996,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 37000,
+        "train_objective": 0.1537867933511734,
+        "train_mask_rate": 0.75,
+        "gate_streak": 1,
+        "processed_tokens": 37888000,
+        "exposures_per_sequence": 1480.0,
+        "training_route": "q8_only"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.024750210188487567,
+            "accuracy": 0.9948239353776175,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.024714921473005937,
+            "accuracy": 0.9949023605991687,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.18285461377582404,
+            "accuracy": 0.9473766763391107,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.18285461377582404,
+        "accuracy": 0.9473766763391107,
+        "masked_tokens": 12751,
+        "next_training_route": "q2_q8_fp16",
+        "step": 38000,
+        "train_objective": 0.13997195661067963,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 38912000,
+        "exposures_per_sequence": 1520.0,
+        "training_route": "q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.03144525272187257,
+            "accuracy": 0.9929417300603874,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.03139814520015893,
+            "accuracy": 0.9930985805034899,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.21555525799885272,
+            "accuracy": 0.9378872245314093,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.21555525799885272,
+        "accuracy": 0.9378872245314093,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_only",
+        "step": 39000,
+        "train_objective": 0.6441353559494019,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 39936000,
+        "exposures_per_sequence": 1560.0,
+        "training_route": "q2_q8_fp16"
+      },
+      {
+        "per_route": {
+          "q8_only": {
+            "loss": 0.034298119127897056,
+            "accuracy": 0.9920006274017724,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 200
+          },
+          "q8_fp16": {
+            "loss": 0.03429909540338406,
+            "accuracy": 0.9918437769586699,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 296
+          },
+          "q2_q8_fp16": {
+            "loss": 0.35774182213137135,
+            "accuracy": 0.8976550858756176,
+            "masked_tokens": 12751,
+            "proxy_full_cost": 210
+          }
+        },
+        "loss": 0.35774182213137135,
+        "accuracy": 0.8976550858756176,
+        "masked_tokens": 12751,
+        "next_training_route": "q8_fp16",
+        "step": 40000,
+        "train_objective": 0.14052309095859528,
+        "train_mask_rate": 0.75,
+        "gate_streak": 0,
+        "processed_tokens": 40960000,
+        "exposures_per_sequence": 1600.0,
+        "training_route": "q8_only"
+      }
+    ],
+    "final": {
+      "per_route": {
+        "q8_only": {
+          "loss": 0.034298119127897056,
+          "accuracy": 0.9920006274017724,
+          "masked_tokens": 12751,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 0.03429909540338406,
+          "accuracy": 0.9918437769586699,
+          "masked_tokens": 12751,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 0.35774182213137135,
+          "accuracy": 0.8976550858756176,
+          "masked_tokens": 12751,
+          "proxy_full_cost": 210
+        }
+      },
+      "loss": 0.35774182213137135,
+      "accuracy": 0.8976550858756176,
+      "masked_tokens": 12751,
+      "reconstruction_accuracy_all_positions": 0.9490234375,
+      "quality_gate": {
+        "threshold": 0.95,
+        "consecutive_reports_required": 3,
+        "consecutive_reports": 0,
+        "passed": false,
+        "meaning": "masked accuracy on a fixed mask over all fixed training sequences"
+      }
+    },
+    "examples": [
+      {
+        "target": " Mister songs, together with his childhood friend, Mr. Mister frontman Richard Page, with whom he also played in Pages prior to forming Mr. Mister.\n\nIn the 1980s and 1990s he was a sought-after songwriter, studio musician and singer in the Los Angeles session scene. As a songwriter, he has co-written hits for artists such as Al Jarreau, The Pointer Sisters, Patti Labelle and Meatloaf. He has sung backup for various artists including: \n Peter Allen on the Bi-Coastal album\n Al Jarreau, various albums\n Cher, various albums\n Amy Grant, various albums\n Barry Manilow on Oh Julie (EP) and his 1982 album\n Kenny Loggins, various albums (on which he also played keyboards and co-wrote). \n Marc Jordan, on his Hole in the Wall (1983) and 'C.O.W. (Conserve Our World) (1990) albums\n Richard Marx, on his Rush Street album (1991)\n Toto, on the Kingdom of Desire album (1992)\n Richard P",
+        "reconstruction": " Mister songs, together with his childhood friend, Mr. Mister frontman Richard Page, with whom he also played in Pages prior to forming Mr. Mister.\n\nIn the 1980s and 1990s he was a sought-after songwriter, studio musician and singer in the Los Angeles session scene. As a songwriter, he has co-written hits for artists such as Al Jarreau, The Pointer Sisters, Patti Labelle and Meatloaf. He has sung backup for various artists including: \n Peter Allen on the Bi-Coastal album\n Al Jarreau, various albums\n Cher, various albums\n Amy Grant, various albums\n Barry Manilow on Oh Julie (EP) and his 1982 album\n Kenny Loggins, various albums (on which he also played keyboards and co-wrote). \n Marc Jordan, on his Hole in the Wall (1983) and 'C.O.W. (Conserve Our World) (1990) albums\n Richard Marx, on his Rush Street album (1991)\n Toto, on the Kingdom of Desire album (1992)\n Richard P"
+      },
+      {
+        "target": " joint press conference with the leader of the pan-European alliance Libertas.eu Declan Ganley that it would run for the 2009 European Parliament election with an open electoral list under the banner of Libertas. While not against European integration, MPT demands more accountability and transparency from the European Union, and the pursuit of a referendum on the Lisbon Treaty in Portugal. In the elections, MPT received 24,062 votes (0.67% of the votes).\n\n2009 Legislative elections \nFor the 2009 Portuguese legislative election, MPT formed a coalition with the Humanist Party on mainland Portugal that received 0.22% of the votes. Including MPT's votes in Azores and Madeira, where they ran a list on their own, they reached 0.28% nationwide. However, the 2009 local elections were a success in terms of the number of people elected, as MPT elected two councilors, 17 municipal assembly members and 47 parish councilor posts.\n\n2011 Elections \nIn the 2011 Portuguese legislative election, MPT stood under its own open lists throughout Portugal and achieved 0.41% of the national vote, catapulting it from 14th to 8th",
+        "reconstruction": " joint press conference with the leader of the pan-European alliance Libertas.eu Declan Ganley that it would run for the 2009 European Parliament election with an open electoral list under the banner of Libertas. While not against European integration, MPT demands more accountability and transparency from the European Union, and the pursuit of a referendum on the Lisbon Treaty in Portugal. In the elections, MPT received 24,062 votes (0.67% of the votes).\n\n2009 Legislative elections \nFor the 2009 Portuguese legislative election, MPT formed a coalition with the Humanist Party on mainland Portugal that received 0.22% of the votes. Including MPT's votes in Azores and Madeira, where they ran a list on their own, they reached 0.28% nationwide. However, the 2009 local elections were a success in terms of the number of people elected, as MPT elected two councilors, 17 municipal assembly members and 47 parish councilor posts.\n\n2011 Elections \nIn the 2011 Portuguese legislative election, MPT stood under its own open lists throughout Portugal and achieved 0.41% of the national vote, catapulting it from 14th to 8th"
+      }
+    ]
+  }
+}

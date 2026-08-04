@@ -1,0 +1,1527 @@
+{
+  "offline_only": true,
+  "cache_meta_path": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/data/cache/meta_seq256_c4a40531c04a048e.json",
+  "cache_metadata": {
+    "dataset_name": "wikimedia/wikipedia",
+    "dataset_config": "20231101.en",
+    "dataset_revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+    "tokenizer_sha256": "344c822c8014a67827590390733b32ee940d43d4f589191e11abcc6faf332b66",
+    "seq_len": 256,
+    "max_articles": 50000,
+    "max_text_bytes": 500000000,
+    "train_split": 0.95,
+    "seed": 42,
+    "n_train_chunks": 256180,
+    "n_val_chunks": 13484,
+    "total_tokens": 69033984,
+    "train_sha256": "963d492e55f499f3bb2d7f37d9a8bf87b5c25c8f0541a425608aec3f7c3fe3d8",
+    "val_sha256": "f691bc4100cd534271e2558b49a26365c1135e8c5f86c16fe5823e9a0a5fdb30"
+  },
+  "tokenizer": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/tokenizer/wiki_bpe",
+  "seed": 20260804,
+  "result": {
+    "mode": "flexible-diagnostics",
+    "checkpoint": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/quality-gate-flexible-A/checkpoints/latest.npz",
+    "checkpoint_loaded": true,
+    "eval_sequence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "masking": {
+      "rate": 0.5,
+      "seed": 21160804
+    },
+    "per_route": {
+      "q8_only": {
+        "schedule": [
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8"
+        ],
+        "milestones": [
+          {
+            "layer": 5,
+            "precision": "q8",
+            "proxy_cost": 40.0
+          },
+          {
+            "layer": 10,
+            "precision": "q8",
+            "proxy_cost": 80.0
+          },
+          {
+            "layer": 15,
+            "precision": "q8",
+            "proxy_cost": 120.0
+          },
+          {
+            "layer": 20,
+            "precision": "q8",
+            "proxy_cost": 160.0
+          },
+          {
+            "layer": 25,
+            "precision": "q8",
+            "proxy_cost": 200.0
+          }
+        ],
+        "route_exit_rows": [
+          {
+            "loss": 2.0321438322720944,
+            "accuracy": 0.49572582542545685,
+            "masked_tokens": 12751,
+            "layer": 5,
+            "precision": "q8",
+            "proxy_cost": 40.0
+          },
+          {
+            "loss": 0.5197394147063038,
+            "accuracy": 0.8807152380205474,
+            "masked_tokens": 12751,
+            "layer": 10,
+            "precision": "q8",
+            "proxy_cost": 80.0
+          },
+          {
+            "loss": 0.04265939137699646,
+            "accuracy": 0.9954513371500274,
+            "masked_tokens": 12751,
+            "layer": 15,
+            "precision": "q8",
+            "proxy_cost": 120.0
+          },
+          {
+            "loss": 0.009085112159275457,
+            "accuracy": 0.9992941730060387,
+            "masked_tokens": 12751,
+            "layer": 20,
+            "precision": "q8",
+            "proxy_cost": 160.0
+          },
+          {
+            "loss": 0.003926422202796195,
+            "accuracy": 0.9995294486706925,
+            "masked_tokens": 12751,
+            "layer": 25,
+            "precision": "q8",
+            "proxy_cost": 200.0
+          }
+        ],
+        "policy": {
+          "kind": "token-wise simulated stable-confidence routing",
+          "confidence_metric": "top-1 softmax probability",
+          "thresholds": [
+            0.5,
+            0.7,
+            0.8,
+            0.9,
+            0.95,
+            0.99
+          ],
+          "rows": [
+            {
+              "accuracy": 0.9899615716414399,
+              "mean_proxy_cost": 105.80817190808564,
+              "savings_vs_full": 0.47095914045957177,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 5996
+                },
+                {
+                  "layer": 15,
+                  "count": 5329
+                },
+                {
+                  "layer": 20,
+                  "count": 1380
+                },
+                {
+                  "layer": 25,
+                  "count": 46
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.5
+            },
+            {
+              "accuracy": 0.9974119676888087,
+              "mean_proxy_cost": 108.48404046741432,
+              "savings_vs_full": 0.45757979766292844,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 5331
+                },
+                {
+                  "layer": 15,
+                  "count": 5824
+                },
+                {
+                  "layer": 20,
+                  "count": 1532
+                },
+                {
+                  "layer": 25,
+                  "count": 64
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.7
+            },
+            {
+              "accuracy": 0.9985883460120775,
+              "mean_proxy_cost": 110.8211120696416,
+              "savings_vs_full": 0.445894439651792,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 4749
+                },
+                {
+                  "layer": 15,
+                  "count": 6262
+                },
+                {
+                  "layer": 20,
+                  "count": 1657
+                },
+                {
+                  "layer": 25,
+                  "count": 83
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.8
+            },
+            {
+              "accuracy": 0.9994510234491413,
+              "mean_proxy_cost": 115.80581915143911,
+              "savings_vs_full": 0.4209709042428045,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 3680
+                },
+                {
+                  "layer": 15,
+                  "count": 6869
+                },
+                {
+                  "layer": 20,
+                  "count": 2061
+                },
+                {
+                  "layer": 25,
+                  "count": 141
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.9
+            },
+            {
+              "accuracy": 0.9996078738922437,
+              "mean_proxy_cost": 122.13630303505607,
+              "savings_vs_full": 0.38931848482471965,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 2624
+                },
+                {
+                  "layer": 15,
+                  "count": 7134
+                },
+                {
+                  "layer": 20,
+                  "count": 2681
+                },
+                {
+                  "layer": 25,
+                  "count": 312
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.95
+            },
+            {
+              "accuracy": 0.9995294486706925,
+              "mean_proxy_cost": 141.36930436828484,
+              "savings_vs_full": 0.29315347815857573,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 874
+                },
+                {
+                  "layer": 15,
+                  "count": 5664
+                },
+                {
+                  "layer": 20,
+                  "count": 4740
+                },
+                {
+                  "layer": 25,
+                  "count": 1473
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.99
+            }
+          ]
+        },
+        "fixed_exits": [
+          {
+            "accuracy": 0.49572582542545685,
+            "mean_proxy_cost": 40.0,
+            "savings_vs_full": 0.8,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 12751
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 5
+          },
+          {
+            "accuracy": 0.8807152380205474,
+            "mean_proxy_cost": 80.0,
+            "savings_vs_full": 0.6,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 12751
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 10
+          },
+          {
+            "accuracy": 0.9954513371500274,
+            "mean_proxy_cost": 120.0,
+            "savings_vs_full": 0.4,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 12751
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 15
+          },
+          {
+            "accuracy": 0.9992941730060387,
+            "mean_proxy_cost": 160.0,
+            "savings_vs_full": 0.19999999999999996,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 12751
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 20
+          },
+          {
+            "accuracy": 0.9995294486706925,
+            "mean_proxy_cost": 200.0,
+            "savings_vs_full": 0.0,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 12751
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 25
+          }
+        ],
+        "oracle": {
+          "accuracy": 0.9999215747784488,
+          "mean_proxy_cost": 64.52513528350718,
+          "savings_vs_full": 0.6773743235824641,
+          "exit_distribution": [
+            {
+              "layer": 5,
+              "count": 6321
+            },
+            {
+              "layer": 10,
+              "count": 5075
+            },
+            {
+              "layer": 15,
+              "count": 1323
+            },
+            {
+              "layer": 20,
+              "count": 31
+            },
+            {
+              "layer": 25,
+              "count": 1
+            }
+          ],
+          "masked_tokens": 12751,
+          "label": "ground-truth oracle earliest-correct upper bound (non-deployable)"
+        }
+      },
+      "q8_fp16": {
+        "schedule": [
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16"
+        ],
+        "milestones": [
+          {
+            "layer": 5,
+            "precision": "q8",
+            "proxy_cost": 40.0
+          },
+          {
+            "layer": 10,
+            "precision": "q8",
+            "proxy_cost": 80.0
+          },
+          {
+            "layer": 15,
+            "precision": "fp16",
+            "proxy_cost": 136.0
+          },
+          {
+            "layer": 20,
+            "precision": "fp16",
+            "proxy_cost": 216.0
+          },
+          {
+            "layer": 25,
+            "precision": "fp16",
+            "proxy_cost": 296.0
+          }
+        ],
+        "route_exit_rows": [
+          {
+            "loss": 2.0321438322720944,
+            "accuracy": 0.49572582542545685,
+            "masked_tokens": 12751,
+            "layer": 5,
+            "precision": "q8",
+            "proxy_cost": 40.0
+          },
+          {
+            "loss": 0.5197394147063038,
+            "accuracy": 0.8807152380205474,
+            "masked_tokens": 12751,
+            "layer": 10,
+            "precision": "q8",
+            "proxy_cost": 80.0
+          },
+          {
+            "loss": 0.0426336174548717,
+            "accuracy": 0.9952160614853737,
+            "masked_tokens": 12751,
+            "layer": 15,
+            "precision": "fp16",
+            "proxy_cost": 136.0
+          },
+          {
+            "loss": 0.009063005243864022,
+            "accuracy": 0.9992157477844875,
+            "masked_tokens": 12751,
+            "layer": 20,
+            "precision": "fp16",
+            "proxy_cost": 216.0
+          },
+          {
+            "loss": 0.003914866357056172,
+            "accuracy": 0.9995294486706925,
+            "masked_tokens": 12751,
+            "layer": 25,
+            "precision": "fp16",
+            "proxy_cost": 296.0
+          }
+        ],
+        "policy": {
+          "kind": "token-wise simulated stable-confidence routing",
+          "confidence_metric": "top-1 softmax probability",
+          "thresholds": [
+            0.5,
+            0.7,
+            0.8,
+            0.9,
+            0.95,
+            0.99
+          ],
+          "rows": [
+            {
+              "accuracy": 0.9898831464198886,
+              "mean_proxy_cost": 118.90832091600659,
+              "savings_vs_full": 0.5982826996080859,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 5996
+                },
+                {
+                  "layer": 15,
+                  "count": 5330
+                },
+                {
+                  "layer": 20,
+                  "count": 1377
+                },
+                {
+                  "layer": 25,
+                  "count": 48
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.5
+            },
+            {
+              "accuracy": 0.9974119676888087,
+              "mean_proxy_cost": 123.00839149870599,
+              "savings_vs_full": 0.584431109801669,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 5331
+                },
+                {
+                  "layer": 15,
+                  "count": 5826
+                },
+                {
+                  "layer": 20,
+                  "count": 1527
+                },
+                {
+                  "layer": 25,
+                  "count": 67
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.7
+            },
+            {
+              "accuracy": 0.9985099207905263,
+              "mean_proxy_cost": 126.59336522625676,
+              "savings_vs_full": 0.5723197120734569,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 4749
+                },
+                {
+                  "layer": 15,
+                  "count": 6262
+                },
+                {
+                  "layer": 20,
+                  "count": 1655
+                },
+                {
+                  "layer": 25,
+                  "count": 85
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.8
+            },
+            {
+              "accuracy": 0.9994510234491413,
+              "mean_proxy_cost": 134.52560583483648,
+              "savings_vs_full": 0.5455216019093362,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 3680
+                },
+                {
+                  "layer": 15,
+                  "count": 6877
+                },
+                {
+                  "layer": 20,
+                  "count": 2047
+                },
+                {
+                  "layer": 25,
+                  "count": 147
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.9
+            },
+            {
+              "accuracy": 0.9995294486706925,
+              "mean_proxy_cost": 145.22406085797192,
+              "savings_vs_full": 0.5093781727771218,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 2624
+                },
+                {
+                  "layer": 15,
+                  "count": 7130
+                },
+                {
+                  "layer": 20,
+                  "count": 2687
+                },
+                {
+                  "layer": 25,
+                  "count": 310
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.95
+            },
+            {
+              "accuracy": 0.9995294486706925,
+              "mean_proxy_cost": 180.44012234334562,
+              "savings_vs_full": 0.3904049920832918,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 874
+                },
+                {
+                  "layer": 15,
+                  "count": 5648
+                },
+                {
+                  "layer": 20,
+                  "count": 4763
+                },
+                {
+                  "layer": 25,
+                  "count": 1466
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.99
+            }
+          ]
+        },
+        "fixed_exits": [
+          {
+            "accuracy": 0.49572582542545685,
+            "mean_proxy_cost": 40.0,
+            "savings_vs_full": 0.8648648648648649,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 12751
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 5
+          },
+          {
+            "accuracy": 0.8807152380205474,
+            "mean_proxy_cost": 80.0,
+            "savings_vs_full": 0.7297297297297297,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 12751
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 10
+          },
+          {
+            "accuracy": 0.9952160614853737,
+            "mean_proxy_cost": 136.0,
+            "savings_vs_full": 0.5405405405405406,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 12751
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 15
+          },
+          {
+            "accuracy": 0.9992157477844875,
+            "mean_proxy_cost": 216.0,
+            "savings_vs_full": 0.2702702702702703,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 12751
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 20
+          },
+          {
+            "accuracy": 0.9995294486706925,
+            "mean_proxy_cost": 296.0,
+            "savings_vs_full": 0.0,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 12751
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 25
+          }
+        ],
+        "oracle": {
+          "accuracy": 0.9999215747784488,
+          "mean_proxy_cost": 66.34146341463415,
+          "savings_vs_full": 0.7758734344100198,
+          "exit_distribution": [
+            {
+              "layer": 5,
+              "count": 6321
+            },
+            {
+              "layer": 10,
+              "count": 5075
+            },
+            {
+              "layer": 15,
+              "count": 1321
+            },
+            {
+              "layer": 20,
+              "count": 33
+            },
+            {
+              "layer": 25,
+              "count": 1
+            }
+          ],
+          "masked_tokens": 12751,
+          "label": "ground-truth oracle earliest-correct upper bound (non-deployable)"
+        }
+      },
+      "q2_q8_fp16": {
+        "schedule": [
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q2",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "q8",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16",
+          "fp16"
+        ],
+        "milestones": [
+          {
+            "layer": 5,
+            "precision": "q2",
+            "proxy_cost": 10.0
+          },
+          {
+            "layer": 10,
+            "precision": "q8",
+            "proxy_cost": 26.0
+          },
+          {
+            "layer": 15,
+            "precision": "q8",
+            "proxy_cost": 66.0
+          },
+          {
+            "layer": 20,
+            "precision": "fp16",
+            "proxy_cost": 130.0
+          },
+          {
+            "layer": 25,
+            "precision": "fp16",
+            "proxy_cost": 210.0
+          }
+        ],
+        "route_exit_rows": [
+          {
+            "loss": 2.8605463175331973,
+            "accuracy": 0.3493059367892714,
+            "masked_tokens": 12751,
+            "layer": 5,
+            "precision": "q2",
+            "proxy_cost": 10.0
+          },
+          {
+            "loss": 1.4807223506875435,
+            "accuracy": 0.5933652262567641,
+            "masked_tokens": 12751,
+            "layer": 10,
+            "precision": "q8",
+            "proxy_cost": 26.0
+          },
+          {
+            "loss": 0.31590205894111323,
+            "accuracy": 0.9085561916712415,
+            "masked_tokens": 12751,
+            "layer": 15,
+            "precision": "q8",
+            "proxy_cost": 66.0
+          },
+          {
+            "loss": 0.09653443990607008,
+            "accuracy": 0.9760018822053173,
+            "masked_tokens": 12751,
+            "layer": 20,
+            "precision": "fp16",
+            "proxy_cost": 130.0
+          },
+          {
+            "loss": 0.052001523102303736,
+            "accuracy": 0.9859618853423261,
+            "masked_tokens": 12751,
+            "layer": 25,
+            "precision": "fp16",
+            "proxy_cost": 210.0
+          }
+        ],
+        "policy": {
+          "kind": "token-wise simulated stable-confidence routing",
+          "confidence_metric": "top-1 softmax probability",
+          "thresholds": [
+            0.5,
+            0.7,
+            0.8,
+            0.9,
+            0.95,
+            0.99
+          ],
+          "rows": [
+            {
+              "accuracy": 0.9265939926280292,
+              "mean_proxy_cost": 80.48043290722296,
+              "savings_vs_full": 0.6167598432989383,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 4212
+                },
+                {
+                  "layer": 15,
+                  "count": 3974
+                },
+                {
+                  "layer": 20,
+                  "count": 3803
+                },
+                {
+                  "layer": 25,
+                  "count": 762
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.5
+            },
+            {
+              "accuracy": 0.9592973100149008,
+              "mean_proxy_cost": 89.09528664418477,
+              "savings_vs_full": 0.5757367302657868,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 3305
+                },
+                {
+                  "layer": 15,
+                  "count": 4174
+                },
+                {
+                  "layer": 20,
+                  "count": 4156
+                },
+                {
+                  "layer": 25,
+                  "count": 1116
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.7
+            },
+            {
+              "accuracy": 0.9721590463493059,
+              "mean_proxy_cost": 94.86612814681202,
+              "savings_vs_full": 0.5482565326342285,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 2749
+                },
+                {
+                  "layer": 15,
+                  "count": 4249
+                },
+                {
+                  "layer": 20,
+                  "count": 4380
+                },
+                {
+                  "layer": 25,
+                  "count": 1373
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.8
+            },
+            {
+              "accuracy": 0.980942671163046,
+              "mean_proxy_cost": 104.76652811544193,
+              "savings_vs_full": 0.501111770878848,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 1963
+                },
+                {
+                  "layer": 15,
+                  "count": 4255
+                },
+                {
+                  "layer": 20,
+                  "count": 4599
+                },
+                {
+                  "layer": 25,
+                  "count": 1934
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.9
+            },
+            {
+              "accuracy": 0.9841581052466474,
+              "mean_proxy_cost": 115.94243588738138,
+              "savings_vs_full": 0.44789316244104105,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 1380
+                },
+                {
+                  "layer": 15,
+                  "count": 3927
+                },
+                {
+                  "layer": 20,
+                  "count": 4749
+                },
+                {
+                  "layer": 25,
+                  "count": 2695
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.95
+            },
+            {
+              "accuracy": 0.9857266096776723,
+              "mean_proxy_cost": 146.6393224060858,
+              "savings_vs_full": 0.3017175123519724,
+              "exit_distribution": [
+                {
+                  "layer": 5,
+                  "count": 0
+                },
+                {
+                  "layer": 10,
+                  "count": 447
+                },
+                {
+                  "layer": 15,
+                  "count": 2636
+                },
+                {
+                  "layer": 20,
+                  "count": 4326
+                },
+                {
+                  "layer": 25,
+                  "count": 5342
+                }
+              ],
+              "masked_tokens": 12751,
+              "confidence_threshold": 0.99
+            }
+          ]
+        },
+        "fixed_exits": [
+          {
+            "accuracy": 0.3493059367892714,
+            "mean_proxy_cost": 10.0,
+            "savings_vs_full": 0.9523809523809523,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 12751
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 5
+          },
+          {
+            "accuracy": 0.5933652262567641,
+            "mean_proxy_cost": 26.0,
+            "savings_vs_full": 0.8761904761904762,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 12751
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 10
+          },
+          {
+            "accuracy": 0.9085561916712415,
+            "mean_proxy_cost": 66.0,
+            "savings_vs_full": 0.6857142857142857,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 12751
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 15
+          },
+          {
+            "accuracy": 0.9760018822053173,
+            "mean_proxy_cost": 130.0,
+            "savings_vs_full": 0.38095238095238093,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 12751
+              },
+              {
+                "layer": 25,
+                "count": 0
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 20
+          },
+          {
+            "accuracy": 0.9859618853423261,
+            "mean_proxy_cost": 210.0,
+            "savings_vs_full": 0.0,
+            "exit_distribution": [
+              {
+                "layer": 5,
+                "count": 0
+              },
+              {
+                "layer": 10,
+                "count": 0
+              },
+              {
+                "layer": 15,
+                "count": 0
+              },
+              {
+                "layer": 20,
+                "count": 0
+              },
+              {
+                "layer": 25,
+                "count": 12751
+              }
+            ],
+            "masked_tokens": 12751,
+            "layer": 25
+          }
+        ],
+        "oracle": {
+          "accuracy": 0.9912948004078111,
+          "mean_proxy_cost": 41.34499254960395,
+          "savings_vs_full": 0.803119083097124,
+          "exit_distribution": [
+            {
+              "layer": 5,
+              "count": 4454
+            },
+            {
+              "layer": 10,
+              "count": 3565
+            },
+            {
+              "layer": 15,
+              "count": 3775
+            },
+            {
+              "layer": 20,
+              "count": 752
+            },
+            {
+              "layer": 25,
+              "count": 205
+            }
+          ],
+          "masked_tokens": 12751,
+          "label": "ground-truth oracle earliest-correct upper bound (non-deployable)"
+        }
+      }
+    },
+    "limits": [
+      "Each route uses the identical leading training sequences and one deterministic mask.",
+      "Shared-master checkpoint weights are loaded once; only layer precision schedules switch.",
+      "Policy and oracle values are token-wise simulations, not measured runtime or executable sparse routing speedups.",
+      "Only compact masked-token predictions/confidences are retained; full-dataset logits are not retained."
+    ]
+  }
+}
