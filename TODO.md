@@ -24,6 +24,10 @@ Poslední aktualizace: 2026-08-04
 - [x] `model.set_bits()` — runtime přepínání precize
 - [x] Campaign harness `scripts/run_dual_m1_campaign.py` (lock, artifact publish)
 - [x] Multi-node SSH spouštění (m1-256, m1-512, m4-air přes ZeroTier)
+- [ ] **Odložený CUDA node:** Windows 11, Intel i7-8700K, 64 GB RAM, 2× GTX 1080 Ti 11 GB
+  - Potenciálně dvě paralelní experimentální varianty přes PyTorch/CUDA; VRAM se automaticky nesčítá na 22 GB.
+  - GGUF není potřeba pro trénink; šlo by o samostatný PyTorch backend a převod checkpointů.
+  - Nezapojovat před potvrzením cílové architektury na MLX nodech, protože cena portu nyní převyšuje přínos.
 - [x] Unit testy — 108/108 passed (Phase 2)
 
 ### Kvantizační schémata (opravené)
