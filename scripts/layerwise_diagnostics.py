@@ -256,6 +256,29 @@ def build_exit_sweep_model(a, vocab_size: int) -> LayerwiseProgressiveLM:
     return LayerwiseProgressiveLM(cfg)
 
 
+def diagnostic_milestone_layers(a, mode: str) -> tuple[int, ...]:
+    """Return the complete, deployable exit set for a diagnostic mode."""
+    layers = tuple(layer for layer, _ in a.milestone_weights)
+    if (not layers or layers != tuple(sorted(set(layers))) or layers[-1] != a.n_layers
+            or any(layer < 1 or layer > a.n_layers or weight <= 0
+                   for layer, weight in a.milestone_weights)):
+        raise ValueError(f"{mode} milestones must be strictly increasing, within the model, and end at --n-layers")
+    return layers
+
+
+def build_flexible_diagnostics_model(a, vocab_size: int) -> LayerwiseProgressiveLM:
+    """Build a flexible shared-master model with every requested exit enabled."""
+    if a.model_variant != "flexible" or a.n_layers != 25:
+        raise ValueError("flexible-diagnostics requires --model-variant flexible and --n-layers 25")
+    layers = diagnostic_milestone_layers(a, "flexible-diagnostics")
+    if layers != (5, 10, 15, 20, 25):
+        raise ValueError("flexible-diagnostics requires milestone layers 5,10,15,20,25")
+    cfg = LayerwiseModelConfig(vocab_size=vocab_size, d_model=a.d_model, d_ff=a.d_ff,
+        n_heads=a.n_heads, n_layers=a.n_layers, min_exit_layer=min(layers),
+        max_seq_len=256, layer_precisions=flexible_route_pool(a.n_layers)["q8_only"])
+    return LayerwiseProgressiveLM(cfg)
+
+
 def run_frequency(a, train, val, tokenizer) -> dict:
     train_info = frequency_summary(count_tokens(train, a.vocab_size), tokenizer, a.top_k)
     val_info = frequency_summary(count_tokens(val, a.vocab_size), tokenizer, a.top_k)
@@ -548,9 +571,7 @@ def run_policy_sweep(a, train) -> dict:
         raise ValueError("--eval-sequences must be positive for policy-sweep")
     if len(train) < a.eval_sequences:
         raise ValueError("cache has fewer rows than --eval-sequences")
-    layers = tuple(layer for layer, _ in a.milestone_weights)
-    if layers != tuple(sorted(set(layers))) or not layers or layers[-1] != a.n_layers:
-        raise ValueError("policy-sweep milestones must be strictly increasing and end at --n-layers for fallback")
+    layers = diagnostic_milestone_layers(a, "policy-sweep")
     sample = np.asarray(train[:a.eval_sequences], dtype=np.int32)
     model = build_exit_sweep_model(a, a.vocab_size)
     load_weights_only(model, a.checkpoint)
@@ -587,9 +608,66 @@ def run_policy_sweep(a, train) -> dict:
             "limits": "Algorithmic token-wise/oracle simulation only: it is not an executable sparse speedup or current sequence-wide controller. Proxy-cost savings are simulated per-token accounting, not measured runtime savings."}
 
 
+def run_flexible_diagnostics(a, train) -> dict:
+    """Run route×exit and simulated routing diagnostics from one shared checkpoint."""
+    if a.eval_sequences < 1:
+        raise ValueError("--eval-sequences must be positive for flexible-diagnostics")
+    if len(train) < a.eval_sequences:
+        raise ValueError("cache has fewer rows than --eval-sequences")
+    layers = diagnostic_milestone_layers(a, "flexible-diagnostics")
+    sample = np.asarray(train[:a.eval_sequences], dtype=np.int32)
+    model = build_flexible_diagnostics_model(a, a.vocab_size)
+    load_weights_only(model, a.checkpoint)  # Deliberately once: routes share master weights.
+    mask_seed = a.seed + 900_000
+    mask_np = deterministic_mask(sample.shape, a.gate_mask_rate, mask_seed)
+    per_route = {}
+    for route_name, schedule in flexible_route_pool(a.n_layers).items():
+        model.set_layer_precisions(schedule)
+        costs = tuple(float(proxy_cost_for_schedule(schedule, layer)) for layer in layers)
+        exit_rows, predictions, confidences, truths = [], [], [], None
+        for layer, cost in zip(layers, costs):
+            metrics, _ = evaluate_in_chunks(model, sample, mask_np, a.eval_batch_size, exit_layer=layer)
+            metrics.update({"layer": int(layer), "precision": schedule[layer - 1], "proxy_cost": cost})
+            exit_rows.append(metrics)
+            predicted, confidence, current_truths = collect_masked_predictions(
+                model, sample, mask_np, a.eval_batch_size, layer)
+            predictions.append(predicted)
+            confidences.append(confidence)
+            if truths is None:
+                truths = current_truths
+            elif not np.array_equal(truths, current_truths):
+                raise RuntimeError("masked targets changed between route/exit passes")
+        fixed_exits = []
+        for index, layer in enumerate(layers):
+            fixed = summarize_routing(np.full(len(truths), index, dtype=np.int32), predictions,
+                                      truths, layers, costs)
+            fixed["layer"] = int(layer)
+            fixed_exits.append(fixed)
+        per_route[route_name] = {
+            "schedule": list(schedule),
+            "milestones": [{"layer": int(layer), "precision": schedule[layer - 1], "proxy_cost": cost}
+                           for layer, cost in zip(layers, costs)],
+            "route_exit_rows": exit_rows,
+            "policy": {"kind": "token-wise simulated stable-confidence routing",
+                       "confidence_metric": "top-1 softmax probability",
+                       "thresholds": list(POLICY_CONFIDENCE_THRESHOLDS),
+                       "rows": [simulate_stable_confidence_policy(predictions, confidences, truths, layers, costs, threshold)
+                                for threshold in POLICY_CONFIDENCE_THRESHOLDS]},
+            "fixed_exits": fixed_exits,
+            "oracle": simulate_oracle_earliest_correct(predictions, truths, layers, costs),
+        }
+    return {"mode": "flexible-diagnostics", "checkpoint": str(a.checkpoint), "checkpoint_loaded": True,
+            "eval_sequence_indices": list(range(a.eval_sequences)),
+            "masking": {"rate": a.gate_mask_rate, "seed": mask_seed}, "per_route": per_route,
+            "limits": ["Each route uses the identical leading training sequences and one deterministic mask.",
+                       "Shared-master checkpoint weights are loaded once; only layer precision schedules switch.",
+                       "Policy and oracle values are token-wise simulations, not measured runtime or executable sparse routing speedups.",
+                       "Only compact masked-token predictions/confidences are retained; full-dataset logits are not retained."]}
+
+
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--mode", required=True, choices=("frequency", "overfit", "mask-sweep", "exit-sweep", "policy-sweep"))
+    p.add_argument("--mode", required=True, choices=("frequency", "overfit", "mask-sweep", "exit-sweep", "policy-sweep", "flexible-diagnostics"))
     p.add_argument("--cache-dir", type=Path, default=ROOT / "data/cache")
     p.add_argument("--tokenizer", type=Path, default=ROOT / "tokenizer/wiki_bpe")
     p.add_argument("--output", type=Path, default=ROOT / "results/layerwise/diagnostics.json")
@@ -598,7 +676,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--n-heads", type=int, default=4); p.add_argument("--n-layers", type=int, default=25)
     p.add_argument("--model-variant", choices=("fp32", "progressive", "flexible"), default="fp32")
     p.add_argument("--vocab-size", type=int, default=None, help="normally inferred from tokenizer")
-    p.add_argument("--checkpoint", type=Path, help="layer-wise .npz required for mask-sweep, exit-sweep, or policy-sweep")
+    p.add_argument("--checkpoint", type=Path, help="layer-wise .npz required for checkpoint diagnostic modes")
     p.add_argument("--eval-sequences", type=int, default=32); p.add_argument("--eval-batch-size", type=int, default=2)
     p.add_argument("--overfit-sequences", type=int, default=100); p.add_argument("--steps", type=int, default=1000)
     p.add_argument("--batch-size", type=int, default=4); p.add_argument("--lr", type=float, default=1e-3)
@@ -617,8 +695,10 @@ def parser() -> argparse.ArgumentParser:
 
 def validate_mode_args(a) -> None:
     """Validate mode-specific inputs before accessing cache or tokenizer."""
-    if a.mode in ("mask-sweep", "exit-sweep", "policy-sweep") and a.checkpoint is None:
+    if a.mode in ("mask-sweep", "exit-sweep", "policy-sweep", "flexible-diagnostics") and a.checkpoint is None:
         raise ValueError(f"--checkpoint is required for {a.mode} (weights are never random)")
+    if a.mode == "flexible-diagnostics" and a.model_variant != "flexible":
+        raise ValueError("flexible-diagnostics requires --model-variant flexible")
 
 
 def main() -> None:
@@ -654,7 +734,8 @@ def main() -> None:
     elif a.mode == "overfit": result["result"] = run_overfit(a, train, tokenizer)
     elif a.mode == "mask-sweep": result["result"] = run_mask_sweep(a, train, val, tokenizer)
     elif a.mode == "exit-sweep": result["result"] = run_exit_sweep(a, train)
-    else: result["result"] = run_policy_sweep(a, train)
+    elif a.mode == "policy-sweep": result["result"] = run_policy_sweep(a, train)
+    else: result["result"] = run_flexible_diagnostics(a, train)
     atomic_json_write(a.output, result)
     print(json.dumps(result, indent=2))
 

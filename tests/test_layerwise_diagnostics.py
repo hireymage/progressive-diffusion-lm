@@ -13,6 +13,7 @@ from scripts.layerwise_diagnostics import (
     flexible_route_pool, route_for_training_step, evaluate_routes,
     simulate_oracle_earliest_correct, simulate_stable_confidence_policy,
     summarize_routing, validate_mode_args, validate_resume_metadata,
+    run_flexible_diagnostics,
 )
 
 
@@ -230,3 +231,47 @@ def test_policy_sweep_parser_and_checkpoint_requirement():
     assert "policy-sweep" in parser()._option_string_actions["--mode"].choices
     with pytest.raises(ValueError, match="--checkpoint is required for policy-sweep"):
         validate_mode_args(SimpleNamespace(mode="policy-sweep", checkpoint=None))
+
+
+def test_flexible_diagnostics_switches_routes_uses_same_mask_and_nested_costs(monkeypatch, tmp_path):
+    args = SimpleNamespace(
+        eval_sequences=2, vocab_size=16, d_model=8, d_ff=16, n_heads=2, n_layers=25,
+        model_variant="flexible", seed=21, gate_mask_rate=.5, eval_batch_size=1,
+        checkpoint=tmp_path / "shared-master.npz",
+        milestone_weights=((5, .1), (10, .2), (15, .3), (20, .4), (25, 1.0)),
+    )
+    schedules, masks, loads = [], [], []
+    class Model:
+        def set_layer_precisions(self, schedule): schedules.append(list(schedule))
+    monkeypatch.setattr(diagnostics, "build_flexible_diagnostics_model", lambda *_args: Model())
+    monkeypatch.setattr(diagnostics, "load_weights_only", lambda *_args: loads.append(True))
+    def fake_metrics(_model, _targets, mask, _batch_size, capture_reconstructions=0, exit_layer=None):
+        masks.append(mask.copy())
+        return {"loss": float(exit_layer), "accuracy": .5, "masked_tokens": int(mask.sum())}, []
+    monkeypatch.setattr(diagnostics, "evaluate_in_chunks", fake_metrics)
+    def fake_predictions(_model, _targets, mask, _batch_size, exit_layer):
+        masks.append(mask.copy())
+        size = int(mask.sum())
+        return np.full(size, exit_layer, dtype=np.int32), np.ones(size), np.zeros(size, dtype=np.int32)
+    monkeypatch.setattr(diagnostics, "collect_masked_predictions", fake_predictions)
+    result = run_flexible_diagnostics(args, np.ones((2, 256), dtype=np.int32))
+    routes = flexible_route_pool(25)
+    assert loads == [True]
+    assert schedules == list(routes.values())
+    assert all(np.array_equal(masks[0], mask) for mask in masks[1:])
+    assert set(result["per_route"]) == set(routes)
+    assert [row["proxy_cost"] for row in result["per_route"]["q8_only"]["route_exit_rows"]] == [40, 80, 120, 160, 200]
+    assert [row["proxy_cost"] for row in result["per_route"]["q8_fp16"]["route_exit_rows"]] == [40, 80, 136, 216, 296]
+    assert result["masking"] == {"rate": .5, "seed": 900021}
+
+
+def test_flexible_diagnostics_requires_flexible_variant_checkpoint_and_complete_milestones(tmp_path):
+    assert "flexible-diagnostics" in parser()._option_string_actions["--mode"].choices
+    with pytest.raises(ValueError, match="--checkpoint is required"):
+        validate_mode_args(SimpleNamespace(mode="flexible-diagnostics", checkpoint=None, model_variant="flexible"))
+    with pytest.raises(ValueError, match="--model-variant flexible"):
+        validate_mode_args(SimpleNamespace(mode="flexible-diagnostics", checkpoint=tmp_path / "x.npz", model_variant="progressive"))
+    args = SimpleNamespace(model_variant="flexible", n_layers=25, vocab_size=16, d_model=8,
+        d_ff=16, n_heads=2, milestone_weights=((5, .1), (10, .2)))
+    with pytest.raises(ValueError, match="end at --n-layers"):
+        diagnostics.build_flexible_diagnostics_model(args, 16)
