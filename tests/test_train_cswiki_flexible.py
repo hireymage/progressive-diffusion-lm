@@ -6,8 +6,8 @@ import numpy as np
 import pytest
 
 from scripts.train_cswiki_flexible import (
-    N_LAYERS, corrupt_50, ensure_outside_icloud, fixed_batch,
-    select_verified_cswiki_cache, run,
+    N_LAYERS, build_model, corrupt_50, ensure_outside_icloud, fixed_batch,
+    load_checkpoint, route_pool, select_verified_cswiki_cache, run,
 )
 
 
@@ -77,3 +77,19 @@ def test_real_trainer_hard_cap_allows_100000_and_rejects_over_one_million(tmp_pa
         run(accepted)
     with pytest.raises(ValueError, match="1000000"):
         run(rejected)
+
+
+def test_custom_128_512_architecture_and_routes_use_requested_values():
+    model = build_model(32, d_model=128, d_ff=512, n_heads=8,
+                        n_layers=6, seq_len=128)
+    assert (model.cfg.d_model, model.cfg.d_ff, model.cfg.n_heads) == (128, 512, 8)
+    assert (model.cfg.n_layers, model.cfg.max_seq_len) == (6, 128)
+    assert model.cfg.layer_precisions == ["q8"] * 6
+    assert all(len(schedule) == 6 for schedule in route_pool(6).values())
+
+
+def test_resume_rejects_architecturally_incompatible_checkpoint_before_weights(tmp_path):
+    path = tmp_path / "latest.npz"
+    path.with_suffix(".json").write_text(json.dumps({"architecture": [25, 64, 256, 4, 256]}))
+    with pytest.raises(ValueError, match="architecture"):
+        load_checkpoint(None, None, path, {"architecture": [25, 128, 512, 4, 256]})

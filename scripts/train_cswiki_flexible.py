@@ -30,7 +30,8 @@ sys.path.insert(0, str(ROOT))
 from scripts.layerwise_diagnostics import flexible_route_pool, route_for_training_step
 from src.config import LayerwiseModelConfig
 from src.data import load_tokenizer
-from src.layerwise_model import LayerwiseProgressiveLM, masked_deep_supervision_loss, proxy_cost_for_schedule
+from src.layerwise_model import (LayerwiseProgressiveLM, build_layer_precision_schedule,
+                                 masked_deep_supervision_loss, proxy_cost_for_schedule)
 
 N_LAYERS, D_MODEL, D_FF, N_HEADS, SEQ_LEN = 25, 64, 256, 4, 256
 MILESTONES = ((5, .1), (10, .2), (15, .3), (20, .4), (25, 1.0))
@@ -53,16 +54,16 @@ def atomic_json_write(path: Path, payload: dict) -> None:
     os.replace(temporary, path)
 
 
-def select_verified_cswiki_cache(cache_dir: Path) -> tuple[np.ndarray, np.ndarray, dict, Path]:
+def select_verified_cswiki_cache(cache_dir: Path, seq_len: int = SEQ_LEN) -> tuple[np.ndarray, np.ndarray, dict, Path]:
     """Re-hash and select one genuine Czech seq256 cache, never an enwiki cache."""
     valid = []
-    for meta_path in cache_dir.glob("meta_seq256_*.json"):
+    for meta_path in cache_dir.glob(f"meta_seq{seq_len}_*.json"):
         meta = json.loads(meta_path.read_text())
         source = meta.get("source", {})
-        suffix = meta_path.name.removeprefix("meta_seq256_").removesuffix(".json")
-        train = cache_dir / f"train_seq256_{suffix}.npy"
-        val = cache_dir / f"val_seq256_{suffix}.npy"
-        if (meta.get("format") != "cswiki-cache-v1" or meta.get("seq_len") != SEQ_LEN
+        suffix = meta_path.name.removeprefix(f"meta_seq{seq_len}_").removesuffix(".json")
+        train = cache_dir / f"train_seq{seq_len}_{suffix}.npy"
+        val = cache_dir / f"val_seq{seq_len}_{suffix}.npy"
+        if (meta.get("format") != "cswiki-cache-v1" or meta.get("seq_len") != seq_len
                 or not re.fullmatch(r"cswiki-\d{8}-pages-articles\.xml\.bz2",
                                     str(source.get("dump_filename", "")))
                 or not re.fullmatch(r"[0-9a-f]{40}", str(source.get("sha1", "")))):
@@ -95,16 +96,32 @@ def corrupt_50(batch: np.ndarray, mask_id: int, seed: int) -> tuple[mx.array, mx
     return mx.array(np.where(mask, mask_id, batch), dtype=mx.int32), mx.array(batch, dtype=mx.int32), mx.array(mask)
 
 
-def build_model(vocab_size: int) -> LayerwiseProgressiveLM:
-    cfg = LayerwiseModelConfig(vocab_size=vocab_size, d_model=D_MODEL, d_ff=D_FF, n_heads=N_HEADS,
-        n_layers=N_LAYERS, min_exit_layer=5, max_seq_len=SEQ_LEN,
-        layer_precisions=flexible_route_pool(N_LAYERS)["q8_only"])
+def route_pool(n_layers: int = N_LAYERS) -> dict[str, list[str]]:
+    if n_layers == N_LAYERS:
+        return flexible_route_pool(n_layers)
+    return {"q8_only": ["q8"] * n_layers,
+            "q8_fp16": build_layer_precision_schedule(n_layers, ["q8", "fp16"]),
+            "q2_q8_fp16": build_layer_precision_schedule(n_layers, ["q2", "q8", "fp16"])}
+
+
+def milestone_weights(n_layers: int) -> tuple[tuple[int, float], ...]:
+    selected = tuple((layer, weight) for layer, weight in MILESTONES if layer <= n_layers)
+    return selected if selected and selected[-1][0] == n_layers else selected + ((n_layers, 1.0),)
+
+
+def build_model(vocab_size: int, *, d_model: int = D_MODEL, d_ff: int = D_FF,
+                n_heads: int = N_HEADS, n_layers: int = N_LAYERS,
+                seq_len: int = SEQ_LEN) -> LayerwiseProgressiveLM:
+    milestones = milestone_weights(n_layers)
+    cfg = LayerwiseModelConfig(vocab_size=vocab_size, d_model=d_model, d_ff=d_ff, n_heads=n_heads,
+        n_layers=n_layers, min_exit_layer=min(layer for layer, _ in milestones), max_seq_len=seq_len,
+        layer_precisions=route_pool(n_layers)["q8_only"])
     return LayerwiseProgressiveLM(cfg)
 
 
 def evaluate_routes(model, val: np.ndarray, batch_size: int, eval_steps: int, seed: int) -> dict:
     """Held-out, fixed-mask route metrics; report the pessimistic route summary."""
-    pool, rows = flexible_route_pool(N_LAYERS), {}
+    pool, rows = route_pool(model.cfg.n_layers), {}
     was_training = model.training
     model.eval()
     try:
@@ -114,7 +131,7 @@ def evaluate_routes(model, val: np.ndarray, batch_size: int, eval_steps: int, se
             for index in range(eval_steps):
                 batch = fixed_batch(val, batch_size, seed + index)
                 x, targets, mask = corrupt_50(batch, model.cfg.mask_token_id(), seed + 100_000 + index)
-                logits = model(x, exit_layer=N_LAYERS).reshape(-1, model.cfg.vocab_size).astype(mx.float32)
+                logits = model(x, exit_layer=model.cfg.n_layers).reshape(-1, model.cfg.vocab_size).astype(mx.float32)
                 truth, flat_mask = targets.reshape(-1), mask.reshape(-1).astype(mx.float32)
                 n = mx.maximum(mx.sum(flat_mask), mx.array(1.0))
                 losses = -nn.log_softmax(logits, axis=-1)[mx.arange(logits.shape[0]), truth]
@@ -180,13 +197,19 @@ def run(a) -> dict:
                             for name in ("latest.npz", "latest.json", "best.npz", "best.json")):
         raise FileExistsError(f"Refusing to overwrite historical checkpoints: {a.checkpoint_dir}")
     a.output.parent.mkdir(parents=True, exist_ok=True)
-    train, val, cache_meta, cache_meta_path = select_verified_cswiki_cache(a.cache_dir)
+    d_model, d_ff = getattr(a, "d_model", D_MODEL), getattr(a, "d_ff", D_FF)
+    n_heads, n_layers = getattr(a, "n_heads", N_HEADS), getattr(a, "n_layers", N_LAYERS)
+    seq_len = getattr(a, "seq_len", SEQ_LEN)
+    train, val, cache_meta, cache_meta_path = select_verified_cswiki_cache(a.cache_dir, seq_len)
     tokenizer = load_tokenizer(cache_meta["tokenizer"])
     mx.random.seed(a.seed)
-    model, optimizer = build_model(tokenizer.get_vocab_size()), optim.AdamW(learning_rate=a.lr)
-    pool = flexible_route_pool(N_LAYERS)
+    model = build_model(tokenizer.get_vocab_size(), d_model=d_model, d_ff=d_ff,
+                        n_heads=n_heads, n_layers=n_layers, seq_len=seq_len)
+    optimizer = optim.AdamW(learning_rate=a.lr)
+    pool = route_pool(n_layers)
     contract = {"cache_train_sha256": cache_meta["train_sha256"], "cache_val_sha256": cache_meta["val_sha256"],
-                "route_pool": pool, "strategy": "A-constant-50pct", "architecture": [N_LAYERS, D_MODEL, D_FF, N_HEADS, SEQ_LEN]}
+                "route_pool": pool, "strategy": "A-constant-50pct",
+                "architecture": [n_layers, d_model, d_ff, n_heads, seq_len]}
     estimate = sum(np.asarray(value).nbytes for _, value in tree_flatten(model.parameters())) * 4
     if shutil.disk_usage(a.output.parent).free < int(a.min_free_gb * 1024**3) + 2 * estimate:
         raise RuntimeError("disk budget guard failed for latest+best checkpoints")
@@ -196,9 +219,10 @@ def run(a) -> dict:
         if not latest.exists(): raise FileNotFoundError("--resume requires latest.npz")
         restored = load_checkpoint(model, optimizer, latest, contract)
         start_step, best_loss, history = int(restored["step"]), float(restored["best_loss"]), restored.get("history", [])
+    milestones = milestone_weights(n_layers)
     grad_fn = nn.value_and_grad(model, lambda m, x, t, mask: masked_deep_supervision_loss(
-        m, x, t, mask, supervised_layers=tuple(layer for layer, _ in MILESTONES),
-        layer_weights=tuple(weight for _, weight in MILESTONES)))
+        m, x, t, mask, supervised_layers=tuple(layer for layer, _ in milestones),
+        layer_weights=tuple(weight for _, weight in milestones)))
     began = time.time()
     for step in range(start_step + 1, a.steps + 1):
         route, schedule = route_for_training_step(pool, step)
@@ -219,7 +243,7 @@ def run(a) -> dict:
             atomic_json_write(a.output, {"status": "running", "cache_meta_path": str(cache_meta_path), "history": history})
     final = history[-1] if history else None
     result = {"status": "complete", "language": "cswiki-only", "strategy": "A-constant-50pct",
-              "architecture": {"n_layers": N_LAYERS, "d_model": D_MODEL, "d_ff": D_FF, "n_heads": N_HEADS, "seq_len": SEQ_LEN,
+              "architecture": {"n_layers": n_layers, "d_model": d_model, "d_ff": d_ff, "n_heads": n_heads, "seq_len": seq_len,
                                "route_pool": pool, "active_schedule": list(model.cfg.layer_precisions)},
               "cache_meta_path": str(cache_meta_path), "cache_metadata": cache_meta, "checkpoint_policy": "atomic latest+best; best is minimum worst-route held-out loss",
               "steps": a.steps, "history": history, "final": final}
@@ -232,6 +256,9 @@ def main() -> None:
     p.add_argument("--cache-dir", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--checkpoint-dir", type=Path, required=True)
+    p.add_argument("--d-model", type=int, default=D_MODEL); p.add_argument("--d-ff", type=int, default=D_FF)
+    p.add_argument("--n-heads", type=int, default=N_HEADS); p.add_argument("--n-layers", type=int, default=N_LAYERS)
+    p.add_argument("--seq-len", type=int, default=SEQ_LEN)
     p.add_argument("--steps", type=int, default=80000); p.add_argument("--batch-size", type=int, default=4)
     p.add_argument("--eval-steps", type=int, default=32); p.add_argument("--eval-every", type=int, default=500)
     p.add_argument("--seed", type=int, default=20260804); p.add_argument("--lr", type=float, default=1e-3)
