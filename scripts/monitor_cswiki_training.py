@@ -139,7 +139,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="m4-air"); parser.add_argument("--interval", type=int, default=300)
     parser.add_argument("--remote-base", default=DEFAULT_REMOTE_BASE)
-    parser.add_argument("--target-steps", type=int, default=60000)
+    parser.add_argument("--target-steps", type=int, default=80000)
     parser.add_argument("--once", action="store_true")
     args = parser.parse_args()
     if args.interval < 1 or args.target_steps < 1: parser.error("interval a target-steps musí být kladné")

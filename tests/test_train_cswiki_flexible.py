@@ -68,7 +68,7 @@ def test_new_run_refuses_historical_report_before_loading_cache(tmp_path):
         run(args)
 
 
-def test_real_trainer_hard_cap_is_extended_to_60000(tmp_path):
-    args = type("Args", (), {"steps": 60001, "output": tmp_path / "report.json"})()
-    with pytest.raises(ValueError, match="60000"):
+def test_real_trainer_hard_cap_is_extended_to_80000(tmp_path):
+    args = type("Args", (), {"steps": 80001, "output": tmp_path / "report.json"})()
+    with pytest.raises(ValueError, match="80000"):
         run(args)

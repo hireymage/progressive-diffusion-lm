@@ -15,8 +15,8 @@ def test_parse_and_render_czech_dashboard_with_worst_route_and_best_eta():
         {"step": 40500, "elapsed_seconds": 7090, "loss": 5.3, "accuracy": .21, "perplexity": 200, "worst_route": "q2_q8_fp16"},
     ]
     state = monitor.parse_remote_output(_remote({"status": "running", "history": history}, {"step": 40500, "best_loss": 5.3}))
-    text = monitor.render_dashboard(state, 60000, datetime(2026, 8, 5, 12, 0, 0))
-    assert "běží" in text and "40,500 / 60,000" in text
+    text = monitor.render_dashboard(state, 80000, datetime(2026, 8, 5, 12, 0, 0))
+    assert "běží" in text and "40,500 / 80,000" in text
     assert "q2_q8_fp16" in text and "5.3000" in text and "ETA:" in text
     assert "Poznámka" not in text
     assert monitor.recent_speed(history) == 500 / 90
@@ -25,7 +25,7 @@ def test_parse_and_render_czech_dashboard_with_worst_route_and_best_eta():
 def test_temporary_bad_json_is_reported_not_misclassified_as_ssh_failure():
     state = monitor.parse_remote_output("__REPORT__\n{bad\n__LATEST__\n{}\n__PROCESS__\n")
     assert state["report"] is None and "dočasně nečitelný JSON" in state["error"]
-    assert "Poznámka" in monitor.render_dashboard(state, 60000)
+    assert "Poznámka" in monitor.render_dashboard(state, 80000)
 
 
 def test_fetch_uses_noninteractive_ssh_and_handles_remote_error(monkeypatch):

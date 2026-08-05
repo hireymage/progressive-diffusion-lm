@@ -1,0 +1,4990 @@
+{
+  "status": "complete",
+  "language": "cswiki-only",
+  "strategy": "A-constant-50pct",
+  "architecture": {
+    "n_layers": 25,
+    "d_model": 64,
+    "d_ff": 256,
+    "n_heads": 4,
+    "seq_len": 256,
+    "route_pool": {
+      "q8_only": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8"
+      ],
+      "q8_fp16": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16"
+      ],
+      "q2_q8_fp16": [
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16"
+      ]
+    },
+    "active_schedule": [
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8",
+      "q8"
+    ]
+  },
+  "cache_meta_path": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/cache/meta_seq256_a92b21bd8b1775d0.json",
+  "cache_metadata": {
+    "format": "cswiki-cache-v1",
+    "corpus_sha256": "2de1aea7a9583c93cee87cc96f4804712f6461d8494949cea17886a62e6e9861",
+    "source": {
+      "dump": "/Users/hozzy/data/cswiki/cswiki-20260801-pages-articles.xml.bz2",
+      "dump_filename": "cswiki-20260801-pages-articles.xml.bz2",
+      "sha1": "7501b901ec7889db1460cca3c6d7cc9a1c01ae2c",
+      "manifest": "/Users/hozzy/data/cswiki/cswiki-latest-sha1sums.txt",
+      "manifest_sha256": "0d40b1b56ae81e34d7079a0e152c7ab1f8e02941b2985907f7765a8f28d971c1"
+    },
+    "corpus_metadata_sha256": "be8e0d3237dd41858cc0a35600e22a00df058ab932df46aaf6692590f833c053",
+    "tokenizer_sha256": "318e5f9904f0bf8386bbc07517213d63f7b07f75382ce8aaf98cb3f7405bc0de",
+    "tokenizer_metadata_sha256": "37503d77f505ea24c9ea2e734a5ed7e13c0c7f7aa60837e02f01218096edf995",
+    "seq_len": 256,
+    "split": "article-sha256-mod20-v1",
+    "corpus": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/corpus/cswiki-20260801-50k-500m.jsonl",
+    "tokenizer": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/tokenizer/bpe16k",
+    "n_train_chunks": 272702,
+    "n_val_chunks": 15214,
+    "total_tokens": 73706496,
+    "train_sha256": "43104092ef2168470a3d44c40b5c551399760056d501c17824cc00c42aa89f52",
+    "val_sha256": "d3318e89cf1a7df5f5fcb5386a4813fdec6646db110bd72d67dd00f7d4826547"
+  },
+  "checkpoint_policy": "atomic latest+best; best is minimum worst-route held-out loss",
+  "steps": 60000,
+  "history": [
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.708712728691378,
+          "accuracy": 0.036042573778422834,
+          "masked_tokens": 16536,
+          "perplexity": 2227.6727924207466,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.708723787068744,
+          "accuracy": 0.036042573778422834,
+          "masked_tokens": 16536,
+          "perplexity": 2227.697427003344,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.702035329050065,
+          "accuracy": 0.03622399612965651,
+          "masked_tokens": 16536,
+          "perplexity": 2212.847283924426,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q8_fp16",
+      "loss": 7.708723787068744,
+      "accuracy": 0.036042573778422834,
+      "masked_tokens": 16536,
+      "perplexity": 2227.697427003344,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 8.242992401123047,
+      "elapsed_seconds": 68.23623299598694
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.314413379803913,
+          "accuracy": 0.06017174649250121,
+          "masked_tokens": 16536,
+          "perplexity": 1501.790556918731,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.314414944807919,
+          "accuracy": 0.06011127237542332,
+          "masked_tokens": 16536,
+          "perplexity": 1501.7929072288084,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.3143339041759265,
+          "accuracy": 0.061925495887760036,
+          "masked_tokens": 16536,
+          "perplexity": 1501.6712059139268,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q8_fp16",
+      "loss": 7.314414944807919,
+      "accuracy": 0.06011127237542332,
+      "masked_tokens": 16536,
+      "perplexity": 1501.7929072288084,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 1000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 8.087068557739258,
+      "elapsed_seconds": 136.72559070587158
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.253226595335556,
+          "accuracy": 0.05914368650217707,
+          "masked_tokens": 16536,
+          "perplexity": 1412.6555704613909,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.253220409140474,
+          "accuracy": 0.05914368650217707,
+          "masked_tokens": 16536,
+          "perplexity": 1412.6468315254795,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.254489568332917,
+          "accuracy": 0.05914368650217707,
+          "masked_tokens": 16536,
+          "perplexity": 1414.4408434399306,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.254489568332917,
+      "accuracy": 0.05914368650217707,
+      "masked_tokens": 16536,
+      "perplexity": 1414.4408434399306,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 1500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 8.053760528564453,
+      "elapsed_seconds": 205.29933071136475
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.225853021674301,
+          "accuracy": 0.058236574746008705,
+          "masked_tokens": 16536,
+          "perplexity": 1374.510603028738,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.225859414568026,
+          "accuracy": 0.058236574746008705,
+          "masked_tokens": 16536,
+          "perplexity": 1374.519390157034,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.228981376097983,
+          "accuracy": 0.06059506531204644,
+          "masked_tokens": 16536,
+          "perplexity": 1378.817292266965,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.228981376097983,
+      "accuracy": 0.058236574746008705,
+      "masked_tokens": 16536,
+      "perplexity": 1378.817292266965,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 2000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 7.720420837402344,
+      "elapsed_seconds": 276.6806547641754
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.191083371956451,
+          "accuracy": 0.05920416061925496,
+          "masked_tokens": 16536,
+          "perplexity": 1327.5406471328554,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.191091241269049,
+          "accuracy": 0.05920416061925496,
+          "masked_tokens": 16536,
+          "perplexity": 1327.5510940062989,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.192109069676577,
+          "accuracy": 0.05968795355587808,
+          "masked_tokens": 16536,
+          "perplexity": 1328.9030011102384,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.192109069676577,
+      "accuracy": 0.05920416061925496,
+      "masked_tokens": 16536,
+      "perplexity": 1328.9030011102384,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 2500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.867280960083008,
+      "elapsed_seconds": 352.89526987075806
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.174134038990687,
+          "accuracy": 0.0628326076439284,
+          "masked_tokens": 16536,
+          "perplexity": 1305.2293337488154,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.174146928127457,
+          "accuracy": 0.0628326076439284,
+          "masked_tokens": 16536,
+          "perplexity": 1305.246157136634,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.180588145041501,
+          "accuracy": 0.06174407353652637,
+          "masked_tokens": 16536,
+          "perplexity": 1313.6806658492796,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.180588145041501,
+      "accuracy": 0.06174407353652637,
+      "masked_tokens": 16536,
+      "perplexity": 1313.6806658492796,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 3000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 7.487300872802734,
+      "elapsed_seconds": 430.0414197444916
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.162985349082116,
+          "accuracy": 0.062288340590227385,
+          "masked_tokens": 16536,
+          "perplexity": 1290.7585516631618,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.162984079361885,
+          "accuracy": 0.062409288824383166,
+          "masked_tokens": 16536,
+          "perplexity": 1290.7569127619556,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.167164146006251,
+          "accuracy": 0.06204644412191582,
+          "masked_tokens": 16536,
+          "perplexity": 1296.1636550779363,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.167164146006251,
+      "accuracy": 0.06204644412191582,
+      "masked_tokens": 16536,
+      "perplexity": 1296.1636550779363,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 3500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 7.506158828735352,
+      "elapsed_seconds": 509.14867305755615
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.1600222206946205,
+          "accuracy": 0.06470730527334301,
+          "masked_tokens": 16536,
+          "perplexity": 1286.9395292784386,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.159995364635304,
+          "accuracy": 0.06470730527334301,
+          "masked_tokens": 16536,
+          "perplexity": 1286.9049676182,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.167626811388788,
+          "accuracy": 0.06452588292210934,
+          "masked_tokens": 16536,
+          "perplexity": 1296.763483880555,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.167626811388788,
+      "accuracy": 0.06452588292210934,
+      "masked_tokens": 16536,
+      "perplexity": 1296.763483880555,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 4000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.60285758972168,
+      "elapsed_seconds": 591.3030648231506
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.148112673083538,
+          "accuracy": 0.06525157232704402,
+          "masked_tokens": 16536,
+          "perplexity": 1271.7035684674856,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.148116098375325,
+          "accuracy": 0.06519109820996613,
+          "masked_tokens": 16536,
+          "perplexity": 1271.7079244307345,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.146640550588489,
+          "accuracy": 0.06543299467827769,
+          "masked_tokens": 16536,
+          "perplexity": 1269.8328423441599,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q8_fp16",
+      "loss": 7.148116098375325,
+      "accuracy": 0.06519109820996613,
+      "masked_tokens": 16536,
+      "perplexity": 1271.7079244307345,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 4500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 8.104898452758789,
+      "elapsed_seconds": 673.1840777397156
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.11772299712559,
+          "accuracy": 0.06573536526366715,
+          "masked_tokens": 16536,
+          "perplexity": 1233.6382351813984,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.117718833624365,
+          "accuracy": 0.06573536526366715,
+          "masked_tokens": 16536,
+          "perplexity": 1233.633098937788,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.1214989383957725,
+          "accuracy": 0.06585631349782294,
+          "masked_tokens": 16536,
+          "perplexity": 1238.3051862276156,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.1214989383957725,
+      "accuracy": 0.06573536526366715,
+      "masked_tokens": 16536,
+      "perplexity": 1238.3051862276156,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 5000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.898101806640625,
+      "elapsed_seconds": 758.624452829361
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.111554179493794,
+          "accuracy": 0.06585631349782294,
+          "masked_tokens": 16536,
+          "perplexity": 1226.0515703196968,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.111566817639355,
+          "accuracy": 0.06585631349782294,
+          "masked_tokens": 16536,
+          "perplexity": 1226.0670654358225,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.114538317321866,
+          "accuracy": 0.06537252056119981,
+          "masked_tokens": 16536,
+          "perplexity": 1229.7157416668738,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.114538317321866,
+      "accuracy": 0.06537252056119981,
+      "masked_tokens": 16536,
+      "perplexity": 1229.7157416668738,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 5500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.484029769897461,
+      "elapsed_seconds": 844.3173027038574
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.096543605972386,
+          "accuracy": 0.06531204644412192,
+          "masked_tokens": 16536,
+          "perplexity": 1207.7852698800946,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.096542424837287,
+          "accuracy": 0.06525157232704402,
+          "masked_tokens": 16536,
+          "perplexity": 1207.7838433233626,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.103730753994126,
+          "accuracy": 0.0647677793904209,
+          "masked_tokens": 16536,
+          "perplexity": 1216.4970703924005,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.103730753994126,
+      "accuracy": 0.0647677793904209,
+      "masked_tokens": 16536,
+      "perplexity": 1216.4970703924005,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 6000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 7.887162208557129,
+      "elapsed_seconds": 930.5731937885284
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.098038775366057,
+          "accuracy": 0.060897435897435896,
+          "masked_tokens": 16536,
+          "perplexity": 1209.5924641438526,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.098044060945626,
+          "accuracy": 0.060897435897435896,
+          "masked_tokens": 16536,
+          "perplexity": 1209.598857557964,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.095734366023374,
+          "accuracy": 0.06186502177068215,
+          "masked_tokens": 16536,
+          "perplexity": 1206.808277153968,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q8_fp16",
+      "loss": 7.098044060945626,
+      "accuracy": 0.060897435897435896,
+      "masked_tokens": 16536,
+      "perplexity": 1209.598857557964,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 6500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 7.9211506843566895,
+      "elapsed_seconds": 1016.2177538871765
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.0787631230015196,
+          "accuracy": 0.0647677793904209,
+          "masked_tokens": 16536,
+          "perplexity": 1186.5000559146458,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.078758752801653,
+          "accuracy": 0.0647677793904209,
+          "masked_tokens": 16536,
+          "perplexity": 1186.4948706835899,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.086195829010379,
+          "accuracy": 0.06561441702951137,
+          "masked_tokens": 16536,
+          "perplexity": 1195.3518175292777,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.086195829010379,
+      "accuracy": 0.0647677793904209,
+      "masked_tokens": 16536,
+      "perplexity": 1195.3518175292777,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 7000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.830540657043457,
+      "elapsed_seconds": 1103.2475378513336
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.067686039408336,
+          "accuracy": 0.06561441702951137,
+          "masked_tokens": 16536,
+          "perplexity": 1173.4296204121624,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.067672648289149,
+          "accuracy": 0.06561441702951137,
+          "masked_tokens": 16536,
+          "perplexity": 1173.4139069814685,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.072635866561026,
+          "accuracy": 0.06452588292210934,
+          "masked_tokens": 16536,
+          "perplexity": 1179.2522929319841,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.072635866561026,
+      "accuracy": 0.06452588292210934,
+      "masked_tokens": 16536,
+      "perplexity": 1179.2522929319841,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 7500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 7.891371726989746,
+      "elapsed_seconds": 1192.7061939239502
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.0592430347282065,
+          "accuracy": 0.06531204644412192,
+          "masked_tokens": 16536,
+          "perplexity": 1163.5640547487026,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.059253162961682,
+          "accuracy": 0.06537252056119981,
+          "masked_tokens": 16536,
+          "perplexity": 1163.5758396567933,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.05923315748594,
+          "accuracy": 0.06573536526366715,
+          "masked_tokens": 16536,
+          "perplexity": 1163.5525620013993,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q8_fp16",
+      "loss": 7.059253162961682,
+      "accuracy": 0.06531204644412192,
+      "masked_tokens": 16536,
+      "perplexity": 1163.5758396567933,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 8000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 7.579564571380615,
+      "elapsed_seconds": 1282.6258177757263
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.043848223194848,
+          "accuracy": 0.06295355587808418,
+          "masked_tokens": 16536,
+          "perplexity": 1145.7883830451917,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.043841726951802,
+          "accuracy": 0.06295355587808418,
+          "masked_tokens": 16536,
+          "perplexity": 1145.7809397495532,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.046542362827694,
+          "accuracy": 0.06246976294146105,
+          "masked_tokens": 16536,
+          "perplexity": 1148.879458964193,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.046542362827694,
+      "accuracy": 0.06246976294146105,
+      "masked_tokens": 16536,
+      "perplexity": 1148.879458964193,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 8500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.343550205230713,
+      "elapsed_seconds": 1371.154807806015
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.034895927824142,
+          "accuracy": 0.0660377358490566,
+          "masked_tokens": 16536,
+          "perplexity": 1135.5767241012209,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.034907296249471,
+          "accuracy": 0.0660377358490566,
+          "masked_tokens": 16536,
+          "perplexity": 1135.5896338937962,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.03395897764253,
+          "accuracy": 0.06573536526366715,
+          "masked_tokens": 16536,
+          "perplexity": 1134.5132435752762,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q8_fp16",
+      "loss": 7.034907296249471,
+      "accuracy": 0.06573536526366715,
+      "masked_tokens": 16536,
+      "perplexity": 1135.5896338937962,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 9000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 7.062978744506836,
+      "elapsed_seconds": 1461.2888507843018
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.014787693328193,
+          "accuracy": 0.06422351233671988,
+          "masked_tokens": 16536,
+          "perplexity": 1112.9703301000686,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.014778229483211,
+          "accuracy": 0.06422351233671988,
+          "masked_tokens": 16536,
+          "perplexity": 1112.9597971712358,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.021412872033934,
+          "accuracy": 0.06458635703918723,
+          "masked_tokens": 16536,
+          "perplexity": 1120.3684372617818,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 7.021412872033934,
+      "accuracy": 0.06422351233671988,
+      "masked_tokens": 16536,
+      "perplexity": 1120.3684372617818,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 9500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.797563552856445,
+      "elapsed_seconds": 1551.2987987995148
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 7.012370249356517,
+          "accuracy": 0.06615868408321239,
+          "masked_tokens": 16536,
+          "perplexity": 1110.283036184872,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 7.012367134112694,
+          "accuracy": 0.0660982099661345,
+          "masked_tokens": 16536,
+          "perplexity": 1110.2795773878884,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 7.011765951111401,
+          "accuracy": 0.06567489114658925,
+          "masked_tokens": 16536,
+          "perplexity": 1109.6122967782574,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q8_only",
+      "loss": 7.012370249356517,
+      "accuracy": 0.06567489114658925,
+      "masked_tokens": 16536,
+      "perplexity": 1110.283036184872,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 10000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.180139541625977,
+      "elapsed_seconds": 1640.5135469436646
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.993981171761611,
+          "accuracy": 0.06507014997581036,
+          "masked_tokens": 16536,
+          "perplexity": 1090.0525354928839,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.9939852319135145,
+          "accuracy": 0.06507014997581036,
+          "masked_tokens": 16536,
+          "perplexity": 1090.0569612807453,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.994332854737391,
+          "accuracy": 0.06621915820029027,
+          "masked_tokens": 16536,
+          "perplexity": 1090.4359558295732,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.994332854737391,
+      "accuracy": 0.06507014997581036,
+      "masked_tokens": 16536,
+      "perplexity": 1090.4359558295732,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 10500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.002082824707031,
+      "elapsed_seconds": 1730.7710337638855
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.981502553259744,
+          "accuracy": 0.06561441702951137,
+          "masked_tokens": 16536,
+          "perplexity": 1076.5347031035078,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.981502494202989,
+          "accuracy": 0.06567489114658925,
+          "masked_tokens": 16536,
+          "perplexity": 1076.5346395268634,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.9906995060020565,
+          "accuracy": 0.06519109820996613,
+          "masked_tokens": 16536,
+          "perplexity": 1086.481210563474,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.9906995060020565,
+      "accuracy": 0.06519109820996613,
+      "masked_tokens": 16536,
+      "perplexity": 1086.481210563474,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 11000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.964457988739014,
+      "elapsed_seconds": 1821.4441838264465
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.965765876936117,
+          "accuracy": 0.06851717464925013,
+          "masked_tokens": 16536,
+          "perplexity": 1059.7262265805557,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.965771516856215,
+          "accuracy": 0.06845670053217223,
+          "masked_tokens": 16536,
+          "perplexity": 1059.7322033686537,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.96715840568967,
+          "accuracy": 0.06815432994678278,
+          "masked_tokens": 16536,
+          "perplexity": 1061.2029537758724,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.96715840568967,
+      "accuracy": 0.06815432994678278,
+      "masked_tokens": 16536,
+      "perplexity": 1061.2029537758724,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 11500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.449150562286377,
+      "elapsed_seconds": 1913.5618398189545
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.957509949291508,
+          "accuracy": 0.06881954523463957,
+          "masked_tokens": 16536,
+          "perplexity": 1051.013219996842,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.957512459203594,
+          "accuracy": 0.06881954523463957,
+          "masked_tokens": 16536,
+          "perplexity": 1051.0158579509362,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.965415729435965,
+          "accuracy": 0.06688437348814708,
+          "masked_tokens": 16536,
+          "perplexity": 1059.355231046843,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.965415729435965,
+      "accuracy": 0.06688437348814708,
+      "masked_tokens": 16536,
+      "perplexity": 1059.355231046843,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 12000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.357537746429443,
+      "elapsed_seconds": 2005.271488904953
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.954129407759963,
+          "accuracy": 0.06567489114658925,
+          "masked_tokens": 16536,
+          "perplexity": 1047.4662249164696,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.954158478447591,
+          "accuracy": 0.06567489114658925,
+          "masked_tokens": 16536,
+          "perplexity": 1047.4966759225094,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.9643707496853455,
+          "accuracy": 0.06416303821964199,
+          "masked_tokens": 16536,
+          "perplexity": 1058.2488044790489,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.9643707496853455,
+      "accuracy": 0.06416303821964199,
+      "masked_tokens": 16536,
+      "perplexity": 1058.2488044790489,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 12500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 7.122918128967285,
+      "elapsed_seconds": 2096.409125804901
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.936839125383632,
+          "accuracy": 0.06555394291243348,
+          "masked_tokens": 16536,
+          "perplexity": 1029.5109116416297,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.936823431051002,
+          "accuracy": 0.06561441702951137,
+          "masked_tokens": 16536,
+          "perplexity": 1029.494754281726,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.950047641084225,
+          "accuracy": 0.06446540880503145,
+          "masked_tokens": 16536,
+          "perplexity": 1043.199426148186,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.950047641084225,
+      "accuracy": 0.06446540880503145,
+      "masked_tokens": 16536,
+      "perplexity": 1043.199426148186,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 13000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 6.770469665527344,
+      "elapsed_seconds": 2186.970385789871
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.8918948974018805,
+          "accuracy": 0.06640058055152395,
+          "masked_tokens": 16536,
+          "perplexity": 984.2647319489301,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.891896757689662,
+          "accuracy": 0.06640058055152395,
+          "masked_tokens": 16536,
+          "perplexity": 984.266562966288,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.910734016997951,
+          "accuracy": 0.06567489114658925,
+          "masked_tokens": 16536,
+          "perplexity": 1002.9831788641775,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.910734016997951,
+      "accuracy": 0.06567489114658925,
+      "masked_tokens": 16536,
+      "perplexity": 1002.9831788641775,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 13500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.295233726501465,
+      "elapsed_seconds": 2279.017323732376
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.846946048229054,
+          "accuracy": 0.07002902757619739,
+          "masked_tokens": 16536,
+          "perplexity": 941.0027370376778,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.846938976182647,
+          "accuracy": 0.07002902757619739,
+          "masked_tokens": 16536,
+          "perplexity": 940.9960822461845,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.870391166550443,
+          "accuracy": 0.068577648766328,
+          "masked_tokens": 16536,
+          "perplexity": 963.325312761355,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.870391166550443,
+      "accuracy": 0.068577648766328,
+      "masked_tokens": 16536,
+      "perplexity": 963.325312761355,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 14000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.496494293212891,
+      "elapsed_seconds": 2370.7743549346924
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.806543240411073,
+          "accuracy": 0.07565312046444123,
+          "masked_tokens": 16536,
+          "perplexity": 903.7413845363724,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.806534662417415,
+          "accuracy": 0.07559264634736333,
+          "masked_tokens": 16536,
+          "perplexity": 903.7336322817571,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.820163381693729,
+          "accuracy": 0.07462506047411707,
+          "masked_tokens": 16536,
+          "perplexity": 916.1346774896515,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.820163381693729,
+      "accuracy": 0.07462506047411707,
+      "masked_tokens": 16536,
+      "perplexity": 916.1346774896515,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 14500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.75754976272583,
+      "elapsed_seconds": 2463.313797712326
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.760773900977413,
+          "accuracy": 0.082970488630866,
+          "masked_tokens": 16536,
+          "perplexity": 863.3100538223756,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.760782995717676,
+          "accuracy": 0.082970488630866,
+          "masked_tokens": 16536,
+          "perplexity": 863.3179054387858,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.794300583173644,
+          "accuracy": 0.07994678277697145,
+          "masked_tokens": 16536,
+          "perplexity": 892.7446405691966,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.794300583173644,
+      "accuracy": 0.07994678277697145,
+      "masked_tokens": 16536,
+      "perplexity": 892.7446405691966,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 15000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 8.002090454101562,
+      "elapsed_seconds": 2555.243745803833
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.7138949737032085,
+          "accuracy": 0.094581519109821,
+          "masked_tokens": 16536,
+          "perplexity": 823.7729729668297,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.713876990921324,
+          "accuracy": 0.09452104499274311,
+          "masked_tokens": 16536,
+          "perplexity": 823.7581593703294,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.744082188340968,
+          "accuracy": 0.08817126269956459,
+          "masked_tokens": 16536,
+          "perplexity": 849.01952894775,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.744082188340968,
+      "accuracy": 0.08817126269956459,
+      "masked_tokens": 16536,
+      "perplexity": 849.01952894775,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 15500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.904047966003418,
+      "elapsed_seconds": 2647.61207985878
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.656760220834467,
+          "accuracy": 0.10153604257377842,
+          "masked_tokens": 16536,
+          "perplexity": 778.0262164401277,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.656750919395561,
+          "accuracy": 0.10147556845670053,
+          "masked_tokens": 16536,
+          "perplexity": 778.0189797104641,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.689698343410778,
+          "accuracy": 0.09506531204644413,
+          "masked_tokens": 16536,
+          "perplexity": 804.0796596284196,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.689698343410778,
+      "accuracy": 0.09506531204644413,
+      "masked_tokens": 16536,
+      "perplexity": 804.0796596284196,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 16000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.6504292488098145,
+      "elapsed_seconds": 2740.553671836853
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.587146819935482,
+          "accuracy": 0.1106676342525399,
+          "masked_tokens": 16536,
+          "perplexity": 725.7073395139288,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.5871622411306205,
+          "accuracy": 0.1106676342525399,
+          "masked_tokens": 16536,
+          "perplexity": 725.7185308747169,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.618381819519722,
+          "accuracy": 0.10540638606676342,
+          "masked_tokens": 16536,
+          "perplexity": 748.7325319336994,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.618381819519722,
+      "accuracy": 0.10540638606676342,
+      "masked_tokens": 16536,
+      "perplexity": 748.7325319336994,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 16500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 7.346763610839844,
+      "elapsed_seconds": 2832.166786670685
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.542970241183062,
+          "accuracy": 0.11544508950169327,
+          "masked_tokens": 16536,
+          "perplexity": 694.3458929580548,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.542978331958492,
+          "accuracy": 0.1153241412675375,
+          "masked_tokens": 16536,
+          "perplexity": 694.3515107774718,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.590364800366908,
+          "accuracy": 0.10861151427189163,
+          "masked_tokens": 16536,
+          "perplexity": 728.0464130593725,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.590364800366908,
+      "accuracy": 0.10861151427189163,
+      "masked_tokens": 16536,
+      "perplexity": 728.0464130593725,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 17000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 5.765323162078857,
+      "elapsed_seconds": 2924.510354757309
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.491897752795983,
+          "accuracy": 0.121129656507015,
+          "masked_tokens": 16536,
+          "perplexity": 659.7742643441165,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.491887048759147,
+          "accuracy": 0.12119013062409288,
+          "masked_tokens": 16536,
+          "perplexity": 659.767202133885,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.552983092523509,
+          "accuracy": 0.11284470246734397,
+          "masked_tokens": 16536,
+          "perplexity": 701.3331982102712,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.552983092523509,
+      "accuracy": 0.11284470246734397,
+      "masked_tokens": 16536,
+      "perplexity": 701.3331982102712,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 17500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.275646209716797,
+      "elapsed_seconds": 3016.8397839069366
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.438495349930172,
+          "accuracy": 0.13056361877116593,
+          "masked_tokens": 16536,
+          "perplexity": 625.4649855045797,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.43849776387503,
+          "accuracy": 0.13062409288824384,
+          "masked_tokens": 16536,
+          "perplexity": 625.4664953443878,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.490967859896589,
+          "accuracy": 0.12185534591194969,
+          "masked_tokens": 16536,
+          "perplexity": 659.1610301057708,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.490967859896589,
+      "accuracy": 0.12185534591194969,
+      "masked_tokens": 16536,
+      "perplexity": 659.1610301057708,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 18000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 7.296353340148926,
+      "elapsed_seconds": 3110.0983848571777
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.393942306511173,
+          "accuracy": 0.1334663763909047,
+          "masked_tokens": 16536,
+          "perplexity": 598.2102653887059,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.39394373863748,
+          "accuracy": 0.1334663763909047,
+          "masked_tokens": 16536,
+          "perplexity": 598.2111221019778,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.467319113884101,
+          "accuracy": 0.12143202709240446,
+          "masked_tokens": 16536,
+          "perplexity": 643.7555761262373,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.467319113884101,
+      "accuracy": 0.12143202709240446,
+      "masked_tokens": 16536,
+      "perplexity": 643.7555761262373,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 18500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 5.305419921875,
+      "elapsed_seconds": 3202.0683636665344
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.355398509372071,
+          "accuracy": 0.13824383164005805,
+          "masked_tokens": 16536,
+          "perplexity": 575.591673637182,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.355389244843637,
+          "accuracy": 0.13824383164005805,
+          "masked_tokens": 16536,
+          "perplexity": 575.586341076457,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.428260821677892,
+          "accuracy": 0.12723754233188195,
+          "masked_tokens": 16536,
+          "perplexity": 619.0962923157423,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.428260821677892,
+      "accuracy": 0.12723754233188195,
+      "masked_tokens": 16536,
+      "perplexity": 619.0962923157423,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 19000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 4.952927589416504,
+      "elapsed_seconds": 3294.800209760666
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.3298029352860805,
+          "accuracy": 0.13884857281083696,
+          "masked_tokens": 16536,
+          "perplexity": 561.0460205847615,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.3297949183315945,
+          "accuracy": 0.13890904692791486,
+          "masked_tokens": 16536,
+          "perplexity": 561.0415227223796,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.417340393509332,
+          "accuracy": 0.12899129172714077,
+          "masked_tokens": 16536,
+          "perplexity": 612.3722771115981,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.417340393509332,
+      "accuracy": 0.12899129172714077,
+      "masked_tokens": 16536,
+      "perplexity": 612.3722771115981,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 19500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.319584846496582,
+      "elapsed_seconds": 3390.3805906772614
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.296870179492377,
+          "accuracy": 0.14544025157232704,
+          "masked_tokens": 16536,
+          "perplexity": 542.870162265579,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.296885644980081,
+          "accuracy": 0.14544025157232704,
+          "masked_tokens": 16536,
+          "perplexity": 542.8785580823212,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.388605960279372,
+          "accuracy": 0.1354620222544751,
+          "masked_tokens": 16536,
+          "perplexity": 595.0265106571596,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.388605960279372,
+      "accuracy": 0.1354620222544751,
+      "masked_tokens": 16536,
+      "perplexity": 595.0265106571596,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 20000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 7.312241077423096,
+      "elapsed_seconds": 3483.0551207065582
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.23069601515727,
+          "accuracy": 0.15299951620706337,
+          "masked_tokens": 16536,
+          "perplexity": 508.10901202482927,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.230689718230773,
+          "accuracy": 0.15299951620706337,
+          "masked_tokens": 16536,
+          "perplexity": 508.10581250980186,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.321735442982357,
+          "accuracy": 0.13884857281083696,
+          "masked_tokens": 16536,
+          "perplexity": 556.5379948134317,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.321735442982357,
+      "accuracy": 0.13884857281083696,
+      "masked_tokens": 16536,
+      "perplexity": 556.5379948134317,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 20500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 7.031167030334473,
+      "elapsed_seconds": 3575.2631838321686
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.189494272794017,
+          "accuracy": 0.1593492985002419,
+          "masked_tokens": 16536,
+          "perplexity": 487.59945154144134,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.189468686454932,
+          "accuracy": 0.159288824383164,
+          "masked_tokens": 16536,
+          "perplexity": 487.586975816141,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.2812551379376815,
+          "accuracy": 0.1476173197871311,
+          "masked_tokens": 16536,
+          "perplexity": 534.4590628618544,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.2812551379376815,
+      "accuracy": 0.1476173197871311,
+      "masked_tokens": 16536,
+      "perplexity": 534.4590628618544,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 21000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.414919376373291,
+      "elapsed_seconds": 3668.0875630378723
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.143362819485233,
+          "accuracy": 0.16291727140783743,
+          "masked_tokens": 16536,
+          "perplexity": 465.6167260808875,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.143333276343565,
+          "accuracy": 0.16291727140783743,
+          "masked_tokens": 16536,
+          "perplexity": 465.6029705031783,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.254431655802586,
+          "accuracy": 0.1482825350749879,
+          "masked_tokens": 16536,
+          "perplexity": 520.3135735065912,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.254431655802586,
+      "accuracy": 0.1482825350749879,
+      "masked_tokens": 16536,
+      "perplexity": 520.3135735065912,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 21500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 7.587419509887695,
+      "elapsed_seconds": 3759.9156637191772
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.1202770688998624,
+          "accuracy": 0.16092162554426706,
+          "masked_tokens": 16536,
+          "perplexity": 454.9907408209677,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.120348055119323,
+          "accuracy": 0.16092162554426706,
+          "masked_tokens": 16536,
+          "perplexity": 455.02304003993436,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.219986323636687,
+          "accuracy": 0.14743589743589744,
+          "masked_tokens": 16536,
+          "perplexity": 502.6963569152125,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.219986323636687,
+      "accuracy": 0.14743589743589744,
+      "masked_tokens": 16536,
+      "perplexity": 502.6963569152125,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 22000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 4.569470405578613,
+      "elapsed_seconds": 3852.4005358219147
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.062807641400769,
+          "accuracy": 0.17138364779874213,
+          "masked_tokens": 16536,
+          "perplexity": 429.57985146185166,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.062797926564579,
+          "accuracy": 0.17132317368166425,
+          "masked_tokens": 16536,
+          "perplexity": 429.57567818423536,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.198642503713489,
+          "accuracy": 0.1516690856313498,
+          "masked_tokens": 16536,
+          "perplexity": 492.0805899124398,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.198642503713489,
+      "accuracy": 0.1516690856313498,
+      "masked_tokens": 16536,
+      "perplexity": 492.0805899124398,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 22500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 5.582247257232666,
+      "elapsed_seconds": 3945.1242418289185
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 6.0113033447856195,
+          "accuracy": 0.17380261248185777,
+          "masked_tokens": 16536,
+          "perplexity": 408.01475778253047,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 6.011290263714396,
+          "accuracy": 0.17398403483309144,
+          "masked_tokens": 16536,
+          "perplexity": 408.0094205473321,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.138436489538923,
+          "accuracy": 0.15904692791485245,
+          "masked_tokens": 16536,
+          "perplexity": 463.32858515579284,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.138436489538923,
+      "accuracy": 0.15904692791485245,
+      "masked_tokens": 16536,
+      "perplexity": 463.32858515579284,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 23000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.955795764923096,
+      "elapsed_seconds": 4038.268474817276
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.960043602192754,
+          "accuracy": 0.17676584421867442,
+          "masked_tokens": 16536,
+          "perplexity": 387.6270252575919,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.960038065621976,
+          "accuracy": 0.17676584421867442,
+          "masked_tokens": 16536,
+          "perplexity": 387.6248791390723,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.088507029879883,
+          "accuracy": 0.15832123850991775,
+          "masked_tokens": 16536,
+          "perplexity": 440.76287387930216,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.088507029879883,
+      "accuracy": 0.15832123850991775,
+      "masked_tokens": 16536,
+      "perplexity": 440.76287387930216,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 23500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 6.723428726196289,
+      "elapsed_seconds": 4135.20966386795
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.8949319943749625,
+          "accuracy": 0.18015239477503628,
+          "masked_tokens": 16536,
+          "perplexity": 363.19213595082766,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.894940764303073,
+          "accuracy": 0.18015239477503628,
+          "masked_tokens": 16536,
+          "perplexity": 363.19532113371724,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 6.034370381761763,
+          "accuracy": 0.16563860667634253,
+          "masked_tokens": 16536,
+          "perplexity": 417.5358386822098,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 6.034370381761763,
+      "accuracy": 0.16563860667634253,
+      "masked_tokens": 16536,
+      "perplexity": 417.5358386822098,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 24000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.850783348083496,
+      "elapsed_seconds": 4227.527713775635
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.849441218272349,
+          "accuracy": 0.1787614900822448,
+          "masked_tokens": 16536,
+          "perplexity": 347.04040645132915,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.849445669675254,
+          "accuracy": 0.17894291243347848,
+          "masked_tokens": 16536,
+          "perplexity": 347.04195127144084,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.982234074519231,
+          "accuracy": 0.1669690372520561,
+          "masked_tokens": 16536,
+          "perplexity": 396.3247989800237,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.982234074519231,
+      "accuracy": 0.1669690372520561,
+      "masked_tokens": 16536,
+      "perplexity": 396.3247989800237,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 24500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 5.639710903167725,
+      "elapsed_seconds": 4320.368493795395
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.7908578844075045,
+          "accuracy": 0.18130140299951622,
+          "masked_tokens": 16536,
+          "perplexity": 327.29368412023024,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.790853100810353,
+          "accuracy": 0.1813618771165941,
+          "masked_tokens": 16536,
+          "perplexity": 327.29211848283995,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.939732965433373,
+          "accuracy": 0.16412675374939525,
+          "masked_tokens": 16536,
+          "perplexity": 379.8334873237777,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.939732965433373,
+      "accuracy": 0.16412675374939525,
+      "masked_tokens": 16536,
+      "perplexity": 379.8334873237777,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 25000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 6.166171073913574,
+      "elapsed_seconds": 4413.066191673279
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.725966189180991,
+          "accuracy": 0.18444605708756653,
+          "masked_tokens": 16536,
+          "perplexity": 306.7294808260402,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.72600059712285,
+          "accuracy": 0.1845670053217223,
+          "masked_tokens": 16536,
+          "perplexity": 306.7400349377543,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.881590711707128,
+          "accuracy": 0.16956942428640542,
+          "masked_tokens": 16536,
+          "perplexity": 358.3788659924527,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.881590711707128,
+      "accuracy": 0.16956942428640542,
+      "masked_tokens": 16536,
+      "perplexity": 358.3788659924527,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 25500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.457629203796387,
+      "elapsed_seconds": 4505.560200929642
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.678134048971279,
+          "accuracy": 0.1884373488147073,
+          "masked_tokens": 16536,
+          "perplexity": 292.4033103071077,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.678143350410185,
+          "accuracy": 0.1884373488147073,
+          "masked_tokens": 16536,
+          "perplexity": 292.4060300912834,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.830936884038046,
+          "accuracy": 0.17259313014029995,
+          "masked_tokens": 16536,
+          "perplexity": 340.6777051072461,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.830936884038046,
+      "accuracy": 0.17259313014029995,
+      "masked_tokens": 16536,
+      "perplexity": 340.6777051072461,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 26000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 4.409697532653809,
+      "elapsed_seconds": 4597.385009765625
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.6340495766103125,
+          "accuracy": 0.19327527818093856,
+          "masked_tokens": 16536,
+          "perplexity": 279.7928692140917,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.63407127996776,
+          "accuracy": 0.19321480406386066,
+          "masked_tokens": 16536,
+          "perplexity": 279.79894172464014,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.784547123865165,
+          "accuracy": 0.17712868892114175,
+          "masked_tokens": 16536,
+          "perplexity": 325.2347157143311,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.784547123865165,
+      "accuracy": 0.17712868892114175,
+      "masked_tokens": 16536,
+      "perplexity": 325.2347157143311,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 26500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 6.780539512634277,
+      "elapsed_seconds": 4691.3176209926605
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.6112178660384915,
+          "accuracy": 0.19267053701015965,
+          "masked_tokens": 16536,
+          "perplexity": 273.4770937415403,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.611224436102481,
+          "accuracy": 0.19267053701015965,
+          "masked_tokens": 16536,
+          "perplexity": 273.4788905094483,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.767729428406205,
+          "accuracy": 0.17640299951620705,
+          "masked_tokens": 16536,
+          "perplexity": 319.8107544172548,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.767729428406205,
+      "accuracy": 0.17640299951620705,
+      "masked_tokens": 16536,
+      "perplexity": 319.8107544172548,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 27000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 4.672844886779785,
+      "elapsed_seconds": 4783.933452606201
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.574384950472643,
+          "accuracy": 0.1955732946298984,
+          "masked_tokens": 16536,
+          "perplexity": 263.5873864735497,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.574394340496681,
+          "accuracy": 0.19533139816158684,
+          "masked_tokens": 16536,
+          "perplexity": 263.5898615770655,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.7623771294684705,
+          "accuracy": 0.1779753265602322,
+          "masked_tokens": 16536,
+          "perplexity": 318.1036043203434,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.7623771294684705,
+      "accuracy": 0.1779753265602322,
+      "masked_tokens": 16536,
+      "perplexity": 318.1036043203434,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 27500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.7342681884765625,
+      "elapsed_seconds": 4875.315347909927
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.537959127882915,
+          "accuracy": 0.19781083696178037,
+          "masked_tokens": 16536,
+          "perplexity": 254.15876425717175,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.537978550173202,
+          "accuracy": 0.19787131107885825,
+          "masked_tokens": 16536,
+          "perplexity": 254.16370065040806,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.710047101305485,
+          "accuracy": 0.17845911949685533,
+          "masked_tokens": 16536,
+          "perplexity": 301.88528713905527,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.710047101305485,
+      "accuracy": 0.17845911949685533,
+      "masked_tokens": 16536,
+      "perplexity": 301.88528713905527,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 28000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 5.552677154541016,
+      "elapsed_seconds": 4967.631265640259
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.52492683753912,
+          "accuracy": 0.2001088534107402,
+          "masked_tokens": 16536,
+          "perplexity": 250.86798323040264,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.524929635352885,
+          "accuracy": 0.2001088534107402,
+          "masked_tokens": 16536,
+          "perplexity": 250.86868511328132,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.691759771117278,
+          "accuracy": 0.18299467827769714,
+          "masked_tokens": 16536,
+          "perplexity": 296.41478411759635,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.691759771117278,
+      "accuracy": 0.18299467827769714,
+      "masked_tokens": 16536,
+      "perplexity": 296.41478411759635,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 28500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 5.2134199142456055,
+      "elapsed_seconds": 5060.628449678421
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.493540416435164,
+          "accuracy": 0.2026487663280116,
+          "masked_tokens": 16536,
+          "perplexity": 243.11641834039227,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.4935556530779435,
+          "accuracy": 0.20240686985970005,
+          "masked_tokens": 16536,
+          "perplexity": 243.1201226466329,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.656516751980055,
+          "accuracy": 0.1852322206095791,
+          "masked_tokens": 16536,
+          "perplexity": 286.1501725842547,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.656516751980055,
+      "accuracy": 0.1852322206095791,
+      "masked_tokens": 16536,
+      "perplexity": 286.1501725842547,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 29000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 5.4521894454956055,
+      "elapsed_seconds": 5152.7960686683655
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.4661193020861685,
+          "accuracy": 0.2015602322206096,
+          "masked_tokens": 16536,
+          "perplexity": 236.54046722921822,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.466127791494693,
+          "accuracy": 0.2013788098693759,
+          "masked_tokens": 16536,
+          "perplexity": 236.5424753264009,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.6244376394329985,
+          "accuracy": 0.18553459119496854,
+          "masked_tokens": 16536,
+          "perplexity": 277.1164013593761,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.6244376394329985,
+      "accuracy": 0.18553459119496854,
+      "masked_tokens": 16536,
+      "perplexity": 277.1164013593761,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 29500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 5.243613243103027,
+      "elapsed_seconds": 5244.77187871933
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.457971684530154,
+          "accuracy": 0.20301161103047896,
+          "masked_tokens": 16536,
+          "perplexity": 234.62105589856026,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.457961194574055,
+          "accuracy": 0.20295113691340105,
+          "masked_tokens": 16536,
+          "perplexity": 234.61859474689263,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.6266903519688105,
+          "accuracy": 0.18577648766328012,
+          "masked_tokens": 16536,
+          "perplexity": 277.74136862209696,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.6266903519688105,
+      "accuracy": 0.18577648766328012,
+      "masked_tokens": 16536,
+      "perplexity": 277.74136862209696,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 30000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.427791118621826,
+      "elapsed_seconds": 5337.304813623428
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.428063970749426,
+          "accuracy": 0.20742622157716498,
+          "masked_tokens": 16536,
+          "perplexity": 227.70796911112427,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.428061490365717,
+          "accuracy": 0.20742622157716498,
+          "masked_tokens": 16536,
+          "perplexity": 227.70740430868793,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.5947960575363975,
+          "accuracy": 0.1909772617319787,
+          "masked_tokens": 16536,
+          "perplexity": 269.02277932883584,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.5947960575363975,
+      "accuracy": 0.1909772617319787,
+      "masked_tokens": 16536,
+      "perplexity": 269.02277932883584,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 30500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 5.7096333503723145,
+      "elapsed_seconds": 5428.665543794632
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.405286983643169,
+          "accuracy": 0.20911949685534592,
+          "masked_tokens": 16536,
+          "perplexity": 222.58008816348578,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.405244898323166,
+          "accuracy": 0.2091799709724238,
+          "masked_tokens": 16536,
+          "perplexity": 222.57072100636037,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.593947648194659,
+          "accuracy": 0.1884373488147073,
+          "masked_tokens": 16536,
+          "perplexity": 268.79463468342186,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.593947648194659,
+      "accuracy": 0.1884373488147073,
+      "masked_tokens": 16536,
+      "perplexity": 268.79463468342186,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 31000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 6.2436299324035645,
+      "elapsed_seconds": 5520.53906583786
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.375371688451523,
+          "accuracy": 0.2098451862602806,
+          "masked_tokens": 16536,
+          "perplexity": 216.02014958551908,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.375366233083783,
+          "accuracy": 0.2097847121432027,
+          "masked_tokens": 16536,
+          "perplexity": 216.01897111937836,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.551410750715295,
+          "accuracy": 0.19146105466860183,
+          "masked_tokens": 16536,
+          "perplexity": 257.6007100715395,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.551410750715295,
+      "accuracy": 0.19146105466860183,
+      "masked_tokens": 16536,
+      "perplexity": 257.6007100715395,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 31500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.813260078430176,
+      "elapsed_seconds": 5613.244982719421
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.361170192473051,
+          "accuracy": 0.2104499274310595,
+          "masked_tokens": 16536,
+          "perplexity": 212.97402128503856,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.36115983539465,
+          "accuracy": 0.21063134978229317,
+          "masked_tokens": 16536,
+          "perplexity": 212.97181550782543,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.568806877560701,
+          "accuracy": 0.19055394291243347,
+          "masked_tokens": 16536,
+          "perplexity": 262.12116994624176,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.568806877560701,
+      "accuracy": 0.19055394291243347,
+      "masked_tokens": 16536,
+      "perplexity": 262.12116994624176,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 32000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 5.317930221557617,
+      "elapsed_seconds": 5706.583293914795
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.338863164258568,
+          "accuracy": 0.2117803580067731,
+          "masked_tokens": 16536,
+          "perplexity": 208.2758002768967,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.338822060757117,
+          "accuracy": 0.2117198838896952,
+          "masked_tokens": 16536,
+          "perplexity": 208.26723958817607,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.53674995558932,
+          "accuracy": 0.19248911465892599,
+          "masked_tokens": 16536,
+          "perplexity": 253.8516282488554,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.53674995558932,
+      "accuracy": 0.19248911465892599,
+      "masked_tokens": 16536,
+      "perplexity": 253.8516282488554,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 32500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 6.275498390197754,
+      "elapsed_seconds": 5798.156060934067
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.31486162057405,
+          "accuracy": 0.21093372036768263,
+          "masked_tokens": 16536,
+          "perplexity": 203.33637361127248,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.314875498911466,
+          "accuracy": 0.21087324625060475,
+          "masked_tokens": 16536,
+          "perplexity": 203.33919560165648,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.508903691661375,
+          "accuracy": 0.189707305273343,
+          "masked_tokens": 16536,
+          "perplexity": 246.8803216963356,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.508903691661375,
+      "accuracy": 0.189707305273343,
+      "masked_tokens": 16536,
+      "perplexity": 246.8803216963356,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 33000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 2.9932987689971924,
+      "elapsed_seconds": 5891.678997993469
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.309231577717744,
+          "accuracy": 0.21280841799709724,
+          "masked_tokens": 16536,
+          "perplexity": 202.19479768968876,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.309201495683188,
+          "accuracy": 0.21280841799709724,
+          "masked_tokens": 16536,
+          "perplexity": 202.1887153502825,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.488511157947055,
+          "accuracy": 0.1967827769714562,
+          "masked_tokens": 16536,
+          "perplexity": 241.89679250735193,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.488511157947055,
+      "accuracy": 0.1967827769714562,
+      "masked_tokens": 16536,
+      "perplexity": 241.89679250735193,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 33500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.318535804748535,
+      "elapsed_seconds": 5986.320350885391
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.291069403557485,
+          "accuracy": 0.21395742622157715,
+          "masked_tokens": 16536,
+          "perplexity": 198.555648029705,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.291059386055425,
+          "accuracy": 0.21389695210449927,
+          "masked_tokens": 16536,
+          "perplexity": 198.55365900805438,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.479657398771997,
+          "accuracy": 0.19514997581035318,
+          "masked_tokens": 16536,
+          "perplexity": 239.7645496722448,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.479657398771997,
+      "accuracy": 0.19514997581035318,
+      "masked_tokens": 16536,
+      "perplexity": 239.7645496722448,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 34000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 5.224771499633789,
+      "elapsed_seconds": 6077.889379739761
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.2783096084631635,
+          "accuracy": 0.2163159167876149,
+          "masked_tokens": 16536,
+          "perplexity": 196.03821377435065,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.278280751856272,
+          "accuracy": 0.2163159167876149,
+          "masked_tokens": 16536,
+          "perplexity": 196.03255685830013,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.47252193279294,
+          "accuracy": 0.19635945815191097,
+          "masked_tokens": 16536,
+          "perplexity": 238.05980718414443,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.47252193279294,
+      "accuracy": 0.19635945815191097,
+      "masked_tokens": 16536,
+      "perplexity": 238.05980718414443,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 34500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.586921215057373,
+      "elapsed_seconds": 6170.734039783478
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.26024417664962,
+          "accuracy": 0.21704160619254959,
+          "masked_tokens": 16536,
+          "perplexity": 192.52849652146008,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.2601844924166405,
+          "accuracy": 0.2169206579583938,
+          "masked_tokens": 16536,
+          "perplexity": 192.51700594872486,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.4604644775390625,
+          "accuracy": 0.19545234639574263,
+          "masked_tokens": 16536,
+          "perplexity": 235.20664720216126,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.4604644775390625,
+      "accuracy": 0.19545234639574263,
+      "masked_tokens": 16536,
+      "perplexity": 235.20664720216126,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 35000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 5.142046928405762,
+      "elapsed_seconds": 6263.194548845291
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.256246226273358,
+          "accuracy": 0.2183115626511853,
+          "masked_tokens": 16536,
+          "perplexity": 191.76031374784935,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.256266630382196,
+          "accuracy": 0.2181906144170295,
+          "masked_tokens": 16536,
+          "perplexity": 191.76422648607974,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.4449117851534155,
+          "accuracy": 0.1975689404934688,
+          "masked_tokens": 16536,
+          "perplexity": 231.57685029472748,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.4449117851534155,
+      "accuracy": 0.1975689404934688,
+      "masked_tokens": 16536,
+      "perplexity": 231.57685029472748,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 35500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 5.368199348449707,
+      "elapsed_seconds": 6355.232326745987
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.233677812861427,
+          "accuracy": 0.2181906144170295,
+          "masked_tokens": 16536,
+          "perplexity": 187.48105735398335,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.233681326738347,
+          "accuracy": 0.2181906144170295,
+          "masked_tokens": 16536,
+          "perplexity": 187.48171614050116,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.432805238971977,
+          "accuracy": 0.20004837929366232,
+          "masked_tokens": 16536,
+          "perplexity": 228.79015711362197,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.432805238971977,
+      "accuracy": 0.20004837929366232,
+      "masked_tokens": 16536,
+      "perplexity": 228.79015711362197,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 36000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 5.697222709655762,
+      "elapsed_seconds": 6447.314040660858
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.221864225095057,
+          "accuracy": 0.21970246734397678,
+          "masked_tokens": 16536,
+          "perplexity": 185.27926457148746,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.221885441234277,
+          "accuracy": 0.21982341557813256,
+          "masked_tokens": 16536,
+          "perplexity": 185.2831955238588,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.437152569110577,
+          "accuracy": 0.19714562167392355,
+          "masked_tokens": 16536,
+          "perplexity": 229.78694857996246,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.437152569110577,
+      "accuracy": 0.19714562167392355,
+      "masked_tokens": 16536,
+      "perplexity": 229.78694857996246,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 36500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 3.768880844116211,
+      "elapsed_seconds": 6540.1845009326935
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.216182514960257,
+          "accuracy": 0.21885582970488632,
+          "masked_tokens": 16536,
+          "perplexity": 184.2295464172416,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.216193123029867,
+          "accuracy": 0.21873488147073053,
+          "masked_tokens": 16536,
+          "perplexity": 184.23150074745993,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.417305705047888,
+          "accuracy": 0.19841557813255928,
+          "masked_tokens": 16536,
+          "perplexity": 225.27135664039426,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.417305705047888,
+      "accuracy": 0.19841557813255928,
+      "masked_tokens": 16536,
+      "perplexity": 225.27135664039426,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 37000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 5.917430877685547,
+      "elapsed_seconds": 6632.263294935226
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.20842786105174,
+          "accuracy": 0.21861393323657474,
+          "masked_tokens": 16536,
+          "perplexity": 182.8064350446556,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.208411332542445,
+          "accuracy": 0.21855345911949686,
+          "masked_tokens": 16536,
+          "perplexity": 182.8034135517653,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.415900604587623,
+          "accuracy": 0.20041122399612965,
+          "masked_tokens": 16536,
+          "perplexity": 224.95505002681898,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.415900604587623,
+      "accuracy": 0.20041122399612965,
+      "masked_tokens": 16536,
+      "perplexity": 224.95505002681898,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 37500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 5.837799072265625,
+      "elapsed_seconds": 6725.707271814346
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.204788436852738,
+          "accuracy": 0.2228471214320271,
+          "masked_tokens": 16536,
+          "perplexity": 182.142334086793,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.204745015373654,
+          "accuracy": 0.2228471214320271,
+          "masked_tokens": 16536,
+          "perplexity": 182.1344253689486,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.418126564413439,
+          "accuracy": 0.20343492985002418,
+          "masked_tokens": 16536,
+          "perplexity": 225.45634865911086,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.418126564413439,
+      "accuracy": 0.20343492985002418,
+      "masked_tokens": 16536,
+      "perplexity": 225.45634865911086,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 38000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.333189487457275,
+      "elapsed_seconds": 6817.633156776428
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.177873003350172,
+          "accuracy": 0.22447992259313013,
+          "masked_tokens": 16536,
+          "perplexity": 177.3052818935468,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.177812654728698,
+          "accuracy": 0.22447992259313013,
+          "masked_tokens": 16536,
+          "perplexity": 177.2945820870671,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.380071882701001,
+          "accuracy": 0.20319303338171263,
+          "masked_tokens": 16536,
+          "perplexity": 217.03787613298624,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.380071882701001,
+      "accuracy": 0.20319303338171263,
+      "masked_tokens": 16536,
+      "perplexity": 217.03787613298624,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 38500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 5.1945695877075195,
+      "elapsed_seconds": 6909.600467920303
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.163896314291546,
+          "accuracy": 0.2241170778906628,
+          "masked_tokens": 16536,
+          "perplexity": 174.84437879961996,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.163874906217873,
+          "accuracy": 0.2240566037735849,
+          "masked_tokens": 16536,
+          "perplexity": 174.8406357583431,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.357168226237452,
+          "accuracy": 0.2059748427672956,
+          "masked_tokens": 16536,
+          "perplexity": 212.1234096376061,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.357168226237452,
+      "accuracy": 0.2059748427672956,
+      "masked_tokens": 16536,
+      "perplexity": 212.1234096376061,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 39000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 4.815182685852051,
+      "elapsed_seconds": 7002.294302940369
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.173395268514529,
+          "accuracy": 0.22381470730527334,
+          "masked_tokens": 16536,
+          "perplexity": 176.51313070132227,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.173406437623311,
+          "accuracy": 0.223996129656507,
+          "masked_tokens": 16536,
+          "perplexity": 176.51510220669047,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.386302621340371,
+          "accuracy": 0.2033744557329463,
+          "masked_tokens": 16536,
+          "perplexity": 218.39440411105593,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.386302621340371,
+      "accuracy": 0.2033744557329463,
+      "masked_tokens": 16536,
+      "perplexity": 218.39440411105593,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 39500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 4.27720832824707,
+      "elapsed_seconds": 7095.453029870987
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.155934932212294,
+          "accuracy": 0.22520561199806483,
+          "masked_tokens": 16536,
+          "perplexity": 173.45790235326857,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.156021258423856,
+          "accuracy": 0.2252660861151427,
+          "masked_tokens": 16536,
+          "perplexity": 173.47287696318548,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.356731412949398,
+          "accuracy": 0.20307208514755684,
+          "masked_tokens": 16536,
+          "perplexity": 212.03077154781647,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.356731412949398,
+      "accuracy": 0.20307208514755684,
+      "masked_tokens": 16536,
+      "perplexity": 212.03077154781647,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 40000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 5.465385913848877,
+      "elapsed_seconds": 7187.794148683548
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.149935179305757,
+          "accuracy": 0.2253265602322206,
+          "masked_tokens": 16536,
+          "perplexity": 172.4203135501894,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.14992378135205,
+          "accuracy": 0.22514513788098695,
+          "masked_tokens": 16536,
+          "perplexity": 172.4183483226372,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.36280761482523,
+          "accuracy": 0.2052491533623609,
+          "masked_tokens": 16536,
+          "perplexity": 213.3230353716774,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.36280761482523,
+      "accuracy": 0.2052491533623609,
+      "masked_tokens": 16536,
+      "perplexity": 213.3230353716774,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 40500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 5.303177833557129,
+      "elapsed_seconds": 68.24404001235962
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.132326012598932,
+          "accuracy": 0.2273826802128689,
+          "masked_tokens": 16536,
+          "perplexity": 169.4107115651822,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.132350122519144,
+          "accuracy": 0.22750362844702468,
+          "masked_tokens": 16536,
+          "perplexity": 169.41479609315977,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.325028979149658,
+          "accuracy": 0.20936139332365747,
+          "masked_tokens": 16536,
+          "perplexity": 205.41431311065293,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.325028979149658,
+      "accuracy": 0.20936139332365747,
+      "masked_tokens": 16536,
+      "perplexity": 205.41431311065293,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 41000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 4.816211700439453,
+      "elapsed_seconds": 136.25666427612305
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.124078050234148,
+          "accuracy": 0.22635462022254474,
+          "masked_tokens": 16536,
+          "perplexity": 168.01916499265195,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.1240568710054015,
+          "accuracy": 0.22635462022254474,
+          "masked_tokens": 16536,
+          "perplexity": 168.01560651400578,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.338401155882431,
+          "accuracy": 0.20422109337203675,
+          "masked_tokens": 16536,
+          "perplexity": 208.17959733761506,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.338401155882431,
+      "accuracy": 0.20422109337203675,
+      "masked_tokens": 16536,
+      "perplexity": 208.17959733761506,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 41500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 5.192317008972168,
+      "elapsed_seconds": 204.837806224823
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.123762303293761,
+          "accuracy": 0.22750362844702468,
+          "masked_tokens": 16536,
+          "perplexity": 167.96612182992794,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.12380213707498,
+          "accuracy": 0.22744315432994677,
+          "masked_tokens": 16536,
+          "perplexity": 167.97281268893738,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.332362440281809,
+          "accuracy": 0.20833333333333334,
+          "masked_tokens": 16536,
+          "perplexity": 206.92624807404297,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.332362440281809,
+      "accuracy": 0.20833333333333334,
+      "masked_tokens": 16536,
+      "perplexity": 206.92624807404297,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 42000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 5.2385334968566895,
+      "elapsed_seconds": 274.7483620643616
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.1180832359487445,
+          "accuracy": 0.2299225931301403,
+          "masked_tokens": 16536,
+          "perplexity": 167.01493439757556,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.118081774294059,
+          "accuracy": 0.2298016448959845,
+          "masked_tokens": 16536,
+          "perplexity": 167.0146902795926,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.345903172375329,
+          "accuracy": 0.20694242864054185,
+          "masked_tokens": 16536,
+          "perplexity": 209.74723698732438,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.345903172375329,
+      "accuracy": 0.20694242864054185,
+      "masked_tokens": 16536,
+      "perplexity": 209.74723698732438,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 42500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 5.787063121795654,
+      "elapsed_seconds": 349.5971260070801
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.102819655906998,
+          "accuracy": 0.23101112723754233,
+          "masked_tokens": 16536,
+          "perplexity": 164.4850452777179,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.102801503336943,
+          "accuracy": 0.231192549588776,
+          "masked_tokens": 16536,
+          "perplexity": 164.4820594785105,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.315537421785233,
+          "accuracy": 0.208514755684567,
+          "masked_tokens": 16536,
+          "perplexity": 203.4738350218988,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.315537421785233,
+      "accuracy": 0.208514755684567,
+      "masked_tokens": 16536,
+      "perplexity": 203.4738350218988,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 43000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 3.8795082569122314,
+      "elapsed_seconds": 426.0187191963196
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.103018352359057,
+          "accuracy": 0.2305878084179971,
+          "masked_tokens": 16536,
+          "perplexity": 164.51773111980418,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.103042034117796,
+          "accuracy": 0.23046686018384133,
+          "masked_tokens": 16536,
+          "perplexity": 164.52162723515409,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.314597887870593,
+          "accuracy": 0.20748669569424286,
+          "masked_tokens": 16536,
+          "perplexity": 203.28275423065168,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.314597887870593,
+      "accuracy": 0.20748669569424286,
+      "masked_tokens": 16536,
+      "perplexity": 203.28275423065168,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 43500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.500705718994141,
+      "elapsed_seconds": 504.71488213539124
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.084287668347185,
+          "accuracy": 0.23016448959845187,
+          "masked_tokens": 16536,
+          "perplexity": 161.46488171684328,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.084202678294705,
+          "accuracy": 0.23016448959845187,
+          "masked_tokens": 16536,
+          "perplexity": 161.4511593912113,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.286449260739353,
+          "accuracy": 0.21159893565553942,
+          "masked_tokens": 16536,
+          "perplexity": 197.640408475225,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.286449260739353,
+      "accuracy": 0.21159893565553942,
+      "masked_tokens": 16536,
+      "perplexity": 197.640408475225,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 44000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.106627464294434,
+      "elapsed_seconds": 585.0854651927948
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.077904334435096,
+          "accuracy": 0.23137397194000967,
+          "masked_tokens": 16536,
+          "perplexity": 160.43748007426325,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.077910144143365,
+          "accuracy": 0.231192549588776,
+          "masked_tokens": 16536,
+          "perplexity": 160.4384121719255,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.296523937120147,
+          "accuracy": 0.21220367682631833,
+          "masked_tokens": 16536,
+          "perplexity": 199.6416355611407,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.296523937120147,
+      "accuracy": 0.21220367682631833,
+      "masked_tokens": 16536,
+      "perplexity": 199.6416355611407,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 44500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 4.609660625457764,
+      "elapsed_seconds": 663.6185710430145
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.080251774005863,
+          "accuracy": 0.23046686018384133,
+          "masked_tokens": 16536,
+          "perplexity": 160.81453975288065,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.080270236623881,
+          "accuracy": 0.2305273343009192,
+          "masked_tokens": 16536,
+          "perplexity": 160.81750883770837,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.309526573590858,
+          "accuracy": 0.20422109337203675,
+          "masked_tokens": 16536,
+          "perplexity": 202.25445311919248,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.309526573590858,
+      "accuracy": 0.20422109337203675,
+      "masked_tokens": 16536,
+      "perplexity": 202.25445311919248,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 45000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 5.901451110839844,
+      "elapsed_seconds": 746.9515862464905
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.062378224971275,
+          "accuracy": 0.23536526366715046,
+          "masked_tokens": 16536,
+          "perplexity": 157.96574804038528,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.062378822920919,
+          "accuracy": 0.23554668601838413,
+          "masked_tokens": 16536,
+          "perplexity": 157.96584249597626,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.28191564344933,
+          "accuracy": 0.21359458151910982,
+          "masked_tokens": 16536,
+          "perplexity": 196.7464105556128,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.28191564344933,
+      "accuracy": 0.21359458151910982,
+      "masked_tokens": 16536,
+      "perplexity": 196.7464105556128,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 45500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.154483795166016,
+      "elapsed_seconds": 830.429897069931
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.066427377554087,
+          "accuracy": 0.2337324625060474,
+          "masked_tokens": 16536,
+          "perplexity": 158.60667218118243,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.066375577397893,
+          "accuracy": 0.2337324625060474,
+          "masked_tokens": 16536,
+          "perplexity": 158.59845654357756,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.275838806713383,
+          "accuracy": 0.20960328979196904,
+          "masked_tokens": 16536,
+          "perplexity": 195.55444011325145,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.275838806713383,
+      "accuracy": 0.20960328979196904,
+      "masked_tokens": 16536,
+      "perplexity": 195.55444011325145,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 46000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 6.0973968505859375,
+      "elapsed_seconds": 915.7492921352386
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.047478825791077,
+          "accuracy": 0.23451862602805998,
+          "masked_tokens": 16536,
+          "perplexity": 155.62960012077002,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.047442158928342,
+          "accuracy": 0.2344581519109821,
+          "masked_tokens": 16536,
+          "perplexity": 155.62389377620235,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.270829760399658,
+          "accuracy": 0.21123609095307208,
+          "masked_tokens": 16536,
+          "perplexity": 194.57734805852726,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.270829760399658,
+      "accuracy": 0.21123609095307208,
+      "masked_tokens": 16536,
+      "perplexity": 194.57734805852726,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 46500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.122949600219727,
+      "elapsed_seconds": 1000.0765521526337
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.036470912422139,
+          "accuracy": 0.23488147073052734,
+          "masked_tokens": 16536,
+          "perplexity": 153.92583760438637,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.03643523476005,
+          "accuracy": 0.23482099661344943,
+          "masked_tokens": 16536,
+          "perplexity": 153.92034598833004,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.242841051578752,
+          "accuracy": 0.21583212385099176,
+          "masked_tokens": 16536,
+          "perplexity": 189.20688605192439,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.242841051578752,
+      "accuracy": 0.21583212385099176,
+      "masked_tokens": 16536,
+      "perplexity": 189.20688605192439,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 47000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 5.650115966796875,
+      "elapsed_seconds": 1086.941908121109
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.0315207161647315,
+          "accuracy": 0.23754233188195453,
+          "masked_tokens": 16536,
+          "perplexity": 153.16575732454842,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.03158504373507,
+          "accuracy": 0.23748185776487662,
+          "masked_tokens": 16536,
+          "perplexity": 153.17561042248576,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.231681354967476,
+          "accuracy": 0.21353410740203194,
+          "masked_tokens": 16536,
+          "perplexity": 187.10713270367302,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.231681354967476,
+      "accuracy": 0.21353410740203194,
+      "masked_tokens": 16536,
+      "perplexity": 187.10713270367302,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 47500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 3.8458518981933594,
+      "elapsed_seconds": 1173.4126830101013
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.030830586308376,
+          "accuracy": 0.2365747460087083,
+          "masked_tokens": 16536,
+          "perplexity": 153.06008952889172,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.0308028886903005,
+          "accuracy": 0.23663522012578617,
+          "masked_tokens": 16536,
+          "perplexity": 153.05585018769943,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.278069579664728,
+          "accuracy": 0.20633768746976294,
+          "masked_tokens": 16536,
+          "perplexity": 195.99116460425472,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.278069579664728,
+      "accuracy": 0.20633768746976294,
+      "masked_tokens": 16536,
+      "perplexity": 195.99116460425472,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 48000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.492674827575684,
+      "elapsed_seconds": 1258.4174201488495
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.010242973368238,
+          "accuracy": 0.2369980648282535,
+          "masked_tokens": 16536,
+          "perplexity": 149.94116343295445,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.010246834203594,
+          "accuracy": 0.23693759071117562,
+          "masked_tokens": 16536,
+          "perplexity": 149.941742332217,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.235103863705514,
+          "accuracy": 0.21734397677793904,
+          "masked_tokens": 16536,
+          "perplexity": 187.74860559743146,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.235103863705514,
+      "accuracy": 0.21734397677793904,
+      "masked_tokens": 16536,
+      "perplexity": 187.74860559743146,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 48500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.259458065032959,
+      "elapsed_seconds": 1344.5698370933533
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.012931177797212,
+          "accuracy": 0.23802612481857766,
+          "masked_tokens": 16536,
+          "perplexity": 150.34477818900953,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.012907577241511,
+          "accuracy": 0.23808659893565554,
+          "masked_tokens": 16536,
+          "perplexity": 150.3412300105672,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.252600534676237,
+          "accuracy": 0.21147798742138366,
+          "masked_tokens": 16536,
+          "perplexity": 191.06248758574952,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.252600534676237,
+      "accuracy": 0.21147798742138366,
+      "masked_tokens": 16536,
+      "perplexity": 191.06248758574952,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 49000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 4.790124893188477,
+      "elapsed_seconds": 1431.6601130962372
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.005640348260046,
+          "accuracy": 0.23857039187227866,
+          "masked_tokens": 16536,
+          "perplexity": 149.25262622421513,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.005593324318911,
+          "accuracy": 0.23857039187227866,
+          "masked_tokens": 16536,
+          "perplexity": 149.24560794252017,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.2256938489554985,
+          "accuracy": 0.21704160619254959,
+          "masked_tokens": 16536,
+          "perplexity": 185.99017485457503,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.2256938489554985,
+      "accuracy": 0.21704160619254959,
+      "masked_tokens": 16536,
+      "perplexity": 185.99017485457503,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 49500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.214260101318359,
+      "elapsed_seconds": 1519.7283952236176
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 5.015615041554695,
+          "accuracy": 0.23990082244799227,
+          "masked_tokens": 16536,
+          "perplexity": 150.74882505114942,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 5.015604824736087,
+          "accuracy": 0.24014271891630382,
+          "masked_tokens": 16536,
+          "perplexity": 150.7472848856163,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.265989188243642,
+          "accuracy": 0.21486453797774552,
+          "masked_tokens": 16536,
+          "perplexity": 193.63775827603092,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.265989188243642,
+      "accuracy": 0.21486453797774552,
+      "masked_tokens": 16536,
+      "perplexity": 193.63775827603092,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 50000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.2426042556762695,
+      "elapsed_seconds": 1607.2548260688782
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.992108563264903,
+          "accuracy": 0.24123125302370585,
+          "masked_tokens": 16536,
+          "perplexity": 147.24657511279509,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.9920761927810915,
+          "accuracy": 0.2408079342041606,
+          "masked_tokens": 16536,
+          "perplexity": 147.24180874706425,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.218506021781076,
+          "accuracy": 0.2175253991291727,
+          "masked_tokens": 16536,
+          "perplexity": 184.65810270886843,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.218506021781076,
+      "accuracy": 0.2175253991291727,
+      "masked_tokens": 16536,
+      "perplexity": 184.65810270886843,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 50500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 3.9841115474700928,
+      "elapsed_seconds": 1697.0882670879364
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.991261593431566,
+          "accuracy": 0.2408079342041606,
+          "masked_tokens": 16536,
+          "perplexity": 147.1219145049516,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.99123811837147,
+          "accuracy": 0.24086840832123851,
+          "masked_tokens": 16536,
+          "perplexity": 147.11846084970475,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.218826094628764,
+          "accuracy": 0.21480406386066764,
+          "masked_tokens": 16536,
+          "perplexity": 184.71721621346038,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.218826094628764,
+      "accuracy": 0.21480406386066764,
+      "masked_tokens": 16536,
+      "perplexity": 184.71721621346038,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 51000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 5.347209453582764,
+      "elapsed_seconds": 1785.378986120224
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.984961463105119,
+          "accuracy": 0.24117077890662797,
+          "masked_tokens": 16536,
+          "perplexity": 146.19794090291666,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.984948662553482,
+          "accuracy": 0.24141267537493952,
+          "masked_tokens": 16536,
+          "perplexity": 146.19606950060236,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.22338076565193,
+          "accuracy": 0.21329221093372036,
+          "masked_tokens": 16536,
+          "perplexity": 185.5604612597552,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.22338076565193,
+      "accuracy": 0.21329221093372036,
+      "masked_tokens": 16536,
+      "perplexity": 185.5604612597552,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 51500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.043039321899414,
+      "elapsed_seconds": 1872.5827131271362
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.985643288105308,
+          "accuracy": 0.238388969521045,
+          "masked_tokens": 16536,
+          "perplexity": 146.29765630436424,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.985633750439383,
+          "accuracy": 0.23850991775520078,
+          "masked_tokens": 16536,
+          "perplexity": 146.29626097284682,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.236955514436306,
+          "accuracy": 0.21377600387034348,
+          "masked_tokens": 16536,
+          "perplexity": 188.09657249735318,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.236955514436306,
+      "accuracy": 0.21377600387034348,
+      "masked_tokens": 16536,
+      "perplexity": 188.09657249735318,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 52000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 4.744294166564941,
+      "elapsed_seconds": 1961.3897712230682
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.974987220118227,
+          "accuracy": 0.24340832123850992,
+          "masked_tokens": 16536,
+          "perplexity": 144.74697528712932,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.97501775246054,
+          "accuracy": 0.2435292694726657,
+          "masked_tokens": 16536,
+          "perplexity": 144.75139481879654,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.212822909048345,
+          "accuracy": 0.2171020803096275,
+          "masked_tokens": 16536,
+          "perplexity": 183.6116462756177,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.212822909048345,
+      "accuracy": 0.2171020803096275,
+      "masked_tokens": 16536,
+      "perplexity": 183.6116462756177,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 52500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 3.7589993476867676,
+      "elapsed_seconds": 2051.118464231491
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.979129150863079,
+          "accuracy": 0.24062651185292694,
+          "masked_tokens": 16536,
+          "perplexity": 145.34775056019487,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.979130287705612,
+          "accuracy": 0.24044508950169327,
+          "masked_tokens": 16536,
+          "perplexity": 145.3479157977937,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.219576189237686,
+          "accuracy": 0.2163159167876149,
+          "masked_tokens": 16536,
+          "perplexity": 184.8558235793372,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.219576189237686,
+      "accuracy": 0.2163159167876149,
+      "masked_tokens": 16536,
+      "perplexity": 184.8558235793372,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 53000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 4.975659370422363,
+      "elapsed_seconds": 2140.181447982788
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.973767329023608,
+          "accuracy": 0.2391146589259797,
+          "masked_tokens": 16536,
+          "perplexity": 144.57050739869027,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.973735792716459,
+          "accuracy": 0.2391146589259797,
+          "masked_tokens": 16536,
+          "perplexity": 144.565948250654,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.219841634587038,
+          "accuracy": 0.21595307208514755,
+          "masked_tokens": 16536,
+          "perplexity": 184.90489921116787,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.219841634587038,
+      "accuracy": 0.21595307208514755,
+      "masked_tokens": 16536,
+      "perplexity": 184.90489921116787,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 53500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 4.574833869934082,
+      "elapsed_seconds": 2229.1980681419373
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.963751096683939,
+          "accuracy": 0.23977987421383648,
+          "masked_tokens": 16536,
+          "perplexity": 143.12968346661083,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.96375249928187,
+          "accuracy": 0.2395984518626028,
+          "masked_tokens": 16536,
+          "perplexity": 143.1298842201494,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.195919957781507,
+          "accuracy": 0.21897677793904208,
+          "masked_tokens": 16536,
+          "perplexity": 180.53415022171498,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.195919957781507,
+      "accuracy": 0.21897677793904208,
+      "masked_tokens": 16536,
+      "perplexity": 180.53415022171498,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 54000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.089798927307129,
+      "elapsed_seconds": 2319.1003892421722
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.962653364486953,
+          "accuracy": 0.24238026124818576,
+          "masked_tokens": 16536,
+          "perplexity": 142.9726516099564,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.962678470989904,
+          "accuracy": 0.24231978713110788,
+          "masked_tokens": 16536,
+          "perplexity": 142.9762411983168,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.209516468980085,
+          "accuracy": 0.2143807450411224,
+          "masked_tokens": 16536,
+          "perplexity": 183.00554793747108,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.209516468980085,
+      "accuracy": 0.2143807450411224,
+      "masked_tokens": 16536,
+      "perplexity": 183.00554793747108,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 54500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 4.003462791442871,
+      "elapsed_seconds": 2408.438805103302
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.962738753172529,
+          "accuracy": 0.2408079342041606,
+          "masked_tokens": 16536,
+          "perplexity": 142.98486037798855,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.9627216193314965,
+          "accuracy": 0.24074746008708273,
+          "masked_tokens": 16536,
+          "perplexity": 142.9824105191086,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.212539185633334,
+          "accuracy": 0.21589259796806967,
+          "masked_tokens": 16536,
+          "perplexity": 183.55955874187646,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.212539185633334,
+      "accuracy": 0.21589259796806967,
+      "masked_tokens": 16536,
+      "perplexity": 183.55955874187646,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 55000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 6.227409362792969,
+      "elapsed_seconds": 2499.1786801815033
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.965589887806339,
+          "accuracy": 0.24014271891630382,
+          "masked_tokens": 16536,
+          "perplexity": 143.39311117796552,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.9656016474826705,
+          "accuracy": 0.24008224479922594,
+          "masked_tokens": 16536,
+          "perplexity": 143.3947974444561,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.1875027313749165,
+          "accuracy": 0.2171020803096275,
+          "masked_tokens": 16536,
+          "perplexity": 179.02093089426904,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.1875027313749165,
+      "accuracy": 0.2171020803096275,
+      "masked_tokens": 16536,
+      "perplexity": 179.02093089426904,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 55500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 5.87615966796875,
+      "elapsed_seconds": 2589.5629460811615
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.952947910938161,
+          "accuracy": 0.24268263183357522,
+          "masked_tokens": 16536,
+          "perplexity": 141.59174916287333,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.952956643955801,
+          "accuracy": 0.242803580067731,
+          "masked_tokens": 16536,
+          "perplexity": 141.59298569151574,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.180865010490842,
+          "accuracy": 0.2209119496855346,
+          "masked_tokens": 16536,
+          "perplexity": 177.83657498306033,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.180865010490842,
+      "accuracy": 0.2209119496855346,
+      "masked_tokens": 16536,
+      "perplexity": 177.83657498306033,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 56000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 5.6319684982299805,
+      "elapsed_seconds": 2786.0947530269623
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.951499219210643,
+          "accuracy": 0.24201741654571843,
+          "masked_tokens": 16536,
+          "perplexity": 141.386774875302,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.951541304530645,
+          "accuracy": 0.24201741654571843,
+          "masked_tokens": 16536,
+          "perplexity": 141.39272530817877,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.18779399190828,
+          "accuracy": 0.21885582970488632,
+          "masked_tokens": 16536,
+          "perplexity": 179.07308022023614,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.18779399190828,
+      "accuracy": 0.21885582970488632,
+      "masked_tokens": 16536,
+      "perplexity": 179.07308022023614,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 56500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 5.008688926696777,
+      "elapsed_seconds": 4461.358055114746
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.952391212437542,
+          "accuracy": 0.2409893565553943,
+          "masked_tokens": 16536,
+          "perplexity": 141.5129471849209,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.952420460295435,
+          "accuracy": 0.24129172714078376,
+          "masked_tokens": 16536,
+          "perplexity": 141.51708619601848,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.191254658692115,
+          "accuracy": 0.21589259796806967,
+          "masked_tokens": 16536,
+          "perplexity": 179.69386602768995,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.191254658692115,
+      "accuracy": 0.21589259796806967,
+      "masked_tokens": 16536,
+      "perplexity": 179.69386602768995,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 57000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 6.071733474731445,
+      "elapsed_seconds": 4544.012221097946
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.937550596874811,
+          "accuracy": 0.2447387518142235,
+          "masked_tokens": 16536,
+          "perplexity": 139.42831481289656,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.937598595252404,
+          "accuracy": 0.24467827769714562,
+          "masked_tokens": 16536,
+          "perplexity": 139.43500730641128,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.186148943852617,
+          "accuracy": 0.21976294146105466,
+          "masked_tokens": 16536,
+          "perplexity": 178.7787385672587,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.186148943852617,
+      "accuracy": 0.21976294146105466,
+      "masked_tokens": 16536,
+      "perplexity": 178.7787385672587,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 57500,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 6.252519607543945,
+      "elapsed_seconds": 4616.105198144913
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.936299021831156,
+          "accuracy": 0.24231978713110788,
+          "masked_tokens": 16536,
+          "perplexity": 139.2539189712046,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.936250706023506,
+          "accuracy": 0.24238026124818576,
+          "masked_tokens": 16536,
+          "perplexity": 139.24719096817674,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.18222607675819,
+          "accuracy": 0.21613449443638122,
+          "masked_tokens": 16536,
+          "perplexity": 178.0787871423788,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.18222607675819,
+      "accuracy": 0.21613449443638122,
+      "masked_tokens": 16536,
+      "perplexity": 178.0787871423788,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 58000,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 4.12503719329834,
+      "elapsed_seconds": 4689.785243034363
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.94751052598072,
+          "accuracy": 0.23935655539429124,
+          "masked_tokens": 16536,
+          "perplexity": 140.82394961839913,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.947557631124894,
+          "accuracy": 0.23923560716013545,
+          "masked_tokens": 16536,
+          "perplexity": 140.83058330708835,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.203449664510386,
+          "accuracy": 0.21716255442670537,
+          "masked_tokens": 16536,
+          "perplexity": 181.89865012261848,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.203449664510386,
+      "accuracy": 0.21716255442670537,
+      "masked_tokens": 16536,
+      "perplexity": 181.89865012261848,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 58500,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 5.180656433105469,
+      "elapsed_seconds": 4779.287820100784
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.938519622256459,
+          "accuracy": 0.24558538945331398,
+          "masked_tokens": 16536,
+          "perplexity": 139.5634898723249,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.938445373151287,
+          "accuracy": 0.2454644412191582,
+          "masked_tokens": 16536,
+          "perplexity": 139.55312779277958,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.188122568928682,
+          "accuracy": 0.2196419932268989,
+          "masked_tokens": 16536,
+          "perplexity": 179.1319291870487,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.188122568928682,
+      "accuracy": 0.2196419932268989,
+      "masked_tokens": 16536,
+      "perplexity": 179.1319291870487,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 59000,
+      "training_route": "q8_fp16",
+      "next_training_route": "q2_q8_fp16",
+      "train_loss": 4.6779561042785645,
+      "elapsed_seconds": 4860.380035161972
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.92623995119786,
+          "accuracy": 0.24570633768746977,
+          "masked_tokens": 16536,
+          "perplexity": 137.86017559795704,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.92626344840424,
+          "accuracy": 0.24600870827285923,
+          "masked_tokens": 16536,
+          "perplexity": 137.8634149650125,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.204769509162774,
+          "accuracy": 0.2183720367682632,
+          "masked_tokens": 16536,
+          "perplexity": 182.13888658579083,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.204769509162774,
+      "accuracy": 0.2183720367682632,
+      "masked_tokens": 16536,
+      "perplexity": 182.13888658579083,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 59500,
+      "training_route": "q8_only",
+      "next_training_route": "q8_fp16",
+      "train_loss": 5.162384986877441,
+      "elapsed_seconds": 4938.393979072571
+    },
+    {
+      "per_route": {
+        "q8_only": {
+          "loss": 4.919529228782562,
+          "accuracy": 0.24631107885824868,
+          "masked_tokens": 16536,
+          "perplexity": 136.93813147872388,
+          "proxy_full_cost": 200
+        },
+        "q8_fp16": {
+          "loss": 4.919532978886501,
+          "accuracy": 0.2466134494436381,
+          "masked_tokens": 16536,
+          "perplexity": 136.93864501191308,
+          "proxy_full_cost": 296
+        },
+        "q2_q8_fp16": {
+          "loss": 5.174155889990022,
+          "accuracy": 0.21788824383164007,
+          "masked_tokens": 16536,
+          "perplexity": 176.6474414525857,
+          "proxy_full_cost": 210
+        }
+      },
+      "worst_route": "q2_q8_fp16",
+      "loss": 5.174155889990022,
+      "accuracy": 0.21788824383164007,
+      "masked_tokens": 16536,
+      "perplexity": 176.6474414525857,
+      "quality_gate": {
+        "passed": true,
+        "metric": "worst-route held-out loss",
+        "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+      },
+      "step": 60000,
+      "training_route": "q2_q8_fp16",
+      "next_training_route": "q8_only",
+      "train_loss": 4.922638416290283,
+      "elapsed_seconds": 5022.631053209305
+    }
+  ],
+  "final": {
+    "per_route": {
+      "q8_only": {
+        "loss": 4.919529228782562,
+        "accuracy": 0.24631107885824868,
+        "masked_tokens": 16536,
+        "perplexity": 136.93813147872388,
+        "proxy_full_cost": 200
+      },
+      "q8_fp16": {
+        "loss": 4.919532978886501,
+        "accuracy": 0.2466134494436381,
+        "masked_tokens": 16536,
+        "perplexity": 136.93864501191308,
+        "proxy_full_cost": 296
+      },
+      "q2_q8_fp16": {
+        "loss": 5.174155889990022,
+        "accuracy": 0.21788824383164007,
+        "masked_tokens": 16536,
+        "perplexity": 176.6474414525857,
+        "proxy_full_cost": 210
+      }
+    },
+    "worst_route": "q2_q8_fp16",
+    "loss": 5.174155889990022,
+    "accuracy": 0.21788824383164007,
+    "masked_tokens": 16536,
+    "perplexity": 176.6474414525857,
+    "quality_gate": {
+      "passed": true,
+      "metric": "worst-route held-out loss",
+      "decision": "all routes must be finite; best checkpoint minimizes the worst route"
+    },
+    "step": 60000,
+    "training_route": "q2_q8_fp16",
+    "next_training_route": "q8_only",
+    "train_loss": 4.922638416290283,
+    "elapsed_seconds": 5022.631053209305
+  }
+}
