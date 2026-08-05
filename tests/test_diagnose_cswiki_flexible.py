@@ -48,10 +48,10 @@ def test_diagnostic_refuses_overwrite_and_invalid_refinement_count(tmp_path):
 def test_prompt_continuation_never_changes_encoded_czech_prompt_prefix():
     class Tokenizer:
         def encode(self, text):
-            assert text == "kočka leze dírou."
-            return SimpleNamespace(ids=[3, 4, 5])
+            assert text == "Kočka leze dírou,"
+            return SimpleNamespace(ids=[1, 3, 4, 5, 2])
         def decode(self, ids): return "/".join(map(str, ids))
-        def token_to_id(self, token): return 2 if token == "[MASK]" else None
+        def token_to_id(self, token): return {"[BOS]": 1, "[EOS]": 2, "[MASK]": 15}[token]
     class Model:
         cfg = SimpleNamespace(mask_token_id=lambda: 15, max_seq_len=256)
         def __call__(self, tokens, exit_layer):
@@ -59,9 +59,28 @@ def test_prompt_continuation_never_changes_encoded_czech_prompt_prefix():
             shape = tuple(tokens.shape) + (20,)
             logits = np.zeros(shape, dtype=np.float32); logits[..., 9] = 10
             return diag.mx.array(logits)
-    result = diag.prompt_continuation(Model(), Tokenizer(), max_new_tokens=24)
+    result = diag.prompt_continuation(Model(), Tokenizer(), max_new_tokens=4)
     assert result["passes"] == 4 and len(result["refinements"]) == 4
-    assert result["continuation_token_ids"][:3] == [3, 4, 5]
+    assert result["prompt_token_ids"] == [1, 3, 4, 5]  # terminal EOS is not part of fixed prefix
+    assert result["continuation_token_ids"][:4] == [1, 3, 4, 5]
+    assert result["continuation_token_ids"][-1] == 2
+    assert len(result["continuation_token_ids"]) == 9  # four new content ids, then fixed EOS
+
+
+def test_prompt_continuation_mode_passes_explicit_cli_prompt_to_each_route(monkeypatch, tmp_path):
+    val = np.ones((1, 256), dtype=np.int32)
+    meta = {"tokenizer": str(tmp_path / "tok")}
+    monkeypatch.setattr(diag, "select_verified_cswiki_cache", lambda _: (np.zeros_like(val), val, meta, tmp_path / "meta.json"))
+    monkeypatch.setattr(diag, "load_tokenizer", lambda _: SimpleNamespace(get_vocab_size=lambda: 16))
+    monkeypatch.setattr(diag, "build_model", lambda _: SimpleNamespace(eval=lambda: None, set_layer_precisions=lambda _: None))
+    monkeypatch.setattr(diag, "load_weights_only", lambda *_: None)
+    prompts = []
+    monkeypatch.setattr(diag, "prompt_continuation", lambda _m, _t, prompt, max_new_tokens: prompts.append((prompt, max_new_tokens)) or {})
+    a = SimpleNamespace(cache_dir=tmp_path, checkpoint=tmp_path / "best.npz", output=tmp_path / "out.json",
+        eval_sequences=1, eval_batch_size=1, examples=1, refinement_steps=4, seed=7,
+        mode="prompt-continuation", prompt="Kočka leze dírou,", max_new_tokens=4)
+    diag.run(a)
+    assert prompts == [("Kočka leze dírou,", 4)] * 3
 
 
 def test_refinement_fills_remaining_positions_over_exactly_four_passes(monkeypatch):

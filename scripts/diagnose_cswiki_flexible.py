@@ -68,19 +68,26 @@ def refinement_steps(model, tokenizer, sample: np.ndarray, steps: int) -> list[s
     return outputs
 
 
-def prompt_continuation(model, tokenizer, prompt: str = "kočka leze dírou.",
-                        max_new_tokens: int = 24, passes: int = 4) -> dict:
+def prompt_continuation(model, tokenizer, prompt: str = "Kočka leze dírou,",
+                        max_new_tokens: int = 4, passes: int = 4) -> dict:
     """Keep Czech prompt ids immutable while confidence-ranking four infill passes."""
     if passes != 4 or max_new_tokens < 1:
         raise ValueError("prompt continuation requires exactly 4 passes and positive --max-new-tokens")
-    prompt_ids = np.asarray(tokenizer.encode(prompt).ids, dtype=np.int32)
+    encoded = np.asarray(tokenizer.encode(prompt).ids, dtype=np.int32)
     display_mask = tokenizer.token_to_id("[MASK]")
-    if display_mask is None:
-        raise ValueError("Czech tokenizer is missing [MASK]")
-    if not len(prompt_ids) or len(prompt_ids) + max_new_tokens > model.cfg.max_seq_len:
+    bos_id, eos_id = tokenizer.token_to_id("[BOS]"), tokenizer.token_to_id("[EOS]")
+    if display_mask is None or bos_id is None or eos_id is None:
+        raise ValueError("Czech tokenizer is missing [MASK], [BOS], or [EOS]")
+    if len(encoded) < 2 or encoded[0] != bos_id or encoded[-1] != eos_id:
+        raise ValueError("Czech tokenizer must encode the prompt with [BOS] and terminal [EOS]")
+    # Do not infill after EOS: reserve a fixed terminal EOS after the requested
+    # number of new content tokens, retaining BOS and all prompt content.
+    prompt_ids = encoded[:-1]
+    if len(prompt_ids) + max_new_tokens + 1 > model.cfg.max_seq_len:
         raise ValueError("prompt token length plus --max-new-tokens must fit the model sequence length")
-    current = np.full((1, len(prompt_ids) + max_new_tokens), model.cfg.mask_token_id(), dtype=np.int32)
+    current = np.full((1, len(prompt_ids) + max_new_tokens + 1), model.cfg.mask_token_id(), dtype=np.int32)
     current[0, :len(prompt_ids)] = prompt_ids
+    current[0, -1] = eos_id
     generated = []
     for pass_index in range(passes):
         logits = model(mx.array(current, dtype=mx.int32), exit_layer=N_LAYERS)
@@ -88,17 +95,18 @@ def prompt_continuation(model, tokenizer, prompt: str = "kočka leze dírou.",
         prediction = np.asarray(mx.argmax(probabilities, axis=-1), dtype=np.int32)
         confidence = np.asarray(mx.max(probabilities, axis=-1))
         mx.eval(probabilities)
-        remaining = np.flatnonzero(current[0, len(prompt_ids):] == model.cfg.mask_token_id()) + len(prompt_ids)
+        remaining = np.flatnonzero(current[0, len(prompt_ids):-1] == model.cfg.mask_token_id()) + len(prompt_ids)
         take = int(np.ceil(len(remaining) / (passes - pass_index)))
         chosen = remaining[np.argsort(-confidence[0, remaining], kind="stable")[:take]]
         current[0, chosen] = prediction[0, chosen]
         # This assignment is intentionally repeated after every pass: no model
-        # prediction can ever replace the exact encoded Czech prompt prefix.
+        # prediction can ever replace the exact encoded Czech prompt prefix or EOS.
         current[0, :len(prompt_ids)] = prompt_ids
+        current[0, -1] = eos_id
         visible = current[0].copy()
         visible[visible == model.cfg.mask_token_id()] = display_mask
         generated.append(decode(tokenizer, visible))
-    return {"prompt": prompt, "prompt_token_ids": prompt_ids.tolist(), "max_new_tokens": max_new_tokens,
+    return {"prompt": prompt, "prompt_token_ids": prompt_ids.tolist(), "terminal_eos_id": int(eos_id), "max_new_tokens": max_new_tokens,
             "passes": passes, "continuation_token_ids": current[0].tolist(), "refinements": generated}
 
 
@@ -120,7 +128,8 @@ def run(a) -> dict:
         for route, schedule in flexible_route_pool(N_LAYERS).items():
             model.set_layer_precisions(schedule)
             per_route[route] = {"schedule": schedule,
-                                "prompt_continuation": prompt_continuation(model, tokenizer, max_new_tokens=a.max_new_tokens)}
+                                "prompt_continuation": prompt_continuation(
+                                    model, tokenizer, prompt=a.prompt, max_new_tokens=a.max_new_tokens)}
         return {"status": "complete", "language": "cswiki-only", "mode": "prompt-continuation",
                 "checkpoint": str(a.checkpoint), "checkpoint_loaded": True,
                 "cache_meta_path": str(meta_path), "tokenizer": meta["tokenizer"],
@@ -173,7 +182,8 @@ def main() -> None:
     p.add_argument("--mode", choices=("validation-diagnostics", "prompt-continuation"), default="validation-diagnostics")
     p.add_argument("--eval-sequences", type=int, default=32); p.add_argument("--eval-batch-size", type=int, default=2)
     p.add_argument("--examples", type=int, default=2); p.add_argument("--refinement-steps", type=int, default=4)
-    p.add_argument("--max-new-tokens", type=int, default=24)
+    p.add_argument("--max-new-tokens", type=int, default=4)
+    p.add_argument("--prompt", default="Kočka leze dírou,", help="exact Czech prefix retained by prompt-continuation")
     p.add_argument("--seed", type=int, default=20260804)
     a = p.parse_args(); ensure_outside_icloud(a.output)
     result = run(a); atomic_json_write(a.output, result); print(json.dumps(result, ensure_ascii=False, indent=2))
