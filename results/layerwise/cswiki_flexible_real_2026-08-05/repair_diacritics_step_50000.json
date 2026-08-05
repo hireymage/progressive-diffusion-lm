@@ -1,0 +1,205 @@
+{
+  "status": "complete",
+  "language": "cswiki-only",
+  "mode": "diacritics-repair",
+  "checkpoint": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki-real/run-20260804-a-40k/checkpoints/latest.npz",
+  "checkpoint_loaded": true,
+  "cache_meta_path": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/cache/meta_seq256_a92b21bd8b1775d0.json",
+  "tokenizer": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/tokenizer/bpe16k",
+  "per_route": {
+    "q8_only": {
+      "schedule": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8"
+      ],
+      "diacritics_repair": {
+        "input": "Kocka leze dirou.",
+        "character_spans": [
+          [
+            0,
+            5
+          ],
+          [
+            11,
+            16
+          ]
+        ],
+        "masked_token_indices": [
+          1,
+          2,
+          5,
+          6
+        ],
+        "fixed_token_ids": {
+          "0": 3,
+          "3": 413,
+          "4": 339,
+          "7": 18,
+          "8": 4
+        },
+        "passes": 4,
+        "refinements": [
+          ". leze.",
+          ". leze..",
+          ".. leze..",
+          ".. leze. Sb."
+        ],
+        "final_text": ".. leze. Sb."
+      }
+    },
+    "q8_fp16": {
+      "schedule": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16"
+      ],
+      "diacritics_repair": {
+        "input": "Kocka leze dirou.",
+        "character_spans": [
+          [
+            0,
+            5
+          ],
+          [
+            11,
+            16
+          ]
+        ],
+        "masked_token_indices": [
+          1,
+          2,
+          5,
+          6
+        ],
+        "fixed_token_ids": {
+          "0": 3,
+          "3": 413,
+          "4": 339,
+          "7": 18,
+          "8": 4
+        },
+        "passes": 4,
+        "refinements": [
+          ". leze.",
+          ". leze..",
+          ".. leze..",
+          ".. leze. Sb."
+        ],
+        "final_text": ".. leze. Sb."
+      }
+    },
+    "q2_q8_fp16": {
+      "schedule": [
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16"
+      ],
+      "diacritics_repair": {
+        "input": "Kocka leze dirou.",
+        "character_spans": [
+          [
+            0,
+            5
+          ],
+          [
+            11,
+            16
+          ]
+        ],
+        "masked_token_indices": [
+          1,
+          2,
+          5,
+          6
+        ],
+        "fixed_token_ids": {
+          "0": 3,
+          "3": 413,
+          "4": 339,
+          "7": 18,
+          "8": 4
+        },
+        "passes": 4,
+        "refinements": [
+          " leze..",
+          ". leze..",
+          ". \u2013 leze..",
+          ". \u2013 leze. n."
+        ],
+        "final_text": ". \u2013 leze. n."
+      }
+    }
+  },
+  "output_path": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki-real/run-20260804-a-40k/repair-diacritics-current.json",
+  "limits": [
+    "Only token offsets overlapping requested character spans may be changed.",
+    "Four confidence-ranked infill passes are diagnostic decoding, not measured serving latency."
+  ]
+}

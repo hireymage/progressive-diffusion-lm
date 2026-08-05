@@ -51,6 +51,7 @@ def test_prompt_continuation_never_changes_encoded_czech_prompt_prefix():
             assert text == "Kočka leze dírou,"
             return SimpleNamespace(ids=[1, 3, 4, 5, 2])
         def decode(self, ids): return "/".join(map(str, ids))
+        def token_to_id(self, token): return 8 if token == "[MASK]" else None
         def token_to_id(self, token): return {"[BOS]": 1, "[EOS]": 2, "[MASK]": 15}[token]
     class Model:
         cfg = SimpleNamespace(mask_token_id=lambda: 15, max_seq_len=256)
@@ -81,6 +82,26 @@ def test_prompt_continuation_mode_passes_explicit_cli_prompt_to_each_route(monke
         mode="prompt-continuation", prompt="Kočka leze dírou,", max_new_tokens=4)
     diag.run(a)
     assert prompts == [("Kočka leze dírou,", 4)] * 3
+
+
+def test_diacritics_repair_changes_only_tokens_overlapping_requested_spans():
+    class Tokenizer:
+        def encode(self, text):
+            assert text == "Kocka leze dirou."
+            # BOS, word, literal middle, word, punctuation, EOS
+            return SimpleNamespace(ids=[1, 3, 4, 5, 6, 2], offsets=[(0, 0), (0, 5), (5, 11), (11, 16), (16, 17), (0, 0)])
+        def decode(self, ids): return "/".join(map(str, ids))
+        def token_to_id(self, token): return 8 if token == "[MASK]" else None
+    class Model:
+        cfg = SimpleNamespace(mask_token_id=lambda: 15)
+        def __call__(self, tokens, exit_layer):
+            logits = np.zeros(tuple(tokens.shape) + (20,), dtype=np.float32); logits[..., 9] = 10
+            return diag.mx.array(logits)
+    result = diag.diacritics_repair(Model(), Tokenizer())
+    assert result["masked_token_indices"] == [1, 3]
+    assert result["fixed_token_ids"] == {"0": 1, "2": 4, "4": 6, "5": 2}
+    final_ids = list(map(int, result["final_text"].split("/")))
+    assert [final_ids[index] for index in (0, 2, 4, 5)] == [1, 4, 6, 2]
 
 
 def test_refinement_fills_remaining_positions_over_exactly_four_passes(monkeypatch):

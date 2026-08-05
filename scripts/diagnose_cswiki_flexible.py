@@ -110,6 +110,69 @@ def prompt_continuation(model, tokenizer, prompt: str = "Kočka leze dírou,",
             "passes": passes, "continuation_token_ids": current[0].tolist(), "refinements": generated}
 
 
+def parse_character_spans(value: str | None, text: str) -> tuple[tuple[int, int], ...]:
+    """Parse explicit START:END spans, defaulting to the two requested words."""
+    if value is None:
+        spans = []
+        for word in ("Kocka", "dirou"):
+            start = text.find(word)
+            if start < 0:
+                raise ValueError(f"default diacritics repair word is absent: {word}")
+            spans.append((start, start + len(word)))
+        return tuple(spans)
+    try:
+        spans = tuple((int(start), int(end)) for start, end in
+                      (part.strip().split(":") for part in value.split(",")))
+    except ValueError as exc:
+        raise ValueError("--repair-spans must be START:END[,START:END...]") from exc
+    if not spans or any(start < 0 or end <= start or end > len(text) for start, end in spans):
+        raise ValueError("repair character spans must be non-empty and within --input-text")
+    return spans
+
+
+def diacritics_repair(model, tokenizer, text: str = "Kocka leze dirou.",
+                      spans: tuple[tuple[int, int], ...] | None = None, passes: int = 4) -> dict:
+    """Mask only token offsets overlapping requested character spans, then infill."""
+    if passes != 4:
+        raise ValueError("diacritics repair requires exactly 4 confidence-ranked passes")
+    encoding = tokenizer.encode(text)
+    token_ids = np.asarray(encoding.ids, dtype=np.int32)
+    offsets = tuple(tuple(offset) for offset in encoding.offsets)
+    if len(token_ids) != len(offsets):
+        raise ValueError("Czech tokenizer encoding must provide one offset per token")
+    chosen_spans = parse_character_spans(None, text) if spans is None else spans
+    mask_id = model.cfg.mask_token_id()
+    display_mask = tokenizer.token_to_id("[MASK]")
+    if display_mask is None:
+        raise ValueError("Czech tokenizer is missing [MASK]")
+    masked = [index for index, (start, end) in enumerate(offsets)
+              if end > start and any(start < span_end and end > span_start for span_start, span_end in chosen_spans)]
+    if not masked:
+        raise ValueError("repair spans overlap no tokenizer tokens")
+    current = token_ids[None, :].copy()
+    current[0, masked] = mask_id
+    fixed_indices = [index for index in range(len(token_ids)) if index not in masked]
+    fixed_ids = token_ids[fixed_indices].tolist()
+    refinements = []
+    for pass_index in range(passes):
+        logits = model(mx.array(current, dtype=mx.int32), exit_layer=N_LAYERS)
+        probabilities = mx.softmax(logits.astype(mx.float32), axis=-1)
+        prediction = np.asarray(mx.argmax(probabilities, axis=-1), dtype=np.int32)
+        confidence = np.asarray(mx.max(probabilities, axis=-1))
+        mx.eval(probabilities)
+        remaining = np.asarray([index for index in masked if current[0, index] == mask_id], dtype=np.int32)
+        take = int(np.ceil(len(remaining) / (passes - pass_index)))
+        selected = remaining[np.argsort(-confidence[0, remaining], kind="stable")[:take]]
+        current[0, selected] = prediction[0, selected]
+        current[0, fixed_indices] = fixed_ids
+        visible = current[0].copy()
+        visible[visible == mask_id] = display_mask
+        refinements.append(decode(tokenizer, visible))
+    return {"input": text, "character_spans": [list(span) for span in chosen_spans],
+            "masked_token_indices": masked, "fixed_token_ids": {str(index): int(token_ids[index]) for index in fixed_indices},
+            "passes": passes, "refinements": refinements, "final_text": decode(tokenizer, current[0])}
+
+
 def run(a) -> dict:
     if a.eval_sequences < 1 or a.examples < 1 or a.refinement_steps != 4:
         raise ValueError("--eval-sequences/--examples must be positive and --refinement-steps must be exactly 4")
@@ -135,6 +198,19 @@ def run(a) -> dict:
                 "cache_meta_path": str(meta_path), "tokenizer": meta["tokenizer"],
                 "per_route": per_route, "output_path": str(a.output),
                 "limits": ["Prompt prefix is held fixed by token id on every pass.",
+                           "Four confidence-ranked infill passes are diagnostic decoding, not measured serving latency."]}
+    if getattr(a, "mode", "validation-diagnostics") == "diacritics-repair":
+        spans = parse_character_spans(a.repair_spans, a.input_text)
+        per_route = {}
+        for route, schedule in flexible_route_pool(N_LAYERS).items():
+            model.set_layer_precisions(schedule)
+            per_route[route] = {"schedule": schedule,
+                                "diacritics_repair": diacritics_repair(model, tokenizer, a.input_text, spans)}
+        return {"status": "complete", "language": "cswiki-only", "mode": "diacritics-repair",
+                "checkpoint": str(a.checkpoint), "checkpoint_loaded": True,
+                "cache_meta_path": str(meta_path), "tokenizer": meta["tokenizer"],
+                "per_route": per_route, "output_path": str(a.output),
+                "limits": ["Only token offsets overlapping requested character spans may be changed.",
                            "Four confidence-ranked infill passes are diagnostic decoding, not measured serving latency."]}
     sample = np.asarray(val[:a.eval_sequences], dtype=np.int32)
     mask_seed = a.seed + 900_000
@@ -179,11 +255,13 @@ def main() -> None:
     p.add_argument("--cache-dir", type=Path, required=True)
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
-    p.add_argument("--mode", choices=("validation-diagnostics", "prompt-continuation"), default="validation-diagnostics")
+    p.add_argument("--mode", choices=("validation-diagnostics", "prompt-continuation", "diacritics-repair"), default="validation-diagnostics")
     p.add_argument("--eval-sequences", type=int, default=32); p.add_argument("--eval-batch-size", type=int, default=2)
     p.add_argument("--examples", type=int, default=2); p.add_argument("--refinement-steps", type=int, default=4)
     p.add_argument("--max-new-tokens", type=int, default=4)
     p.add_argument("--prompt", default="Kočka leze dírou,", help="exact Czech prefix retained by prompt-continuation")
+    p.add_argument("--input-text", default="Kocka leze dirou.", help="input for diacritics-repair")
+    p.add_argument("--repair-spans", help="optional character spans START:END[,START:END...] for diacritics-repair")
     p.add_argument("--seed", type=int, default=20260804)
     a = p.parse_args(); ensure_outside_icloud(a.output)
     result = run(a); atomic_json_write(a.output, result); print(json.dumps(result, ensure_ascii=False, indent=2))
