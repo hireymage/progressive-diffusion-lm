@@ -170,8 +170,8 @@ def ensure_outside_icloud(path: Path | str) -> None:
 
 
 def run(a) -> dict:
-    if not 1 <= a.steps <= 40000:
-        raise ValueError("--steps must be in [1, 40000]")
+    if not 1 <= a.steps <= 60000:
+        raise ValueError("--steps must be in [1, 60000]")
     if a.batch_size < 1 or a.eval_steps < 1 or a.eval_every < 1:
         raise ValueError("batch size, eval steps, and eval interval must be positive")
     if not a.resume and a.output.exists():
@@ -232,7 +232,7 @@ def main() -> None:
     p.add_argument("--cache-dir", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--checkpoint-dir", type=Path, required=True)
-    p.add_argument("--steps", type=int, default=40000); p.add_argument("--batch-size", type=int, default=4)
+    p.add_argument("--steps", type=int, default=60000); p.add_argument("--batch-size", type=int, default=4)
     p.add_argument("--eval-steps", type=int, default=32); p.add_argument("--eval-every", type=int, default=500)
     p.add_argument("--seed", type=int, default=20260804); p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument("--min-free-gb", type=float, default=10.0); p.add_argument("--resume", action="store_true")

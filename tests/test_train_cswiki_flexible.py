@@ -66,3 +66,9 @@ def test_new_run_refuses_historical_report_before_loading_cache(tmp_path):
         "checkpoint_dir": tmp_path / "checkpoints", "cache_dir": tmp_path / "missing"})()
     with pytest.raises(FileExistsError, match="historical report"):
         run(args)
+
+
+def test_real_trainer_hard_cap_is_extended_to_60000(tmp_path):
+    args = type("Args", (), {"steps": 60001, "output": tmp_path / "report.json"})()
+    with pytest.raises(ValueError, match="60000"):
+        run(args)
