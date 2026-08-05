@@ -170,8 +170,8 @@ def ensure_outside_icloud(path: Path | str) -> None:
 
 
 def run(a) -> dict:
-    if not 1 <= a.steps <= 80000:
-        raise ValueError("--steps must be in [1, 80000]")
+    if not 1 <= a.steps <= 1_000_000:
+        raise ValueError("--steps must be in [1, 1000000]")
     if a.batch_size < 1 or a.eval_steps < 1 or a.eval_every < 1:
         raise ValueError("batch size, eval steps, and eval interval must be positive")
     if not a.resume and a.output.exists():

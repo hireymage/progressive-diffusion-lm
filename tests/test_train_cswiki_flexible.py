@@ -68,7 +68,12 @@ def test_new_run_refuses_historical_report_before_loading_cache(tmp_path):
         run(args)
 
 
-def test_real_trainer_hard_cap_is_extended_to_80000(tmp_path):
-    args = type("Args", (), {"steps": 80001, "output": tmp_path / "report.json"})()
-    with pytest.raises(ValueError, match="80000"):
-        run(args)
+def test_real_trainer_hard_cap_allows_100000_and_rejects_over_one_million(tmp_path):
+    accepted = type("Args", (), {"steps": 100000, "output": tmp_path / "report.json"})()
+    rejected = type("Args", (), {"steps": 1_000_001, "output": tmp_path / "report.json"})()
+    # 100k clears the cap check; the following missing batch field proves it
+    # reached later validation without touching cache/model state.
+    with pytest.raises(AttributeError, match="batch_size"):
+        run(accepted)
+    with pytest.raises(ValueError, match="1000000"):
+        run(rejected)
