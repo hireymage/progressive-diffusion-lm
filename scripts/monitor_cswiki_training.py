@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shlex
 import subprocess
 import sys
@@ -22,7 +23,9 @@ def remote_command(remote_base: str) -> str:
         f"base={base}; "
         "printf '__REPORT__\\n'; cat \"$base/report.json\" 2>/dev/null || true; "
         "printf '\\n__LATEST__\\n'; cat \"$base/checkpoints/latest.json\" 2>/dev/null || true; "
-        "printf '\\n__PROCESS__\\n'; pgrep -af '[t]rain_cswiki_flexible.py' 2>/dev/null || true"
+        "printf '\\n__PROCESS__\\n'; "
+        "for pid in $(pgrep -f '[t]rain_cswiki_flexible.py' 2>/dev/null); do "
+        "ps -ww -p \"$pid\" -o pid=,command= 2>/dev/null; done"
     )
 
 
@@ -73,9 +76,25 @@ def history_from(state: dict) -> list[dict]:
     return [row for row in history if isinstance(row, dict) and isinstance(row.get("step"), int)]
 
 
-def progress(state: dict, target_steps: int) -> dict:
+def inferred_target_steps(state: dict, override: int | None = None) -> int:
+    """Prefer an explicit override, otherwise read --steps from the live trainer."""
+    if override is not None:
+        return override
+    process = state.get("process") or ""
+    match = re.search(r"(?:^|\s)--steps(?:=|\s+)(\d+)(?:\s|$)", process)
+    if match:
+        return int(match.group(1))
+    report = state.get("report") or {}
+    report_steps = report.get("steps")
+    if isinstance(report_steps, int) and report_steps > 0:
+        return report_steps
+    return 80000
+
+
+def progress(state: dict, target_steps: int | None) -> dict:
     history = history_from(state)
     latest = state.get("latest") or {}
+    target_steps = inferred_target_steps(state, target_steps)
     current = history[-1]["step"] if history else int(latest.get("step", 0) or 0)
     best_row = min((row for row in history if isinstance(row.get("loss"), (int, float))),
                    key=lambda row: row["loss"], default=None)
@@ -103,7 +122,7 @@ def format_duration(seconds: float | None) -> str:
     return f"{hours:d}:{minutes:02d}:{seconds:02d}"
 
 
-def render_dashboard(state: dict, target_steps: int, now: datetime | None = None) -> str:
+def render_dashboard(state: dict, target_steps: int | None = None, now: datetime | None = None) -> str:
     now = now or datetime.now()
     if state.get("ssh_error"):
         return f"CSWiki flexible · m4-air\nSSH offline: {state['ssh_error']}\nKontrola: {now:%Y-%m-%d %H:%M:%S}"
@@ -139,10 +158,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="m4-air"); parser.add_argument("--interval", type=int, default=300)
     parser.add_argument("--remote-base", default=DEFAULT_REMOTE_BASE)
-    parser.add_argument("--target-steps", type=int, default=80000)
+    parser.add_argument("--target-steps", type=int, default=None,
+                        help="ruční cíl; bez něj se přečte --steps z běžícího trenéru")
     parser.add_argument("--once", action="store_true")
     args = parser.parse_args()
-    if args.interval < 1 or args.target_steps < 1: parser.error("interval a target-steps musí být kladné")
+    if args.interval < 1 or (args.target_steps is not None and args.target_steps < 1):
+        parser.error("interval a target-steps musí být kladné")
     try:
         while True:
             print("\033[2J\033[H" + render_dashboard(poll(args.host, args.remote_base), args.target_steps), flush=True)

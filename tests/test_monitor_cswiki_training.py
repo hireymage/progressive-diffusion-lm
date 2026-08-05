@@ -22,6 +22,24 @@ def test_parse_and_render_czech_dashboard_with_worst_route_and_best_eta():
     assert monitor.recent_speed(history) == 500 / 90
 
 
+def test_live_process_target_replaces_old_default_and_restores_eta():
+    history = [
+        {"step": 80500, "elapsed_seconds": 80, "loss": 5.1},
+        {"step": 81000, "elapsed_seconds": 160, "loss": 5.0},
+    ]
+    process = "123 python train_cswiki_flexible.py --steps 100000 --resume"
+    state = monitor.parse_remote_output(_remote({"status": "running", "history": history}, {}, process))
+    text = monitor.render_dashboard(state, now=datetime(2026, 8, 5, 12, 0, 0))
+    assert "81,000 / 100,000" in text
+    assert "ETA: 0:50:40" in text
+
+
+def test_explicit_target_overrides_live_process_target():
+    state = {"process": "python train.py --steps=100000"}
+    assert monitor.inferred_target_steps(state) == 100000
+    assert monitor.inferred_target_steps(state, 120000) == 120000
+
+
 def test_temporary_bad_json_is_reported_not_misclassified_as_ssh_failure():
     state = monitor.parse_remote_output("__REPORT__\n{bad\n__LATEST__\n{}\n__PROCESS__\n")
     assert state["report"] is None and "dočasně nečitelný JSON" in state["error"]
@@ -42,4 +60,4 @@ def test_fetch_uses_noninteractive_ssh_and_handles_remote_error(monkeypatch):
 def test_remote_command_quotes_base_and_has_report_checkpoint_and_process_reads():
     command = monitor.remote_command("/tmp/a space")
     assert "report.json" in command and "checkpoints/latest.json" in command
-    assert "pgrep" in command and "'" in command
+    assert "pgrep" in command and "ps -ww" in command and "'" in command
