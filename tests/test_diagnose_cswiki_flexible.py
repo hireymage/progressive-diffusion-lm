@@ -45,6 +45,25 @@ def test_diagnostic_refuses_overwrite_and_invalid_refinement_count(tmp_path):
         diag.run(a)
 
 
+def test_prompt_continuation_never_changes_encoded_czech_prompt_prefix():
+    class Tokenizer:
+        def encode(self, text):
+            assert text == "kočka leze dírou."
+            return SimpleNamespace(ids=[3, 4, 5])
+        def decode(self, ids): return "/".join(map(str, ids))
+        def token_to_id(self, token): return 2 if token == "[MASK]" else None
+    class Model:
+        cfg = SimpleNamespace(mask_token_id=lambda: 15, max_seq_len=256)
+        def __call__(self, tokens, exit_layer):
+            # Highest-probability id deliberately differs from the prompt ids.
+            shape = tuple(tokens.shape) + (20,)
+            logits = np.zeros(shape, dtype=np.float32); logits[..., 9] = 10
+            return diag.mx.array(logits)
+    result = diag.prompt_continuation(Model(), Tokenizer(), max_new_tokens=24)
+    assert result["passes"] == 4 and len(result["refinements"]) == 4
+    assert result["continuation_token_ids"][:3] == [3, 4, 5]
+
+
 def test_refinement_fills_remaining_positions_over_exactly_four_passes(monkeypatch):
     remaining_counts = []
     class Tokenizer:
