@@ -1,4 +1,5 @@
 import json
+import math
 import subprocess
 from datetime import datetime
 
@@ -61,3 +62,39 @@ def test_remote_command_quotes_base_and_has_report_checkpoint_and_process_reads(
     command = monitor.remote_command("/tmp/a space")
     assert "report.json" in command and "checkpoints/latest.json" in command
     assert "pgrep" in command and "ps -ww" in command and "'" in command
+
+
+def test_default_selection_contains_all_three_nodes_with_independent_runs():
+    nodes = dict(monitor.selected_nodes(None, None))
+    assert list(nodes) == ["m4-air", "m1-512", "m1-256"]
+    assert "cswiki-real" in nodes["m4-air"]
+    assert "cswiki-wide128" in nodes["m1-512"]
+    assert monitor.DEFAULT_TARGETS["m1-512"] == 400000
+
+
+def test_render_dashboard_uses_supplied_host_name():
+    state = monitor.parse_remote_output(_remote({"status": "running", "history": []}, {}))
+    text = monitor.render_dashboard(state, host="m1-512")
+    assert "CSWiki flexible · m1-512" in text
+
+
+def test_custom_remote_base_requires_exactly_one_host():
+    assert monitor.selected_nodes(["custom"], "/tmp/run") == [("custom", "/tmp/run")]
+    try:
+        monitor.selected_nodes(["m4-air", "m1-512"], "/tmp/run")
+    except ValueError as exc:
+        assert "jedním --host" in str(exc)
+    else:
+        raise AssertionError("multiple hosts with one remote base must fail")
+
+
+def test_nonfinite_metrics_are_shown_as_numerical_error_and_ignored_for_best():
+    history = [
+        {"step": 51000, "loss": 6.5, "accuracy": .08, "perplexity": 665.},
+        {"step": 51500, "loss": math.nan, "accuracy": 0., "perplexity": math.nan},
+    ]
+    state = monitor.parse_remote_output(_remote({"status": "running", "history": history}, {}))
+    text = monitor.render_dashboard(state, 400000, host="m1-512")
+    assert "NUMERICKÁ CHYBA" in text
+    assert "loss: CHYBA" in text
+    assert "Best: loss 6.5000 @ krok 51000" in text

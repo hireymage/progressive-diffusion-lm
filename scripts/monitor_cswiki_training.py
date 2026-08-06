@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import shlex
 import subprocess
@@ -12,8 +13,16 @@ import time
 from datetime import datetime
 from pathlib import PurePosixPath
 
-DEFAULT_REMOTE_BASE = ("/Users/hozzy/Library/Application Support/ML-Experiments/"
-                       "progressive-diffusion-lm/cswiki-real/run-20260804-a-40k")
+REMOTE_ROOT = ("/Users/hozzy/Library/Application Support/ML-Experiments/"
+               "progressive-diffusion-lm")
+DEFAULT_REMOTE_BASE = f"{REMOTE_ROOT}/cswiki-real/run-20260804-a-40k"
+DEFAULT_NODES = {
+    "m4-air": DEFAULT_REMOTE_BASE,
+    "m1-512": f"{REMOTE_ROOT}/cswiki-wide128/run-20260805-d128",
+    # Připraveno pro příští běh; chybějící report se zobrazí jako čekající stav.
+    "m1-256": f"{REMOTE_ROOT}/cswiki-real/run-20260804-a-40k",
+}
+DEFAULT_TARGETS = {"m4-air": 400000, "m1-512": 400000, "m1-256": 80000}
 
 
 def remote_command(remote_base: str) -> str:
@@ -96,7 +105,8 @@ def progress(state: dict, target_steps: int | None) -> dict:
     latest = state.get("latest") or {}
     target_steps = inferred_target_steps(state, target_steps)
     current = history[-1]["step"] if history else int(latest.get("step", 0) or 0)
-    best_row = min((row for row in history if isinstance(row.get("loss"), (int, float))),
+    best_row = min((row for row in history if isinstance(row.get("loss"), (int, float))
+                    and math.isfinite(row["loss"])),
                    key=lambda row: row["loss"], default=None)
     return {"current": current, "target": target_steps, "percent": min(100., 100 * current / max(target_steps, 1)),
             "history": history, "best_loss": (best_row or {}).get("loss", latest.get("best_loss")),
@@ -122,23 +132,30 @@ def format_duration(seconds: float | None) -> str:
     return f"{hours:d}:{minutes:02d}:{seconds:02d}"
 
 
-def render_dashboard(state: dict, target_steps: int | None = None, now: datetime | None = None) -> str:
+def render_dashboard(state: dict, target_steps: int | None = None, now: datetime | None = None,
+                     host: str = "m4-air") -> str:
     now = now or datetime.now()
     if state.get("ssh_error"):
-        return f"CSWiki flexible · m4-air\nSSH offline: {state['ssh_error']}\nKontrola: {now:%Y-%m-%d %H:%M:%S}"
+        return f"CSWiki flexible · {host}\nSSH offline: {state['ssh_error']}\nKontrola: {now:%Y-%m-%d %H:%M:%S}"
     p = progress(state, target_steps); history = p["history"]
     latest_row = history[-1] if history else {}
     report = state.get("report") or {}
     running = bool(state.get("process"))
-    status = ("SSH online · běží" if running else
+    nonfinite = any(isinstance(latest_row.get(key), (int, float))
+                    and not math.isfinite(latest_row[key]) for key in ("loss", "accuracy", "perplexity"))
+    status = ("SSH online · NUMERICKÁ CHYBA" if nonfinite else
+              "SSH online · běží" if running else
               ("SSH online · dokončeno" if report.get("status") == "complete"
                else "SSH online · plánováno / čeká"))
     speed = recent_speed(history)
     eta = (p["target"] - p["current"]) / speed if speed and p["current"] < p["target"] else 0 if p["current"] >= p["target"] else None
     loss = latest_row.get("loss"); acc = latest_row.get("accuracy"); ppl = latest_row.get("perplexity")
-    numeric = lambda value, digits=4: f"{value:.{digits}f}" if isinstance(value, (int, float)) else "—"
+    def numeric(value, digits=4):
+        if not isinstance(value, (int, float)):
+            return "—"
+        return f"{value:.{digits}f}" if math.isfinite(value) else "CHYBA"
     return "\n".join((
-        "CSWiki flexible · m4-air",
+        f"CSWiki flexible · {host}",
         f"Stav: {status}  |  krok: {p['current']:,} / {p['target']:,} ({p['percent']:.1f} %)",
         f"Worst route: {latest_row.get('worst_route', '—')}  |  loss: {numeric(loss)}  |  accuracy: {numeric(acc * 100 if isinstance(acc, (int, float)) else None, 2)} %  |  ppl: {numeric(ppl, 2)}",
         f"Best: loss {numeric(p['best_loss'])} @ krok {p['best_step'] or '—'}",
@@ -154,10 +171,25 @@ def poll(host: str, remote_base: str) -> dict:
     return parse_remote_output(raw)
 
 
+def selected_nodes(hosts: list[str] | None, remote_base: str | None) -> list[tuple[str, str]]:
+    """Resolve CLI selection while keeping the historical single-host options useful."""
+    if not hosts:
+        return list(DEFAULT_NODES.items())
+    if remote_base is not None and len(hosts) != 1:
+        raise ValueError("--remote-base lze použít jen s jedním --host")
+    unknown = [host for host in hosts if host not in DEFAULT_NODES]
+    if unknown and remote_base is None:
+        raise ValueError(f"neznámý host bez --remote-base: {', '.join(unknown)}")
+    return [(host, remote_base or DEFAULT_NODES[host]) for host in hosts]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--host", default="m4-air"); parser.add_argument("--interval", type=int, default=300)
-    parser.add_argument("--remote-base", default=DEFAULT_REMOTE_BASE)
+    parser.add_argument("--host", action="append",
+                        help="omezit výpis na host (lze zadat opakovaně); výchozí jsou všechny tři nody")
+    parser.add_argument("--interval", type=int, default=300)
+    parser.add_argument("--remote-base", default=None,
+                        help="vlastní adresář běhu; lze použít jen s jedním --host")
     parser.add_argument("--target-steps", type=int, default=None,
                         help="ruční cíl; bez něj se přečte --steps z běžícího trenéru")
     parser.add_argument("--once", action="store_true")
@@ -165,8 +197,16 @@ def main() -> None:
     if args.interval < 1 or (args.target_steps is not None and args.target_steps < 1):
         parser.error("interval a target-steps musí být kladné")
     try:
+        nodes = selected_nodes(args.host, args.remote_base)
+    except ValueError as exc:
+        parser.error(str(exc))
+    try:
         while True:
-            print("\033[2J\033[H" + render_dashboard(poll(args.host, args.remote_base), args.target_steps), flush=True)
+            now = datetime.now()
+            dashboards = [render_dashboard(poll(host, base),
+                                           args.target_steps or DEFAULT_TARGETS.get(host), now, host)
+                          for host, base in nodes]
+            print("\033[2J\033[H" + "\n\n".join(dashboards), flush=True)
             if args.once: return
             time.sleep(args.interval)
     except KeyboardInterrupt:
