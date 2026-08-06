@@ -93,3 +93,21 @@ def test_resume_rejects_architecturally_incompatible_checkpoint_before_weights(t
     path.with_suffix(".json").write_text(json.dumps({"architecture": [25, 64, 256, 4, 256]}))
     with pytest.raises(ValueError, match="architecture"):
         load_checkpoint(None, None, path, {"architecture": [25, 128, 512, 4, 256]})
+
+
+def test_reset_optimizer_requires_resume_before_loading_cache(tmp_path):
+    args = type("Args", (), {"steps": 1, "batch_size": 1, "eval_steps": 1,
+        "eval_every": 1, "resume": False, "reset_optimizer": True, "grad_clip": 1.0,
+        "output": tmp_path / "report.json", "checkpoint_dir": tmp_path / "checkpoints",
+        "cache_dir": tmp_path / "missing"})()
+    with pytest.raises(ValueError, match="reset-optimizer requires"):
+        run(args)
+
+
+def test_negative_gradient_clip_is_rejected_before_loading_cache(tmp_path):
+    args = type("Args", (), {"steps": 1, "batch_size": 1, "eval_steps": 1,
+        "eval_every": 1, "resume": True, "reset_optimizer": False, "grad_clip": -1.0,
+        "output": tmp_path / "report.json", "checkpoint_dir": tmp_path / "checkpoints",
+        "cache_dir": tmp_path / "missing"})()
+    with pytest.raises(ValueError, match="grad-clip"):
+        run(args)

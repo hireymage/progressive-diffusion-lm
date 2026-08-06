@@ -166,18 +166,23 @@ def checkpoint(model, optimizer, directory: Path, kind: str, metadata: dict) -> 
     atomic_json_write(directory / f"{kind}.json", metadata)
 
 
-def load_checkpoint(model, optimizer, path: Path, expected: dict) -> dict:
+def load_checkpoint(model, optimizer, path: Path, expected: dict, *, load_optimizer: bool = True) -> dict:
     metadata = json.loads(path.with_suffix(".json").read_text())
     for key, value in expected.items():
         if metadata.get(key) != value:
             raise ValueError(f"resume metadata mismatch for {key}")
     data = mx.load(str(path))
     model.load_weights([(key, value) for key, value in data.items() if not key.startswith("opt_")])
-    state = [(key.removeprefix("opt_"), value) for key, value in data.items() if key.startswith("opt_")]
-    if not state:
-        raise ValueError("checkpoint has no optimizer state")
-    optimizer.state = tree_unflatten(state)
-    mx.eval(model.parameters(), optimizer.state)
+    if load_optimizer:
+        state = [(key.removeprefix("opt_"), value) for key, value in data.items() if key.startswith("opt_")]
+        if not state:
+            raise ValueError("checkpoint has no optimizer state")
+        optimizer.state = tree_unflatten(state)
+        mx.eval(model.parameters(), optimizer.state)
+    else:
+        # Evaluate the fresh optimizer state so no moment estimate from a
+        # numerically unstable run can leak into the resumed training.
+        mx.eval(model.parameters(), optimizer.state)
     return metadata
 
 
@@ -191,6 +196,12 @@ def run(a) -> dict:
         raise ValueError("--steps must be in [1, 1000000]")
     if a.batch_size < 1 or a.eval_steps < 1 or a.eval_every < 1:
         raise ValueError("batch size, eval steps, and eval interval must be positive")
+    grad_clip = getattr(a, "grad_clip", 0.0)
+    reset_optimizer = getattr(a, "reset_optimizer", False)
+    if grad_clip < 0:
+        raise ValueError("--grad-clip must be non-negative")
+    if reset_optimizer and not a.resume:
+        raise ValueError("--reset-optimizer requires --resume")
     if not a.resume and a.output.exists():
         raise FileExistsError(f"Refusing to overwrite historical report: {a.output}")
     if not a.resume and any((a.checkpoint_dir / name).exists()
@@ -217,7 +228,8 @@ def run(a) -> dict:
     latest = a.checkpoint_dir / "latest.npz"
     if a.resume:
         if not latest.exists(): raise FileNotFoundError("--resume requires latest.npz")
-        restored = load_checkpoint(model, optimizer, latest, contract)
+        restored = load_checkpoint(model, optimizer, latest, contract,
+                                   load_optimizer=not reset_optimizer)
         start_step, best_loss, history = int(restored["step"]), float(restored["best_loss"]), restored.get("history", [])
     milestones = milestone_weights(n_layers)
     grad_fn = nn.value_and_grad(model, lambda m, x, t, mask: masked_deep_supervision_loss(
@@ -228,7 +240,17 @@ def run(a) -> dict:
         route, schedule = route_for_training_step(pool, step)
         model.set_layer_precisions(schedule)
         x, targets, mask = corrupt_50(fixed_batch(train, a.batch_size, a.seed + step), model.cfg.mask_token_id(), a.seed + 10_000 + step)
-        loss, grads = grad_fn(model, x, targets, mask); optimizer.update(model, grads); mx.eval(loss, model.parameters())
+        loss, grads = grad_fn(model, x, targets, mask)
+        if grad_clip:
+            grads, gradient_norm = optim.clip_grad_norm(grads, grad_clip)
+        else:
+            gradient_norm = optim.clip_grad_norm(grads, float("inf"))[1]
+        mx.eval(loss, gradient_norm)
+        if not np.isfinite(float(loss)) or not np.isfinite(float(gradient_norm)):
+            raise FloatingPointError(
+                f"non-finite training value at step {step}: loss={float(loss)}, "
+                f"gradient_norm={float(gradient_norm)}")
+        optimizer.update(model, grads); mx.eval(model.parameters())
         if step % a.eval_every == 0 or step == a.steps:
             report = evaluate_routes(model, val, a.batch_size, a.eval_steps, a.seed + 900_000)
             # Avoid runtime precision leakage after the three route passes.
@@ -246,6 +268,8 @@ def run(a) -> dict:
               "architecture": {"n_layers": n_layers, "d_model": d_model, "d_ff": d_ff, "n_heads": n_heads, "seq_len": seq_len,
                                "route_pool": pool, "active_schedule": list(model.cfg.layer_precisions)},
               "cache_meta_path": str(cache_meta_path), "cache_metadata": cache_meta, "checkpoint_policy": "atomic latest+best; best is minimum worst-route held-out loss",
+              "optimizer_policy": {"learning_rate": a.lr, "reset_on_resume": reset_optimizer,
+                                   "gradient_clip": grad_clip},
               "steps": a.steps, "history": history, "final": final}
     atomic_json_write(a.output, result)
     return result
@@ -262,7 +286,11 @@ def main() -> None:
     p.add_argument("--steps", type=int, default=80000); p.add_argument("--batch-size", type=int, default=4)
     p.add_argument("--eval-steps", type=int, default=32); p.add_argument("--eval-every", type=int, default=500)
     p.add_argument("--seed", type=int, default=20260804); p.add_argument("--lr", type=float, default=1e-3)
+    p.add_argument("--grad-clip", type=float, default=0.0,
+                   help="global gradient norm cap; 0 disables clipping")
     p.add_argument("--min-free-gb", type=float, default=10.0); p.add_argument("--resume", action="store_true")
+    p.add_argument("--reset-optimizer", action="store_true",
+                   help="resume model weights but initialize fresh optimizer moments")
     a = p.parse_args(); ensure_outside_icloud(a.output); ensure_outside_icloud(a.checkpoint_dir)
     print(json.dumps(run(a), ensure_ascii=False, indent=2))
 
