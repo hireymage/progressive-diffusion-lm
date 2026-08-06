@@ -81,7 +81,13 @@ def parse_remote_output(raw: str) -> dict:
 
 def history_from(state: dict) -> list[dict]:
     report, latest = state.get("report") or {}, state.get("latest") or {}
-    history = report.get("history") or latest.get("history") or []
+    # During a model-only recovery the old report can be ahead of the restored
+    # healthy checkpoint until the first new evaluation is written. In that
+    # window the checkpoint is the authoritative state.
+    if "--reset-optimizer" in (state.get("process") or ""):
+        history = latest.get("history") or report.get("history") or []
+    else:
+        history = report.get("history") or latest.get("history") or []
     return [row for row in history if isinstance(row, dict) and isinstance(row.get("step"), int)]
 
 
@@ -203,9 +209,13 @@ def main() -> None:
     try:
         while True:
             now = datetime.now()
-            dashboards = [render_dashboard(poll(host, base),
-                                           args.target_steps or DEFAULT_TARGETS.get(host), now, host)
-                          for host, base in nodes]
+            dashboards = []
+            for host, base in nodes:
+                state = poll(host, base)
+                # A live --steps argument is more accurate than the remembered
+                # per-node target (for example during a short recovery run).
+                target = args.target_steps or (None if state.get("process") else DEFAULT_TARGETS.get(host))
+                dashboards.append(render_dashboard(state, target, now, host))
             print("\033[2J\033[H" + "\n\n".join(dashboards), flush=True)
             if args.once: return
             time.sleep(args.interval)

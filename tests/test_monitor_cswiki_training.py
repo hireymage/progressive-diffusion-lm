@@ -98,3 +98,14 @@ def test_nonfinite_metrics_are_shown_as_numerical_error_and_ignored_for_best():
     assert "NUMERICKÁ CHYBA" in text
     assert "loss: CHYBA" in text
     assert "Best: loss 6.5000 @ krok 51000" in text
+
+
+def test_reset_optimizer_recovery_prefers_restored_checkpoint_history():
+    stale = [{"step": 58500, "loss": math.nan, "accuracy": 0., "perplexity": math.nan}]
+    healthy = [{"step": 51000, "loss": 6.5, "accuracy": .08, "perplexity": 665.}]
+    process = "python train_cswiki_flexible.py --steps 55000 --resume --reset-optimizer"
+    state = monitor.parse_remote_output(_remote(
+        {"status": "running", "history": stale}, {"step": 51000, "history": healthy}, process))
+    text = monitor.render_dashboard(state, host="m1-512")
+    assert "běží" in text and "NUMERICKÁ CHYBA" not in text
+    assert "51,000 / 55,000" in text
