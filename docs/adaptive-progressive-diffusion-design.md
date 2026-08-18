@@ -2,7 +2,17 @@
 
 [English](adaptive-progressive-diffusion-design.en.md) | [Čeština](adaptive-progressive-diffusion-design.md)
 
+<!-- doc-status: proposal; verified: 2026-08-18 -->
+> **Stav dokumentu:** Návrh z 4. 8. 2026. Implementované části a zbývající mezery jsou označeny v textu; aktuální provozní stav je v samostatném snapshotu.
+
 Datum návrhu: 2026-08-04
+
+> **Aktualizace implementace k 18. 8. 2026:** níže popsaný model s pevnými
+> skupinami 5× Q1/Q2/Q4/Q8/FP16 byl vytvořen a použit jako diagnostický prototyp.
+> Aktivní český model realizuje další fázi se sdílenými master vahami a routes
+> `q8_only`, `q8_fp16` a `q2_q8_fp16`. Route-by-exit a proxy ukončení tokenů
+> existují, ale skutečné tokenově selektivní přeskakování kernelů, packed
+> low-bit výpočet a levnější využití rezidua zůstávají otevřené.
 
 > **Aktualizace cíle:** Primární experimentální větev už nepoužívá opakované
 > celé průchody Q1 → Q2 → Q4 → Q8. Jeden 25vrstvý Transformer má pevné skupiny

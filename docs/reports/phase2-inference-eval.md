@@ -2,6 +2,9 @@
 
 [English](phase2-inference-eval.en.md) | [Čeština](phase2-inference-eval.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Stav dokumentu:** Historický report. Čísla a závěry platí pro uvedenou kampaň a datum, nikoli jako současný provozní stav projektu.
+
 **Datum:** 2026-07-21
 **Train steps:** 2000 · **Gen repeats:** 5 · **Seq len:** 128 · **Precision schedule:** [1, 2, 4, 8, 8, 4, 2, 1] · **Max steps:** 8
 

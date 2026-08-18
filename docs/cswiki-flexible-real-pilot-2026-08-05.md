@@ -2,6 +2,9 @@
 
 [English](cswiki-flexible-real-pilot-2026-08-05.en.md) | [Čeština](cswiki-flexible-real-pilot-2026-08-05.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Stav dokumentu:** Historický report. Čísla a závěry platí pro uvedenou kampaň a datum, nikoli jako současný provozní stav projektu.
+
 ## Rozsah
 
 Jde o první omezený běh flexibilního modelu se sdílenými master vahami na reálných datech. Výsledek není tvrzením, že jde o použitelný jazykový model.

@@ -2,6 +2,9 @@
 
 [English](layerwise-exit-policy-abc-2026-08-04.en.md) | [Čeština](layerwise-exit-policy-abc-2026-08-04.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Stav dokumentu:** Historický report. Čísla a závěry platí pro uvedenou kampaň a datum, nikoli jako současný provozní stav projektu.
+
 ## Podmínky
 
 - weighted checkpointy A, B a C po splnění 100sekvenční quality-gate,

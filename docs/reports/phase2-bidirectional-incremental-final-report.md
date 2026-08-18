@@ -2,9 +2,12 @@
 
 [English](phase2-bidirectional-incremental-final-report.md) | [Čeština](phase2-bidirectional-incremental-final-report.cs.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 **Date:** 2026-07-21  
 **Authors:** Martin Hozák (Hozzy), Hermes Agent  
-**Repository:** hireymage/progressive-diffusion-lm (PRIVATE, Apache-2.0)  
+**Repository at report time:** hireymage/progressive-diffusion-lm (then private, Apache-2.0; public as of 2026-08-18)
 **Hardware:** 2× Mac mini M1 8GB (m1-256, m1-512) + 1× MacBook Air M4 16GB (m4-air)  
 
 ---

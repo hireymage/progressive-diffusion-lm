@@ -2,6 +2,9 @@
 
 [English](m0-pareto-policy-test-2026-08-04.en.md) | [Čeština](m0-pareto-policy-test-2026-08-04.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 ## Verdict
 
 The offline held-out test found a simple adaptive policy that maintained

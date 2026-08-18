@@ -1,6 +1,9 @@
 # Progressive A/B/C exit policy sweep, 2026-08-04
 [English](layerwise-exit-policy-abc-2026-08-04.en.md) | [Čeština](layerwise-exit-policy-abc-2026-08-04.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 ## Conditions
 
 - weighted checkpoints A, B and C after passing the 100-sequential quality-gate,

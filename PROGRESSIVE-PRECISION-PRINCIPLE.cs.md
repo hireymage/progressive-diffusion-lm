@@ -2,6 +2,9 @@
 
 [English](PROGRESSIVE-PRECISION-PRINCIPLE.md) | [Čeština](PROGRESSIVE-PRECISION-PRINCIPLE.cs.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 18. 8. 2026.
+
 > **Kanonický zdroj pravdy pro návrh experimentu.**
 > Tento dokument odděluje dlouhodobý princip od toho, co skutečně ověřil
 > současný kód a český experiment. Naposledy porovnáno s kódem a publikovanými

@@ -2,6 +2,9 @@
 
 [English](cuda-training.en.md) | [Čeština](cuda-training.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Document status:** Living documentation, verified against the current code and published results on 2026-08-18.
+
 The CUDA backend preserves the 25-layer architecture, Czech tokenizer and
 cache, shared FP32 master weights, and the `q8_only`, `q8_fp16`, and
 `q2_q8_fp16` routes. It also converts the MLX AdamW `m` and `v` moments and

@@ -2,6 +2,9 @@
 
 [English](cswiki-flexible-project-status-2026-08-18.en.md) | [Čeština](cswiki-flexible-project-status-2026-08-18.md)
 
+<!-- doc-status: snapshot; verified: 2026-08-18 -->
+> **Stav dokumentu:** Ověřený snapshot k 18. 8. 2026. Průběžný trénink se po tomto okamžiku může změnit.
+
 ## Co bylo ověřeno
 
 Současný experiment ověřil, že jeden model se sdílenými master vahami lze
@@ -56,8 +59,8 @@ proto musí být pro kvalitativní testy zachováno rozlišení `best` a `latest
 
 ## Průběžný stav po pokračování
 
-Trénink byl bezpečně obnoven z kroku 3 000 000, nezačal od nuly. Snapshot na
-kroku 3 189 500:
+Trénink byl bezpečně obnoven z kroku 3 000 000, nezačal od nuly. Poslední úplný
+snapshot všech routes je z kroku 3 189 500:
 
 | Route | Loss | Accuracy | Perplexita |
 |---|---:|---:|---:|
@@ -65,10 +68,12 @@ kroku 3 189 500:
 | `q8_fp16` | 4,0839 | 35,23 % | 59,38 |
 | `q2_q8_fp16` | 4,3757 | 31,60 % | 79,49 |
 
-Konzervativní worst route zůstává `q2_q8_fp16`. Cíl běhu byl na výslovný
-pokyn zvýšen na 20 000 000 kroků. `latest` a případný nový `best` se ukládají
-po validačních blocích po 500 krocích; neměnné dlouhodobé snapshoty se po
-3 milionech ukládají po 100 000 krocích, aby archiv nevyčerpal disk.
+Kompaktní živý monitor 18. 8. 2026 13:56 CEST hlásil krok 3 206 000 a nejhorší
+route `q2_q8_fp16` s loss 4,4015, accuracy 30,87 % a perplexitou 81,57. Nejlepší
+worst-route loss je 4,3451 na kroku 2 891 500. Cíl je 20 000 000 kroků a
+naposledy naměřená rychlost byla 3,429 kroku/s. `latest` a případný nový `best`
+se ukládají po validačních blocích po 500 krocích; neměnné dlouhodobé snapshoty
+se po 3 milionech ukládají po 100 000 krocích, aby archiv nevyčerpal disk.
 
 ## První závěry
 

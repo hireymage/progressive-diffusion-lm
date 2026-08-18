@@ -2,6 +2,9 @@
 
 [English](phase2-inference-eval.en.md) | [Čeština](phase2-inference-eval.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 **Date:** 2026-07-21
 **Train steps:** 2000 · **Gen repeats:** 5 · **Seq len:** 128 · **Precision schedule:** [1, 2, 4, 8, 8, 4, 2, 1] · **Max steps:** 8
 

@@ -2,7 +2,17 @@
 
 [English](PROJECT_DOCUMENTATION.md) | [Čeština](PROJECT_DOCUMENTATION.cs.md)
 
-*Generated 2026-07-18. All numbers read from actual result files in the repository.*
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Document status:** Living documentation, verified against the current code and published results on 2026-08-18.
+
+*Original experiment reference generated 2026-07-18; living status and roadmap
+reviewed 2026-08-18. Historical numbers remain tied to their source campaigns.*
+
+> Sections describing the 28M English-Wikipedia scaffold are a preserved
+> reference, not the active training configuration. The active experiment is
+> the Czech-only 25-layer `d_model=64` shared-master model described in the
+> current-status addendum below. For the canonical research boundary, see
+> [PROGRESSIVE-PRECISION-PRINCIPLE.md](PROGRESSIVE-PRECISION-PRINCIPLE.md).
 
 ---
 
@@ -947,11 +957,17 @@ These are ideas and hypotheses that have not been implemented or systematically 
 
 **G. Scale model size**
 
-All current experiments use ~28M parameters. Repeating key findings at 100M, 500M, or 1B+ parameters would test whether the observed behaviors scale. Low-bit training becomes more practically relevant at larger sizes where memory is a real constraint.
+Historical campaigns used the ~28M and ~7.5M scaffolds. The active Czech pilot
+is a separate 25-layer `d_model=64` model, while `d_model=32` and the
+numerically unstable `d_model=128` attempt are controls. Repeating verified
+findings at 100M, 500M, or 1B+ parameters remains future work.
 
 **H. Larger datasets / longer training**
 
-The current ~69M token dataset with 10k training steps is modest. Training on 1B+ tokens with 100k+ steps might reveal qualitatively different behaviors (e.g., whether native 1-bit training continues to match or surpass FP32 baselines as training data increases).
+The historical English dataset contained roughly 69M tokens. The active Czech
+cache contains 73,706,496 tokens and is being reused over a much longer run;
+this adds optimization exposure, not new knowledge. Adding verified Czech data
+without replacing the original corpus remains a future scaling direction.
 
 **I. Real packed low-bit kernels**
 
@@ -961,17 +977,38 @@ Implementing actual integer arithmetic via custom MLX Metal shaders or exploitin
 
 The hypothesis that multiple 1-bit matrix operations can be combined to approximate higher-precision computation. For example, two 1-bit matmuls with different scale factors could theoretically approximate a 2-bit operation. This is an unproven architectural idea, not explored in any current experiment.
 
-**K. Progressive precision at inference time for adaptive compute (HYPOTHETICAL)**
+**K. Progressive precision at inference time for adaptive compute (PARTIAL)**
 
-The current model supports switching precision per step via `model.set_bits()`. A hypothetical adaptive inference system could dynamically choose precision per token position or per layer based on confidence, allowing high-precision computation only where needed. This has not been implemented or benchmarked.
+The repository now includes fixed flexible routes, layerwise early exit,
+diffusion-step early exit, and route-by-exit diagnostics. What remains
+hypothetical is a calibrated production policy with genuine token-selective
+kernel skipping and measured end-to-end savings.
 
 **L. Transfer findings to substantially larger models**
 
-All current findings are on a small research scaffold (28M params, 69M tokens). The hypothesis is that native low-bit training benefits will remain or increase at scale (since larger models may have more redundancy to exploit via quantization). This is a research hypothesis, not a demonstrated result.
+All findings remain limited to small research models and the wider
+`d_model=128` Czech pilot diverged numerically. The hypothesis that low-bit or
+flexible-route benefits persist at substantially larger scale is unproven.
 
 ---
 
 ## 12. CURRENT PROJECT STATUS
+
+### ACTIVE CZECH SHARED-MASTER RUN (verified 2026-08-18 13:56 CEST)
+
+- M1-512 is training the Czech-only 25-layer `d_model=64`, `d_ff=256`,
+  four-head, sequence-length-256 model from a resumed checkpoint.
+- The three routes are `q8_only`, `q8_fp16`, and `q2_q8_fp16`; the worst route
+  controls checkpoint selection.
+- Live step: 3,206,000 / 20,000,000. Worst route `q2_q8_fp16`: loss 4.4015,
+  accuracy 30.87%, perplexity 81.57. Best worst-route loss: 4.3451 at step
+  2,891,500.
+- MLX is the primary backend. PyTorch/CUDA conversion and resumed training are
+  implemented, but both backends still simulate low-bit arithmetic over FP32
+  master weights.
+- The model is a masked-token completion research model, not an
+  instruction-tuned chatbot. See the dated
+  [current status](docs/cswiki-flexible-project-status-2026-08-18.en.md).
 
 ### COMPLETED
 
@@ -990,7 +1027,7 @@ All current findings are on a small research scaffold (28M params, 69M tokens). 
 - One native true-Q3 and one native ternary 10k run at seed 31415
 - Two additional paired baseline/Q1/progressive replications (seeds 31415 and 27182)
 
-### NEXT (proposed; not launched)
+### NEXT FOR THE HISTORICAL ENGLISH EXPERIMENT FAMILY
 
 1. Run a scheme-matched multi-seed native comparison of FP32, current true Q3, current true Q4, and ternary.
 2. Split six paired seeds evenly across m1-256 and m1-512, with four serial 10k variants per seed and immutable node-local outputs.
@@ -999,7 +1036,7 @@ All current findings are on a small research scaffold (28M params, 69M tokens). 
 ### FUTURE
 
 - Add seeds (better statistical confidence)
-- Native Q3 training
+- Replicated, scheme-matched native Q3 training beyond the completed single-seed run
 - Native Q4 under updated scheme
 - Calibrated PTQ study
 - Scale-up experiments
@@ -1011,7 +1048,7 @@ All current findings are on a small research scaffold (28M params, 69M tokens). 
 
 Chronological narrative reconstructed from file timestamps, config contents, and result dates.
 
-**[2025-07-15] — Initial setup and smoke tests**
+**[2026-07-15] — Initial setup and smoke tests**
 
 Repository created. Core source files written: `src/model.py`, `src/quantization.py`, `src/diffusion.py`, `src/train.py`, `src/data.py`, `src/config.py`, `src/evaluate.py`, `src/generate.py`. Unit tests written. BPE tokenizer trained. Initial smoke test configs created and run (50 steps, tiny model d_model=128). Checkpoints saved to `checkpoints/smoke_test_baseline/` and `checkpoints/smoke_test_progressive/`. At this stage, quantization.py used a different scheme for bits=3 (ternary) and bits=4 (15-level with zero) compared to the current implementation.
 
@@ -1019,21 +1056,27 @@ Short experiment configs created (d_model=256, 4 layers, 500 steps) and run: `sh
 
 Full-scale configs written (`configs/baseline.json`, `configs/progressive_1_2_4.json`, `configs/full_baseline.json`, `configs/full_progressive_1_2_4.json`).
 
-**[2025-07-15 / 07-16] — Full-scale initial comparison**
+**[2026-07-15 / 07-16] — Full-scale initial comparison**
 
 Full 10k-step training run for `full_baseline` (seed=42) and `full_progressive_1_2_4` (seed=42). Both used the updated configs with `tie_word_embeddings=True` and `results_dir="results"`. Results: baseline best_val_loss = 7.432665 (4990s), progressive best_val_loss = 7.414686 (5663s). Progressive beat baseline by 0.018 nats at seed=42. This motivated the ablation study to test with multiple seeds.
 
-**[2025-07-16] — Ablation study design and screening phase**
+**[2026-07-16] — Ablation study design and screening phase**
 
 `scripts/ablation_study.py` written. 6 variants defined: baseline, const_1bit, const_2bit, const_4bit, prog_1_2_4, prog_4_2_1. All 18 screening configs auto-generated into `configs/ablation/`. 18 screening runs (3k steps each) executed sequentially. All completed. Aggregate results show all variants within 0.007 nats of each other at 3k steps; decision made to run all 6 variants to full 10k steps.
 
-**[2025-07-16 / 07-18] — Full ablation phase**
+**[2026-07-16 / 07-18] — Full ablation phase**
 
 All 18 full 10k-step ablation runs executed. Runs spanned approximately Jul 16 18:00 through Jul 18 15:46 (inferred from config file timestamps). All 18 completed without failures. `aggregate_full.json` and `per_run_full.csv` written. Key finding: const_1bit achieves the best mean best_val_loss (7.4336), beating the baseline (7.4434) by 0.0099 nats, though with high seed variance. prog_1_2_4 (7.4428) is essentially tied with baseline (7.4434).
 
-**[2025-07-18] — PTQ study design and Q4/Q3 scheme update**
+**[2026-07-18] — PTQ study design and Q4/Q3 scheme update**
 
-`scripts/ptq_study.py` written. Q4 scheme updated from 15-level with-zero to 16-level no-zero to be consistent with Q1 and Q2. Q3 (True 3-bit) added as a new PTQ-only evaluation level. Ternary moved from bits=3 to bits=0 sentinel. PTQ baseline configs written to `configs/ptq/`. The caveat about const_4bit using the old scheme is documented in both `src/quantization.py` and `scripts/ptq_study.py`. PTQ study has not yet been run.
+`scripts/ptq_study.py` written. Q4 scheme updated from 15-level with-zero to
+16-level no-zero to be consistent with Q1 and Q2. Q3 (True 3-bit) added as a
+new PTQ-only evaluation level. Ternary moved from bits=3 to bits=0 sentinel.
+PTQ baseline configs written to `configs/ptq/`. The caveat about const_4bit
+using the old scheme is documented in both `src/quantization.py` and
+`scripts/ptq_study.py`. This paragraph records the 2026-07-18 state; the later
+direct/naive PTQ recovery completed all 18 requested evaluations.
 
 ---
 

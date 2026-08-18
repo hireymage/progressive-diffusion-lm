@@ -2,6 +2,9 @@
 
 [English](p1-matched-noise-3node-summary-2026-07-19.md) | [Čeština](p1-matched-noise-3node-summary-2026-07-19.cs.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 All three nodes finished successfully (24/24 training tasks).
 
 | Node | Seeds | Tasks | Status |

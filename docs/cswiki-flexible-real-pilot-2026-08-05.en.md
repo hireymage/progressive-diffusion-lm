@@ -2,6 +2,9 @@
 
 [English](cswiki-flexible-real-pilot-2026-08-05.en.md) | [Čeština](cswiki-flexible-real-pilot-2026-08-05.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 ## Scope
 
 This is the first bounded real-data run of the shared-master flexible model. It is not a claim of a usable language model.

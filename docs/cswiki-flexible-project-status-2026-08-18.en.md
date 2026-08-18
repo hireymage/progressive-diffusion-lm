@@ -2,6 +2,9 @@
 
 [English](cswiki-flexible-project-status-2026-08-18.en.md) | [Čeština](cswiki-flexible-project-status-2026-08-18.md)
 
+<!-- doc-status: snapshot; verified: 2026-08-18 -->
+> **Document status:** Verified snapshot as of 2026-08-18. The live training run may advance after this point.
+
 ## What has been verified
 
 The current experiment has verified that one model with shared master weights
@@ -58,7 +61,7 @@ tests must continue to distinguish `best` from `latest`.
 ## Current resumed run
 
 Training resumed safely from step 3,000,000 and did not restart from zero.
-Snapshot at step 3,189,500:
+The latest complete per-route snapshot is from step 3,189,500:
 
 | Route | Loss | Accuracy | Perplexity |
 |---|---:|---:|---:|
@@ -66,10 +69,13 @@ Snapshot at step 3,189,500:
 | `q8_fp16` | 4.0839 | 35.23% | 59.38 |
 | `q2_q8_fp16` | 4.3757 | 31.60% | 79.49 |
 
-The conservative worst route remains `q2_q8_fp16`. The target was explicitly
-raised to 20,000,000 steps. `latest` and a possible new `best` are saved after
-500-step validation blocks. Immutable long-term snapshots are stored every
-100,000 steps after three million to avoid exhausting disk space.
+The compact live monitor at 2026-08-18 13:56 CEST reported step 3,206,000 and
+the worst route `q2_q8_fp16` at loss 4.4015, accuracy 30.87%, and perplexity
+81.57. The best worst-route loss is 4.3451 at step 2,891,500. The target is
+20,000,000 steps and the observed recent speed was 3.429 steps/s. `latest` and
+a possible new `best` are saved after 500-step validation blocks. Immutable
+long-term snapshots are stored every 100,000 steps after three million to
+avoid exhausting disk space.
 
 ## Preliminary conclusions
 

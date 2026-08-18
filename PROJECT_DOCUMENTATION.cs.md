@@ -2,7 +2,17 @@
 
 [English](PROJECT_DOCUMENTATION.md) | [Čeština](PROJECT_DOCUMENTATION.cs.md)
 
-*Vygenerováno 2026-07-18. Všechna čísla načtená ze souborů skutečných výsledků v úložišti.*
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 18. 8. 2026.
+
+*Původní reference experimentů vytvořena 18. 7. 2026; živý stav a roadmapa
+ověřeny 18. 8. 2026. Historická čísla zůstávají svázána se svými kampaněmi.*
+
+> Sekce popisující 28M model nad anglickou Wikipedií jsou zachovanou referencí,
+> nikoli aktivní trénovací konfigurací. Aktivním experimentem je český
+> 25vrstvý model `d_model=64` se sdílenými master vahami, popsaný v aktuálním
+> dodatku níže. Kanonické hranice výzkumu uvádí
+> [PROGRESSIVE-PRECISION-PRINCIPLE.cs.md](PROGRESSIVE-PRECISION-PRINCIPLE.cs.md).
 
 ---
 
@@ -943,13 +953,19 @@ To by porovnalo současný přímý PTQ přístup s kalibrovanými metodami (GPT
 
 Jde o myšlenky a hypotézy, které nebyly realizovány nebo systematicky prozkoumány. Jsou uvedeny jako směry výzkumu, nikoli jako ověřené výsledky.
 
-**G. Velikost modelu v měřítku**
+**G. Škálování velikosti modelu**
 
-Všechny současné experimenty používají ~28M parametrů. Opakování klíčových zjištění u parametrů 100M, 500M nebo 1B+ by otestovalo, zda se pozorované chování škáluje. Low-bit trénink se stává praktičtějším ve větších velikostech, kde je paměť skutečným omezením.
+Historické kampaně používaly přibližně 28M a 7,5M modely. Aktivní český pilot
+je samostatný 25vrstvý model `d_model=64`; `d_model=32` slouží jako kontrola a
+pokus `d_model=128` byl numericky nestabilní. Ověření na 100M, 500M nebo 1B+
+parametrech zůstává budoucí prací.
 
-**H. Větší datové sady / delší školení**
+**H. Větší datové sady a delší trénink**
 
-Aktuální ~69M token datový soubor s 10 000 tréninkovými kroky je skromný. Trénink na 1B+ tokens se 100 000+ kroky může odhalit kvalitativně odlišné chování (např. zda nativní 1bitový trénink nadále odpovídá nebo překonává FP32 základní linie, jak se tréninková data zvyšují).
+Historická anglická datová sada měla přibližně 69M tokenů. Aktivní česká cache
+má 73 706 496 tokenů a v dlouhém běhu se opakovaně používá; další kroky přidávají
+optimalizační expozici, nikoli nové znalosti. Budoucí rozšíření má přidávat
+ověřená česká data bez nahrazení původního korpusu.
 
 **I. Skutečně zabalená low-bit jádra**
 
@@ -959,17 +975,37 @@ Implementace skutečné celočíselné aritmetiky pomocí vlastních MLX Metal s
 
 Hypotéza, že více 1bitových maticových operací lze kombinovat k aproximaci higher-precision výpočtu. Například dva 1bitové matmuly s různými měřítkovými faktory by teoreticky mohly aproximovat 2bitovou operaci. Toto je neověřený architektonický nápad, neprozkoumaný v žádném současném experimentu.
 
-**K. Progresivní přesnost v době inference pro adaptivní výpočty (HYPOTETICKÉ)**
+**K. Progresivní přesnost při inference pro adaptivní výpočet (ČÁSTEČNĚ)**
 
-Aktuální model podporuje přesnost přepínání na krok pomocí `model.set_bits()`. Hypotetický adaptivní inferenční systém by mohl dynamicky volit přesnost na token pozici nebo na vrstvu na základě spolehlivosti, což umožňuje high-precision výpočet pouze tam, kde je to potřeba. Toto nebylo implementováno ani srovnáno.
+Repozitář už obsahuje pevné flexibilní routes, early exit podle vrstev i
+diffusion kroků a route-by-exit diagnostiku. Hypotetická zůstává kalibrovaná
+produkční policy se skutečným přeskakováním kernelů pro jednotlivé tokeny a
+změřenou end-to-end úsporou.
 
-**L. Přeneste zjištění do podstatně větších modelů**
+**L. Přenos zjištění do podstatně větších modelů**
 
-Všechna aktuální zjištění jsou na malém výzkumném lešení (28 mil. param., 69 mil. tokens). Hypotézou je, že přínosy nativního low-bit školení zůstanou nebo se zvýší v měřítku (protože větší modely mohou mít větší redundanci k využití kvantizací). Toto je výzkumná hypotéza, nikoli prokázaný výsledek.
+Všechna zjištění zůstávají omezená na malé výzkumné modely a širší český pilot
+`d_model=128` numericky divergovala. Hypotéza, že výhody low-bit tréninku nebo
+flexibilních routes přetrvají ve výrazně větším měřítku, není prokázána.
 
 ---
 
 ## 12. AKTUÁLNÍ STAV PROJEKTU
+
+### AKTIVNÍ ČESKÝ BĚH SE SDÍLENÝMI VAHAMI (ověřeno 18. 8. 2026 13:56 CEST)
+
+- M1-512 trénuje z obnoveného checkpointu český 25vrstvý model `d_model=64`,
+  `d_ff=256`, se čtyřmi heads a délkou sekvence 256.
+- Routes jsou `q8_only`, `q8_fp16` a `q2_q8_fp16`; checkpoint vybírá nejhorší
+  route.
+- Živý krok: 3 206 000 / 20 000 000. Nejhorší route `q2_q8_fp16`: loss 4,4015,
+  accuracy 30,87 %, perplexita 81,57. Nejlepší worst-route loss: 4,3451 na
+  kroku 2 891 500.
+- MLX je hlavní backend. Převod a resume přes PyTorch/CUDA jsou implementovány,
+  ale oba backendy stále simulují low-bit aritmetiku nad FP32 master vahami.
+- Jde o výzkumný model pro doplňování maskovaných tokenů, nikoli instruction
+  chatbot. Podrobnosti obsahuje datovaný
+  [aktuální stav](docs/cswiki-flexible-project-status-2026-08-18.md).
 
 ### DOKONČENO
 
@@ -988,7 +1024,7 @@ Všechna aktuální zjištění jsou na malém výzkumném lešení (28 mil. par
 - Jedna nativní true-Q3 a jedna nativní ternární 10k běží na seed 31415
 - Dvě další párové baseline/Q1/progressive replikace (seeds 31415 a 27182)
 
-### DALŠÍ (navrženo; nespuštěno)
+### DALŠÍ KROKY HISTORICKÉ RODINY ANGLICKÝCH EXPERIMENTŮ
 
 1. Spusťte scheme-matched multi-seed nativní srovnání FP32, aktuální pravdivé Q3, aktuální skutečné Q4 a trojčlenné.
 2. Rozdělte šest spárovaných seeds rovnoměrně napříč m1-256 a m1-512, se čtyřmi sériovými 10k variantami na seed a neměnnými node-local výstupy.
@@ -997,7 +1033,7 @@ Všechna aktuální zjištění jsou na malém výzkumném lešení (28 mil. par
 ### BUDOUCNOST
 
 - Přidejte seeds (lepší statistická spolehlivost)
-- Nativní Q3 trénink
+- Replikovaný nativní Q3 trénink se shodným schématem nad rámec dokončeného single-seed běhu
 - Nativní Q4 podle aktualizovaného schématu
 - Kalibrovaná PTQ studie
 - Scale-up experimenty
@@ -1009,7 +1045,7 @@ Všechna aktuální zjištění jsou na malém výzkumném lešení (28 mil. par
 
 Chronologický příběh rekonstruovaný z časových razítek souborů, obsahu konfigurace a dat výsledků.
 
-**[2025-07-15] — Počáteční nastavení a smoke testy**
+**[2026-07-15] — Počáteční nastavení a smoke testy**
 
 Úložiště vytvořeno. Zapsané základní zdrojové soubory: `src/model.py`, `src/quantization.py`, `src/diffusion.py`, `src/train.py`, `src/data.py`, `src/config.py`, `src/evaluate.py`, `src/generate.py`. Písemné jednotkové testy. BPE tokenizer vyškoleni. Vytvořeny a spuštěny počáteční konfigurace testu kouře (50 kroků, malý model d_model=128). Checkpoints uloženo do `checkpoints/smoke_test_baseline/` a `checkpoints/smoke_test_progressive/`. V této fázi quantization.py použilo jiné schéma pro bits=3 (ternární) a bits=4 (15-úrovňové s nulou) ve srovnání se současnou implementací.
 
@@ -1017,21 +1053,26 @@ Byly vytvořeny konfigurace krátkého experimentu (d_model=256, 4 vrstvy, 500 k
 
 Full-scale zapsané konfigurace (`configs/baseline.json`, `configs/progressive_1_2_4.json`, `configs/full_baseline.json`, `configs/full_progressive_1_2_4.json`).
 
-**[2025-07-15 / 07-16] — Full-scale počáteční srovnání**
+**[2026-07-15 / 07-16] — Full-scale počáteční srovnání**
 
 Celý tréninkový běh o 10 000 krocích pro `full_baseline` (seed=42) a `full_progressive_1_2_4` (seed=42). Oba používali aktualizované konfigurace s `tie_word_embeddings=True` a `results_dir="results"`. Výsledky: baseline best_val_loss = 7,432665 (4990s), progresivní best_val_loss = 7,414686 (5663s). Progresivní takt baseline o 0,018 nats při seed=42. To motivovalo ablační studii k testování s více seeds.
 
-**[2025-07-16] — Návrh ablační studie a fáze screeningu**
+**[2026-07-16] — Návrh ablační studie a fáze screeningu**
 
 `scripts/ablation_study.py` napsáno. Definováno 6 variant: baseline, const_1bit, const_2bit, const_4bit, prog_1_2_4, prog_4_2_1. Všech 18 konfigurací promítání auto-generated do `configs/ablation/`. 18 cyklů screeningu (každý 3 000 kroků) provedených postupně. Vše dokončeno. Souhrnné výsledky ukazují všechny varianty v rozmezí 0,007 nats od sebe ve 3k krocích; rozhodnuto spustit všech 6 variant na plných 10 000 kroků.
 
-**[2025-07-16 / 07-18] — Fáze úplné ablace**
+**[2026-07-16 / 07-18] — Fáze úplné ablace**
 
 Všech 18 úplných 10k-krokových ablačních běhů bylo provedeno. Spuštění trvala přibližně od 16. července 18:00 do 18. července 15:46 (odvozeno z časových razítek konfiguračního souboru). Všech 18 dokončilo bez chyb. `aggregate_full.json` a `per_run_full.csv` napsáno. Klíčové zjištění: const_1bit dosahuje nejlepšího průměru best_val_loss (7,4336), přičemž překonává baseline (7,4434) o 0,0099 nat, i když s vysokým seed rozptylem. prog_1_2_4 (7,4428) je v podstatě svázán s baseline (7,4434).
 
-**[2025-07-18] — PTQ návrh studie a Q4/Q3 aktualizace schématu**
+**[2026-07-18] — PTQ návrh studie a Q4/Q3 aktualizace schématu**
 
-`scripts/ptq_study.py` napsáno. Q4 schéma aktualizováno z 15úrovňového with-zero na 16úrovňového no-zero, aby bylo konzistentní s Q1 a Q2. Q3 (True 3-bit) přidán jako nová PTQ-only úroveň hodnocení. Ternární se posunul z bits=3 na bits=0 sentinelu. PTQ baseline konfigurace zapsané do `configs/ptq/`. Upozornění ohledně const_4bit používání starého schématu je zdokumentováno v `src/quantization.py` i `scripts/ptq_study.py`. PTQ studie dosud neproběhla.
+Byl vytvořen `scripts/ptq_study.py`. Q4 schéma bylo změněno z 15 úrovní s
+nulou na 16 úrovní bez nuly, Q3 bylo přidáno jako skutečná 3bitová úroveň a
+ternární varianta byla přesunuta z `bits=3` na sentinel `bits=0`. Konfigurace
+baseline byly uloženy do `configs/ptq/`. Tento odstavec zaznamenává stav z
+18. 7. 2026; pozdější obnova direct/naive PTQ dokončila všech 18 požadovaných
+evaluací.
 
 ---
 
