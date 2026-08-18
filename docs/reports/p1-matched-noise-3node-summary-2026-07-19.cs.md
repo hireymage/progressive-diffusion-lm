@@ -2,6 +2,9 @@
 
 [English](p1-matched-noise-3node-summary-2026-07-19.md) | [Čeština](p1-matched-noise-3node-summary-2026-07-19.cs.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Stav dokumentu:** Historický report. Čísla a závěry platí pro uvedenou kampaň a datum, nikoli jako současný provozní stav projektu.
+
 Všechny tři uzly úspěšně skončily (24/24 tréninkové úkoly).
 
 | Uzel | Seeds | Úkoly | Stav |

@@ -1,6 +1,9 @@
 # Progressive A exit sweep, 2026-08-04
 [English](layerwise-exit-sweep-A-2026-08-04.en.md) | [Čeština](layerwise-exit-sweep-A-2026-08-04.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 ## Question
 
 Does weighted deep supervision actually learn usable layer-wise outputs at

@@ -2,6 +2,9 @@
 
 [English](layerwise-first-3node-smoke-2026-08-04.en.md) | [Čeština](layerwise-first-3node-smoke-2026-08-04.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 Date: 2026-08-04
 Commit: `ee5737f`
 

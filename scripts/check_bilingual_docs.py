@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify that public Markdown documentation has Czech and English versions."""
+"""Verify bilingual coverage, lifecycle status, and local Markdown links."""
 from __future__ import annotations
 
 import re
@@ -9,6 +9,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED_PARTS = {".git", ".pytest_cache", ".venv", "results"}
 LINK_RE = re.compile(r"(?<!!)\[[^]]+\]\(([^)]+)\)")
+STATUS_RE = re.compile(
+    r"<!-- doc-status: (living|snapshot|proposal|historical); "
+    r"verified: \d{4}-\d{2}-\d{2} -->"
+)
 
 
 def public_markdown_files(root: Path = ROOT) -> list[Path]:
@@ -42,11 +46,23 @@ def check_bilingual_docs(root: Path = ROOT) -> list[str]:
             errors.append(f"missing language peer: {relative}")
             continue
         for document in (path, peer):
-            head = "\n".join(document.read_text().splitlines()[:8])
+            head = "\n".join(document.read_text().splitlines()[:12])
             if "[English](" not in head or "[Čeština](" not in head:
                 errors.append(f"missing language switch: {document.relative_to(root)}")
+        statuses = []
+        for document in (path, peer):
+            match = STATUS_RE.search("\n".join(document.read_text().splitlines()[:12]))
+            statuses.append(match.group(1) if match else None)
+        if all(statuses) and statuses[0] != statuses[1]:
+            errors.append(
+                f"language peers have different document status: {relative}"
+            )
 
     for path in public_markdown_files(root):
+        head = "\n".join(path.read_text().splitlines()[:12])
+        if not STATUS_RE.search(head):
+            errors.append(f"missing or invalid document status: {path.relative_to(root)}")
+
         for target in LINK_RE.findall(path.read_text(errors="replace")):
             local_target = target.split("#", 1)[0]
             if not local_target or "://" in local_target or local_target.startswith("mailto:"):

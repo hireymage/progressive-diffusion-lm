@@ -2,6 +2,9 @@
 
 [English](phase2-bidirectional-incremental-plan.en.md) | [Čeština](phase2-bidirectional-incremental-plan.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 This document captures the post-P1 implementation phase aligned with the canonical principle:
 
 - Progressive Up: `1b → 2b → 4b → 8b`

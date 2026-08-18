@@ -2,6 +2,9 @@
 
 [English](p1-matched-noise-3node-summary-2026-07-20.md) | [Čeština](p1-matched-noise-3node-summary-2026-07-20.cs.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Stav dokumentu:** Historický report. Čísla a závěry platí pro uvedenou kampaň a datum, nikoli jako současný provozní stav projektu.
+
 Všechny tři uzly dokončily dvě fáze kampaně (48/48 tréninkové úkoly celkem):
 
 | Uzel | Hardware | P1 Seeds | P1-next Seeds | Úkoly | Stav |

@@ -2,6 +2,9 @@
 
 [English](SECURITY.md) | [Čeština](SECURITY.cs.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 18. 8. 2026.
+
 ## Podporovaná verze
 
 Opravy zabezpečení jsou aplikovány na aktuální větev `main`. Toto je experimentální výzkumný software a zatím nemá žádnou záruku stabilní kompatibility.

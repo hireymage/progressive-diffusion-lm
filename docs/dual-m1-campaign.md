@@ -2,6 +2,9 @@
 
 [English](dual-m1-campaign.en.md) | [Čeština](dual-m1-campaign.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Stav dokumentu:** Historický report. Čísla a závěry platí pro uvedenou kampaň a datum, nikoli jako současný provozní stav projektu.
+
 Status: **historická dual-M1 campaign dokončena; P1 matched-noise campaign implementována, ověřena a spuštěna na obou nodech 2026-07-19**.
 
 ## Safety model

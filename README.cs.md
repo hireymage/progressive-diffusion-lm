@@ -2,6 +2,9 @@
 
 [English](README.md) | [Čeština](README.cs.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 18. 8. 2026.
+
 [Dokumentace](docs/) · [Přispívání](CONTRIBUTING.md) · [Bezpečnost](SECURITY.md) · [Citace](CITATION.cff)
 
 > **Experimentální proof-of-concept** pro Apple Silicon a volitelně CUDA. Nejde o produkční chatbot.
@@ -136,10 +139,13 @@ python -m src.generate \
 
 ## Stav projektu
 
-> **Aktuální snapshot českého flexibilního modelu (2026-08-18):** model se
-> sdílenými master vahami a `d_model=64` dokončil 3 000 000 aktualizací s
-> konečnými held-out metrikami na všech třech precision routes a pokračuje
-> směrem k 20 000 000 aktualizací. Ověřené metriky, první závěry a omezení jsou
+> **Aktuální snapshot českého flexibilního modelu (18. 8. 2026 13:56 CEST):**
+> model se sdílenými master vahami a `d_model=64` běží na M1-512 na kroku
+> 3 206 000 z 20 000 000. Aktuálně nejhorší route `q2_q8_fp16` má loss 4,4015,
+> accuracy 30,87 % a perplexitu 81,57. Nejlepší worst-route loss zůstává 4,3451
+> na kroku 2 891 500. Pro živý stav použijte `python
+> scripts/monitor_cswiki_training.py --host m1-512 --once`; tento snapshot se
+> sám průběžně nemění. Ověřené metriky, první závěry a omezení jsou
 > v [`docs/cswiki-flexible-project-status-2026-08-18.md`](docs/cswiki-flexible-project-status-2026-08-18.md).
 > Stejný český checkpoint lze převést a dál trénovat přes volitelný
 > PyTorch/CUDA backend; viz [`docs/cuda-training.md`](docs/cuda-training.md).
@@ -153,9 +159,10 @@ python -m src.generate \
 | Plná ablace 10k | HOTOVO | 6 variant × 3 seedy = 18 |
 | PTQ studie | HOTOVO | 18/18 evaluací Q1/Q2/Q3/Q4/FP32/ternární |
 
-Úplnou technickou dokumentaci původních studií obsahuje český dokument
-[`PROJECT_DOCUMENTATION.cs.md`](PROJECT_DOCUMENTATION.cs.md); k dispozici je
-také [anglická verze](PROJECT_DOCUMENTATION.md).
+Původní experimenty a současný implementační dodatek jsou v
+[`PROJECT_DOCUMENTATION.cs.md`](PROJECT_DOCUMENTATION.cs.md). Kanonické
+rozlišení mezi implementovaným systémem a úplnou vizí je v
+[`PROGRESSIVE-PRECISION-PRINCIPLE.cs.md`](PROGRESSIVE-PRECISION-PRINCIPLE.cs.md).
 
 ---
 

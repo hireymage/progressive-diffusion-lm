@@ -2,6 +2,9 @@
 
 [English](m0-oracle-3node-pilot-2026-08-04.en.md) | [Čeština](m0-oracle-3node-pilot-2026-08-04.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 ## Verdict
 
 The pilot confirmed that the distributed M0 pipeline is reproducible, but the

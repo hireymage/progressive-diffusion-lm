@@ -2,6 +2,9 @@
 
 [English](layerwise-collapse-diagnostics-2026-08-04.en.md) | [Čeština](layerwise-collapse-diagnostics-2026-08-04.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Stav dokumentu:** Historický report. Čísla a závěry platí pro uvedenou kampaň a datum, nikoli jako současný provozní stav projektu.
+
 Datum: 2026-08-04  
 Zdrojový commit: `a3d41ed`
 

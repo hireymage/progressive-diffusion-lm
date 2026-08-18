@@ -1,6 +1,9 @@
 # Flexible multi-route quality-gate, 2026-08-04
 [English](flexible-quality-gate-final-2026-08-04.en.md) | [Čeština](flexible-quality-gate-final-2026-08-04.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Document status:** Historical report. Numbers and conclusions apply to the named campaign and date, not to the project’s current operational state.
+
 ## Quality-gate A/B/C
 
 One shared model was deterministically cycled between routes `25× Q8`,

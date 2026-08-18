@@ -2,6 +2,9 @@
 
 [English](SECURITY.md) | [Čeština](SECURITY.cs.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Document status:** Living documentation, verified against the current code and published results on 2026-08-18.
+
 ## Supported version
 
 Security fixes are applied to the current `main` branch. This is experimental research software and has no stable compatibility guarantee yet.

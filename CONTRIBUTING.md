@@ -2,6 +2,9 @@
 
 [English](CONTRIBUTING.md) | [Čeština](CONTRIBUTING.cs.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Document status:** Living documentation, verified against the current code and published results on 2026-08-18.
+
 Thank you for helping with this experimental research project.
 
 1. Open an issue describing the proposed change or reproducibility problem.

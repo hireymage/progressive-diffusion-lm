@@ -2,6 +2,9 @@
 
 [English](m0-pareto-policy-test-2026-08-04.en.md) | [Čeština](m0-pareto-policy-test-2026-08-04.md)
 
+<!-- doc-status: historical; verified: 2026-08-18 -->
+> **Stav dokumentu:** Historický report. Čísla a závěry platí pro uvedenou kampaň a datum, nikoli jako současný provozní stav projektu.
+
 ## Verdikt
 
 Offline held-out test našel jednoduchou adaptivní politiku, která zachovala

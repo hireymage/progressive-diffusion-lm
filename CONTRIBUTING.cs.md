@@ -2,6 +2,9 @@
 
 [English](CONTRIBUTING.md) | [Čeština](CONTRIBUTING.cs.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 18. 8. 2026.
+
 Děkujeme za pomoc s tímto experimentálním výzkumným projektem.
 
 1. Nejprve založte issue s popisem navržené změny nebo problému s reprodukcí.

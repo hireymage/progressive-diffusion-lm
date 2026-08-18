@@ -2,6 +2,9 @@
 
 [English](cuda-training.en.md) | [Čeština](cuda-training.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 18. 8. 2026.
+
 CUDA backend zachovává architekturu 25 vrstev, český tokenizer/cache, sdílené
 FP32 master váhy a routes `q8_only`, `q8_fp16`, `q2_q8_fp16`. Převádí také
 MLX AdamW momenty `m`, `v` a číslo kroku. Používá kompatibilní AdamW bez bias

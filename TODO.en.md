@@ -2,6 +2,9 @@
 
 [English](TODO.en.md) | [Čeština](TODO.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Document status:** Living documentation, verified against the current code and published results on 2026-08-18.
+
 Last update: 2026-08-18
 
 ---
@@ -14,8 +17,12 @@ Last update: 2026-08-18
 - Practically, this means designing a new generation strategy, clarifying the necessary components, and then reassembling the experiments according to this goal.
 - As a useful intermediate step, it makes sense to create a simple functional PD model that can actually generate text, even if it has not yet been finally optimized.
 - The original experiments and results remain as the history of the project, but new developments will follow this refined goal.
-- The target first model changes accuracy **between groups of Transformer layers**, not over the entire pass through the model: 5× Q1, 5× Q2, 5× Q4, 5× Q8, and 5× FP16.
-- Starting at layer 5, computation may stop after any subsequent layer, including inside a precision group (for example, after layer 8).
+- The 5× Q1/Q2/Q4/Q8/FP16 layout was the first layerwise prototype. The active
+  Czech shared-master model instead uses the verified routes `q8_only`,
+  `q8_fp16`, and `q2_q8_fp16` across 25 layers.
+- Checkpoint selection and quality gates are conservative: the worst held-out
+  route decides. Layerwise stopping remains diagnostic and is not yet a
+  production token-skipping runtime.
 
 ## ✅ Done
 
@@ -31,7 +38,7 @@ Last update: 2026-08-18
   - Implemented continuation of Czech flexible training through CUDA with the same architecture, tokenizer, cache and routes.
   - Both the transfer and the CUDA trainer are covered by the tests; the procedure is in `docs/cuda-training.md` and `docs/cuda-training.en.md`.
   - Q2/Q8 for now, QAT fake-quant calculations remain above FP32 master weights, not packed integer CUDA kernels.
-- [x] Unit tests — 280/280 passed
+- [x] Unit tests — 281/281 passed on 2026-08-18
 
 ### Quantization schemes (fixed)
 - [x] Q1 binary (2 levels, bits=1)
@@ -59,7 +66,9 @@ Last update: 2026-08-18
 - [x] M3 Early-exit generation (threshold ≤ 0.03 → 1 step, 5–9× speedup, 100% match)
 
 ### Documentation
-- [x] `PROJECT_DOCUMENTATION.md` — 1042 lines, 13 sections
+- [x] English and Czech pairs for all public Markdown documentation
+- [x] Automated bilingual-pair, status-metadata, language-switch, and local-link audit
+- [x] `PROJECT_DOCUMENTATION.md` — legacy experiment reference plus current addendum
 - [x] `README.md` — rewritten, public overview
 - [x] Obsidian `_Project.md` — updated (Phase 1 + Phase 2 results)
 - [x] `src/model.py` — docstring fixed (bits schemas)
@@ -69,7 +78,15 @@ Last update: 2026-08-18
 
 ## 🔜 Direct next steps (recommended)
 
-### 1. M0 — functional PD-LM baseline according to the new goal
+### 0. Active Czech shared-master run
+- [x] Czech-only CSWiki pipeline and Czech BPE tokenizer with vocabulary 16,000
+- [x] Stable `d_model=64`, 25-layer training across all three flexible routes
+- [x] MLX checkpoint resume and optional PyTorch/CUDA conversion/resume
+- [ ] Continue the explicitly approved run toward 20,000,000 steps without restarting
+- [ ] Evaluate `best` and milestone snapshots with held-out, prompt, refinement, and route-by-exit diagnostics
+- [ ] Do not claim packed low-bit speed or memory savings before real low-bit kernels exist
+
+### 1. Historical M0 baseline and diagnostics
 - [x] Implement a deterministic M0/oracle evaluator for Q1/Q2/Q4/Q8/FP32
 - [x] Verify evaluator smoke test at 10k `full_baseline` checkpoint
 - [x] Verify a reproducible M0 inference run on `m1-256`, `m1-512` and `m4-air`
@@ -129,7 +146,7 @@ Last update: 2026-08-18
 
 ## 🔭 Research hypotheses (mid-term)
 
-- [ ] **Native Q3 training** — no ablation counterpart exists yet
+- [ ] **Replicated native Q3 training** — one seed exists, but no multi-seed scheme-matched ablation exists yet
 - [ ] **Calibrated PTQ** (GPTQ-style, AWQ-style) as a separate study
 - [ ] **Binary decomposition** — representation FP32 by a matrix of more Q1 matrices
 - [ ] **Adaptive compute** — early-exit thresholds trained, not hardcoded
@@ -149,7 +166,7 @@ Last update: 2026-08-18
 
 ## 🧹 Tech debt
 
-- [ ] SSH config not set (nodes accessible via ZeroTier, but without `~/.ssh/config`)
-- [ ] Passwords in Obsidian plain text (`SSH-pristupy.md`) — move to Keychain/1Password
+- [ ] Keep credentials, private addresses, and machine-specific access details out of Git
+- [ ] Keep remote-monitor configuration separate from the public documentation
 - [ ] `configs/ptq/ptq_baseline_s{42,123,7}.json` — check if they match the new quantization schemes
 - [ ] `results/full_progressive_1_2_4/` — check if it is included in the aggregated results

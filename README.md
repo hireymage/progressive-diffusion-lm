@@ -2,6 +2,9 @@
 
 [English](README.md) | [Čeština](README.cs.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Document status:** Living documentation, verified against the current code and published results on 2026-08-18.
+
 [Documentation](docs/) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Citation](CITATION.cff)
 
 > **Experimental proof-of-concept** on Apple Silicon. Not a production chatbot.
@@ -150,9 +153,13 @@ python -m src.generate \
 
 ## Project Status
 
-> **Current Czech flexible-model snapshot (2026-08-18):** the shared-master
-> `d_model=64` model completed 3,000,000 updates with finite held-out metrics
-> on all three precision routes and is now resuming toward 20,000,000 updates.
+> **Current Czech flexible-model snapshot (2026-08-18 13:56 CEST):** the
+> shared-master `d_model=64` model is running on M1-512 at step 3,206,000 of
+> 20,000,000. The current worst route is `q2_q8_fp16` with loss 4.4015,
+> accuracy 30.87%, and perplexity 81.57. The best worst-route loss remains
+> 4.3451 at step 2,891,500. Use `python scripts/monitor_cswiki_training.py
+> --host m1-512 --once` for live data rather than treating this snapshot as a
+> continuously updated value.
 > See [`docs/cswiki-flexible-project-status-2026-08-18.en.md`](docs/cswiki-flexible-project-status-2026-08-18.en.md)
 > for the verified metrics, preliminary conclusions, and limitations.
 > The same Czech checkpoint format can also be converted and resumed with the
@@ -168,9 +175,10 @@ python -m src.generate \
 | **Full ablation (10k steps)** | **DONE** | **6 variants × 3 seeds = 18 runs** |
 | PTQ study | **DONE** | 18/18 Q1/Q2/Q3/Q4/FP32/ternary evaluations across 3 seeds |
 
-See [`PROJECT_DOCUMENTATION.md`](PROJECT_DOCUMENTATION.md) for full technical
-documentation including all numerical results, quantization scheme details,
-methodological limitations, and the research roadmap.
+See [`PROJECT_DOCUMENTATION.md`](PROJECT_DOCUMENTATION.md) for the legacy
+experiment reference plus the current implementation addendum, and
+[`PROGRESSIVE-PRECISION-PRINCIPLE.md`](PROGRESSIVE-PRECISION-PRINCIPLE.md) for
+the canonical distinction between the implemented system and the full vision.
 
 ---
 

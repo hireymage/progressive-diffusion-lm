@@ -2,6 +2,9 @@
 
 [English](PROGRESSIVE-PRECISION-PRINCIPLE.md) | [Čeština](PROGRESSIVE-PRECISION-PRINCIPLE.cs.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Document status:** Living documentation, verified against the current code and published results on 2026-08-18.
+
 > **Canonical source of truth for the experiment design.**
 > This document separates the long-term principle from what the repository and
 > the current Czech experiment have actually verified. Last reviewed against

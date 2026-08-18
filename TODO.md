@@ -2,6 +2,9 @@
 
 [English](TODO.en.md) | [Čeština](TODO.md)
 
+<!-- doc-status: living; verified: 2026-08-18 -->
+> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 18. 8. 2026.
+
 Poslední aktualizace: 2026-08-18
 
 ---
@@ -14,8 +17,12 @@ Poslední aktualizace: 2026-08-18
 - Prakticky to znamená navrhnout novou strategii generování, vyjasnit potřebné komponenty a pak znovu poskládat experimenty podle tohoto cíle.
 - Jako užitečný mezikrok dává smysl vytvořit jednoduchý funkční PD model, který umí text skutečně generovat, i kdyby ještě nebyl finálně optimalizovaný.
 - Původní experimenty a výsledky zůstávají zachované jako historie projektu, ale nový vývoj se bude řídit tímto zpřesněným cílem.
-- Cílový první model mění přesnost **mezi skupinami Transformerových vrstev**, nikoli po celém průchodu modelem: 5× Q1, 5× Q2, 5× Q4, 5× Q8 a 5× FP16.
-- Od vrstvy 5 lze sekvenčně ukončit výpočet po libovolné další vrstvě, tedy i uvnitř skupiny (např. po vrstvě 8).
+- Rozložení 5× Q1/Q2/Q4/Q8/FP16 bylo prvním layer-wise prototypem. Aktivní
+  český model se sdílenými vahami používá ověřené routes `q8_only`, `q8_fp16`
+  a `q2_q8_fp16` napříč 25 vrstvami.
+- Checkpoint a quality gate se vybírají konzervativně podle nejhorší route na
+  neviděných datech. Ukončování podle vrstev je zatím diagnostika, nikoli
+  produkční runtime, který skutečně přeskakuje výpočet tokenů.
 
 ## ✅ Hotovo
 
@@ -31,7 +38,7 @@ Poslední aktualizace: 2026-08-18
   - Implementováno pokračování českého flexibilního tréninku přes CUDA se stejnou architekturou, tokenizerem, cache a routes.
   - Převod i CUDA trenér jsou pokryté testy; postup je v `docs/cuda-training.md` a `docs/cuda-training.en.md`.
   - Q2/Q8 zatím zůstávají QAT fake-quant výpočty nad FP32 master vahami, nikoli packed integer CUDA kernely.
-- [x] Unit testy — 280/280 passed
+- [x] Unit testy — 281/281 prošlo 18. 8. 2026
 
 ### Kvantizační schémata (opravené)
 - [x] Q1 binary (2 úrovně, bits=1)
@@ -59,7 +66,9 @@ Poslední aktualizace: 2026-08-18
 - [x] M3 Early-exit generation (threshold ≤ 0,03 → 1 krok, 5–9× speedup, 100% shoda)
 
 ### Dokumentace
-- [x] `PROJECT_DOCUMENTATION.md` — 1 042 řádků, 13 sekcí
+- [x] České a anglické dvojice pro veškerou veřejnou Markdown dokumentaci
+- [x] Automatický audit jazykových dvojic, stavových metadat, přepínačů jazyka a lokálních odkazů
+- [x] `PROJECT_DOCUMENTATION.cs.md` — reference původních experimentů a současný dodatek
 - [x] `README.md` — přepsán, veřejný přehled
 - [x] Obsidian `_Project.md` — aktualizován (Phase 1 + Phase 2 výsledky)
 - [x] `src/model.py` — docstring opraven (bits schémata)
@@ -69,7 +78,15 @@ Poslední aktualizace: 2026-08-18
 
 ## 🔜 Přímé další kroky (doporučené)
 
-### 1. M0 — funkční PD-LM baseline podle nového cíle
+### 0. Aktivní český běh se sdílenými vahami
+- [x] Pipeline pouze z CSWiki a český BPE tokenizer se slovníkem 16 000
+- [x] Stabilní `d_model=64`, 25 vrstev a trénink přes všechny tři flexibilní routes
+- [x] Resume MLX checkpointu a volitelný převod/resume přes PyTorch/CUDA
+- [ ] Pokračovat ve výslovně schváleném běhu k 20 000 000 krokům bez restartu
+- [ ] Vyhodnocovat `best` a milníkové snapshoty pomocí held-out, prompt, refinement a route-by-exit diagnostiky
+- [ ] Netvrdit packed low-bit rychlost ani úsporu paměti před implementací skutečných low-bit kernelů
+
+### 1. Historický M0 baseline a diagnostiky
 - [x] Implementovat deterministický M0/oracle evaluator pro Q1/Q2/Q4/Q8/FP32
 - [x] Ověřit evaluator smoke testem na 10k `full_baseline` checkpointu
 - [x] Ověřit reprodukovatelný M0 inference běh na `m1-256`, `m1-512` a `m4-air`
@@ -129,7 +146,7 @@ Poslední aktualizace: 2026-08-18
 
 ## 🔭 Výzkumné hypotézy (střednědobé)
 
-- [ ] **Native Q3 trénink** — žádný ablation protějšek zatím neexistuje
+- [ ] **Replikovaný nativní Q3 trénink** — jeden seed existuje, ale multi-seed ablace se shodným schématem zatím ne
 - [ ] **Kalibrované PTQ** (GPTQ-style, AWQ-style) jako samostatná studie
 - [ ] **Binární dekompozice** — reprezentace FP32 maticí více Q1 matic
 - [ ] **Adaptivní compute** — early-exit prahy trénovány, ne hardcoded
@@ -149,7 +166,7 @@ Poslední aktualizace: 2026-08-18
 
 ## 🧹 Tech debt
 
-- [ ] SSH config není nastaven (nody přístupné přes ZeroTier, ale bez `~/.ssh/config`)
-- [ ] Hesla v Obsidian plain textu (`SSH-pristupy.md`) — přesunout do Keychain/1Password
+- [ ] Neukládat credentials, privátní adresy ani strojové přístupové údaje do Gitu
+- [ ] Konfiguraci vzdáleného monitoru držet odděleně od veřejné dokumentace
 - [ ] `configs/ptq/ptq_baseline_s{42,123,7}.json` — zkontrolovat, zda odpovídají novým kvantizačním schématům
 - [ ] `results/full_progressive_1_2_4/` — ověřit, zda je zahrnuto v agregovaných výsledcích

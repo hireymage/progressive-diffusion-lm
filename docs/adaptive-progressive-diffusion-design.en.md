@@ -2,7 +2,17 @@
 
 [English](adaptive-progressive-diffusion-design.en.md) | [Čeština](adaptive-progressive-diffusion-design.md)
 
+<!-- doc-status: proposal; verified: 2026-08-18 -->
+> **Document status:** Proposal from 2026-08-04. Implemented parts and remaining gaps are identified in the text; current operations are tracked in the separate status snapshot.
+
 Proposal date: 2026-08-04
+
+> **Implementation update, 2026-08-18:** the fixed 5×
+> Q1/Q2/Q4/Q8/FP16 model below was built and used as a diagnostic prototype.
+> The active Czech model implements the next shared-master stage with the
+> routes `q8_only`, `q8_fp16`, and `q2_q8_fp16`. Route-by-exit and token-exit
+> proxies exist, but genuine token-selective kernel skipping, packed low-bit
+> execution, and cheaper residual reuse remain open.
 
 > **Goal update:** The primary experimental branch no longer uses repeated
 > full passes Q1 → Q2 → Q4 → Q8. A single 25-layer Transformer has fixed groups
