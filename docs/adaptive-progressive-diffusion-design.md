@@ -1,5 +1,7 @@
 # Adaptive Progressive-Diffusion LM — návrh nového směru
 
+[English](adaptive-progressive-diffusion-design.en.md) | [Čeština](adaptive-progressive-diffusion-design.md)
+
 Datum návrhu: 2026-08-04
 
 > **Aktualizace cíle:** Primární experimentální větev už nepoužívá opakované

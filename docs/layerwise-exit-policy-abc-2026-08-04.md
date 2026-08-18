@@ -1,5 +1,7 @@
 # Progressive A/B/C exit a policy sweep, 2026-08-04
 
+[English](layerwise-exit-policy-abc-2026-08-04.en.md) | [Čeština](layerwise-exit-policy-abc-2026-08-04.md)
+
 ## Podmínky
 
 - weighted checkpointy A, B a C po splnění 100sekvenční quality-gate,

@@ -1,5 +1,7 @@
 # Progressive A exit sweep, 2026-08-04
 
+[English](layerwise-exit-sweep-A-2026-08-04.en.md) | [Čeština](layerwise-exit-sweep-A-2026-08-04.md)
+
 ## Otázka
 
 Naučí weighted deep supervision skutečně použitelné výstupy po vrstvách

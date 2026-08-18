@@ -1,5 +1,7 @@
 # Flexible multi-route quality-gate, 2026-08-04
 
+[English](flexible-quality-gate-final-2026-08-04.en.md) | [Čeština](flexible-quality-gate-final-2026-08-04.md)
+
 ## Quality-gate A/B/C
 
 Jeden sdílený model se při tréninku deterministicky střídal mezi cestami
