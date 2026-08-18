@@ -1,5 +1,7 @@
 # P1 Matched-Noise Campaign — Full 3-Node Summary (2026-07-20)
 
+[English](p1-matched-noise-3node-summary-2026-07-20.md) | [Čeština](p1-matched-noise-3node-summary-2026-07-20.cs.md)
+
 All three nodes completed two campaign phases (48/48 training tasks total):
 
 | Node | Hardware | P1 Seeds | P1-next Seeds | Tasks | Status |

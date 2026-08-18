@@ -1,5 +1,7 @@
 # Progressive-Precision Diffusion Language Model — Technical Research Documentation
 
+[English](PROJECT_DOCUMENTATION.md) | [Čeština](PROJECT_DOCUMENTATION.cs.md)
+
 *Generated 2026-07-18. All numbers read from actual result files in the repository.*
 
 ---

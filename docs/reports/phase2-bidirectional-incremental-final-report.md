@@ -1,5 +1,7 @@
 # Phase 2: Bidirectional Incremental Progressive Precision — Final Report
 
+[English](phase2-bidirectional-incremental-final-report.md) | [Čeština](phase2-bidirectional-incremental-final-report.cs.md)
+
 **Date:** 2026-07-21  
 **Authors:** Martin Hozák (Hozzy), Hermes Agent  
 **Repository:** hireymage/progressive-diffusion-lm (PRIVATE, Apache-2.0)  

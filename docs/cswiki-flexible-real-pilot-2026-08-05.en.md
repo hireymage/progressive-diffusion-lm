@@ -1,5 +1,7 @@
 # Czech flexible real-data pilot — 2026-08-05
 
+[English](cswiki-flexible-real-pilot-2026-08-05.en.md) | [Čeština](cswiki-flexible-real-pilot-2026-08-05.md)
+
 ## Scope
 
 This is the first bounded real-data run of the shared-master flexible model. It is not a claim of a usable language model.
