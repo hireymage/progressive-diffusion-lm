@@ -1,5 +1,7 @@
 # P1 matched-noise campaign — 3-node summary (2026-07-19)
 
+[English](p1-matched-noise-3node-summary-2026-07-19.md) | [Čeština](p1-matched-noise-3node-summary-2026-07-19.cs.md)
+
 All three nodes finished successfully (24/24 training tasks).
 
 | Node | Seeds | Tasks | Status |

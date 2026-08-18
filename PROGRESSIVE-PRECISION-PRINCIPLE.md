@@ -1,5 +1,7 @@
 # Progressive Precision — Canonical Experiment Principle
 
+[English](PROGRESSIVE-PRECISION-PRINCIPLE.md) | [Čeština](PROGRESSIVE-PRECISION-PRINCIPLE.cs.md)
+
 > **Canonical source of truth for the experiment design.**
 > This document defines the full scope of the Progressive Precision LM
 > experiment. The current codebase implements only a subset of this vision.

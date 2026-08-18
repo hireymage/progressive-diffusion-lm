@@ -1,5 +1,7 @@
 # TODO — Progressive Diffusion LM
 
+[English](TODO.en.md) | [Čeština](TODO.md)
+
 Poslední aktualizace: 2026-08-18
 
 ---

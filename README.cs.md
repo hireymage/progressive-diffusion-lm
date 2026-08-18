@@ -153,8 +153,9 @@ python -m src.generate \
 | Plná ablace 10k | HOTOVO | 6 variant × 3 seedy = 18 |
 | PTQ studie | HOTOVO | 18/18 evaluací Q1/Q2/Q3/Q4/FP32/ternární |
 
-Úplnou technickou dokumentaci původních studií obsahuje
-[`PROJECT_DOCUMENTATION.md`](PROJECT_DOCUMENTATION.md).
+Úplnou technickou dokumentaci původních studií obsahuje český dokument
+[`PROJECT_DOCUMENTATION.cs.md`](PROJECT_DOCUMENTATION.cs.md); k dispozici je
+také [anglická verze](PROJECT_DOCUMENTATION.md).
 
 ---
 

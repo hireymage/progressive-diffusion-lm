@@ -1,5 +1,7 @@
 # Plán fáze 2 — obousměrná inkrementální progresivní přesnost
 
+[English](phase2-bidirectional-incremental-plan.en.md) | [Čeština](phase2-bidirectional-incremental-plan.md)
+
 Tento dokument zachycuje implementační fázi po P1 v souladu s hlavním principem:
 
 - Progressive Up: `1b → 2b → 4b → 8b`,

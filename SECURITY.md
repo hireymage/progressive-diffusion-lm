@@ -1,5 +1,7 @@
 # Security Policy
 
+[English](SECURITY.md) | [Čeština](SECURITY.cs.md)
+
 ## Supported version
 
 Security fixes are applied to the current `main` branch. This is experimental research software and has no stable compatibility guarantee yet.

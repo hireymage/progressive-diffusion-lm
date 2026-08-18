@@ -1,5 +1,7 @@
 # Phase 2 Plan — Bidirectional Incremental Progressive Precision
 
+[English](phase2-bidirectional-incremental-plan.en.md) | [Čeština](phase2-bidirectional-incremental-plan.md)
+
 This document captures the post-P1 implementation phase aligned with the canonical principle:
 
 - Progressive Up: `1b → 2b → 4b → 8b`
