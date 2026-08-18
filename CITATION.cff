@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this research software, please cite it using the metadata below."
+title: "Progressive-Precision Diffusion Language Model"
+type: software
+authors:
+  - alias: hireymage
+repository-code: "https://github.com/hireymage/progressive-diffusion-lm"
+license: Apache-2.0
+version: 0.1.0
+date-released: 2026-08-18

@@ -1,47 +1,50 @@
-# Phase 2 Plan — Bidirectional Incremental Progressive Precision
+# Plán fáze 2 — obousměrná inkrementální progresivní přesnost
 
-This document captures the post-P1 implementation phase aligned with the
-canonical principle:
+Tento dokument zachycuje implementační fázi po P1 v souladu s hlavním principem:
 
-- Progressive Up: `1b → 2b → 4b → 8b`
-- Progressive Down: `8b → 4b → 2b → 1b`
-- Constant precision baselines
-- Full-precision baseline (FP16 and FP32 tracked separately)
+- Progressive Up: `1b → 2b → 4b → 8b`,
+- Progressive Down: `8b → 4b → 2b → 1b`,
+- baseline s konstantní přesností,
+- baseline v plné přesnosti, kde jsou FP16 a FP32 sledovány odděleně.
 
-## Scope
+## Rozsah
 
-Current code does **full recompute** at each diffusion step with 1/2/4 only.
-Phase 2 introduces:
+Aktuální kód provádí v každém diffusion kroku **úplný přepočet** pouze s 1/2/4 bity. Fáze 2 zavádí:
 
-1. New precision level: 8b (alongside existing 1b/2b/4b).
-2. Incremental computation interface: `y_next = y_prev + Δ`.
-3. Reuse of intermediate activations where valid.
-4. Early-exit inference with confidence threshold.
-5. Bidirectional schedules as first-class configs.
+1. novou 8bitovou úroveň přesnosti vedle stávajících 1b/2b/4b,
+2. rozhraní inkrementálního výpočtu `y_next = y_prev + Δ`,
+3. opětovné použití mezivýsledků aktivací tam, kde je platné,
+4. inference s předčasným ukončením podle prahu jistoty,
+5. obousměrné schedules jako plnohodnotné konfigurace.
 
-## Milestones
+## Milníky
 
-### M1 — Quantization extension
-- Add 8b quantization mode in `src/quantization.py`.
-- Keep 1b/2b/4b as existing standard low-bit variants.
-- Add tests for levels, symmetry, and storage accounting.
+### M1 — rozšíření kvantizace
 
-### M2 — Incremental forward API
-- Introduce residual/delta path in model forward.
-- Keep legacy full-recompute path behind flag for A/B validation.
-- Add parity tests against full recompute.
+- Přidat 8bitový režim kvantizace do `src/quantization.py`.
+- Zachovat 1b/2b/4b jako stávající standardní low-bit varianty.
+- Přidat testy úrovní, symetrie a výpočtu úložiště.
 
-### M3 — Early-exit inference
-- Confidence metric (entropy/top-1 margin).
-- Exit decision and fallback to next precision.
-- Add accuracy-vs-latency evaluation script.
+### M2 — inkrementální forward API
 
-### M4 — Campaigns and analysis
-- Up/Down/Constant/Baseline campaign configs.
-- Multi-seed runs on M1-256, M1-512, M4 Air.
-- Summary + publication-quality tables.
+- Zavést residual/delta cestu ve forward průchodu modelu.
+- Zachovat původní úplný přepočet za přepínačem pro A/B ověření.
+- Přidat parity testy proti úplnému přepočtu.
 
-## Run policy
-- One long task per node.
-- Node-local runtime/cache.
-- Immutable result bundles only.
+### M3 — inference s předčasným ukončením
+
+- Metrika jistoty (entropie / rozdíl top-1).
+- Rozhodnutí o ukončení a fallback na další přesnost.
+- Přidat skript pro vyhodnocení přesnosti proti latenci.
+
+### M4 — kampaně a analýza
+
+- Konfigurace kampaní Up/Down/Constant/Baseline.
+- Běhy s více seedy na M1-256, M1-512 a M4 Air.
+- Souhrn a tabulky v publikační kvalitě.
+
+## Pravidla běhů
+
+- Jeden dlouhý úkol na node.
+- Runtime a cache lokální pro každý node.
+- Pouze neměnné balíčky výsledků.

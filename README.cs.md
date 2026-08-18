@@ -2,7 +2,12 @@
 
 [English](README.md) | [Čeština](README.cs.md)
 
+[Dokumentace](docs/) · [Přispívání](CONTRIBUTING.md) · [Bezpečnost](SECURITY.md) · [Citace](CITATION.cff)
+
 > **Experimentální proof-of-concept** pro Apple Silicon a volitelně CUDA. Nejde o produkční chatbot.
+
+**Stav vydání:** výzkumný náhled zdrojového kódu. Součástí tohoto vydání nejsou
+váhy modelu; dlouhý český trénink stále pokračuje.
 
 ## Cíl projektu
 

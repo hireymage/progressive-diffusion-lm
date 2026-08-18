@@ -16,6 +16,8 @@ checkpoints/
 *.npz
 *.safetensors
 *.bin
+*.pt
+*.pth
 
 # Hugging Face cache
 ~/.cache/huggingface/
