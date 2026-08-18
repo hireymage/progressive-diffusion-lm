@@ -1,5 +1,7 @@
 # Progressive-Precision Diffusion Language Model
 
+[English](README.md) | [Čeština](README.cs.md)
+
 > **Experimental proof-of-concept** on Apple Silicon. Not a production chatbot.
 
 ## Project Goal
@@ -146,11 +148,11 @@ python -m src.generate \
 > **Current Czech flexible-model snapshot (2026-08-18):** the shared-master
 > `d_model=64` model completed 3,000,000 updates with finite held-out metrics
 > on all three precision routes and is now resuming toward 20,000,000 updates.
-> See [`docs/cswiki-flexible-project-status-2026-08-18.md`](docs/cswiki-flexible-project-status-2026-08-18.md)
+> See [`docs/cswiki-flexible-project-status-2026-08-18.en.md`](docs/cswiki-flexible-project-status-2026-08-18.en.md)
 > for the verified metrics, preliminary conclusions, and limitations.
 > The same Czech checkpoint format can also be converted and resumed with the
 > optional PyTorch/CUDA backend; see
-> [`docs/cuda-training.md`](docs/cuda-training.md).
+> [`docs/cuda-training.en.md`](docs/cuda-training.en.md).
 
 | Experiment | Status | Runs |
 |---|---|---|
@@ -161,7 +163,9 @@ python -m src.generate \
 | **Full ablation (10k steps)** | **DONE** | **6 variants × 3 seeds = 18 runs** |
 | PTQ study | **DONE** | 18/18 Q1/Q2/Q3/Q4/FP32/ternary evaluations across 3 seeds |
 
-See `PROJECT_DOCUMENTATION.md` for full technical documentation including all numerical results, quantization scheme details, methodological limitations, and research roadmap.
+See [`PROJECT_DOCUMENTATION.md`](PROJECT_DOCUMENTATION.md) for full technical
+documentation including all numerical results, quantization scheme details,
+methodological limitations, and the research roadmap.
 
 ---
 
@@ -175,7 +179,7 @@ See `PROJECT_DOCUMENTATION.md` for full technical documentation including all nu
   M4 16 GB)
 - MLX dependencies: `mlx>=0.21.0`, `tokenizers`, `datasets`, `numpy`, `tqdm`
 - CUDA dependencies and setup: [`requirements-cuda.txt`](requirements-cuda.txt)
-  and [`docs/cuda-training.md`](docs/cuda-training.md)
+  and [`docs/cuda-training.en.md`](docs/cuda-training.en.md)
 
 ---
 

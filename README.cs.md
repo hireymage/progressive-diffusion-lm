@@ -2,83 +2,188 @@
 
 [English](README.md) | [Čeština](README.cs.md)
 
-> **Soukromý source-only staging snapshot.** Výsledky a dokumentace pro veřejné vydání se stále ověřují.
+> **Experimentální proof-of-concept** pro Apple Silicon a volitelně CUDA. Nejde o produkční chatbot.
 
-Výzkumný prototyp pro Apple MLX testuje, zda mohou časné denoising kroky s vysokým šumem používat nižší přesnost vah než pozdní jemné kroky bez významného zhoršení kvality.
+## Cíl projektu
 
-Snapshot obsahuje zdrojový kód, konfigurace, testy, campaign tooling a licenci. Záměrně neobsahuje datasety, tokenizer artefakty, cache, checkpointy, runtime logy ani výsledkové bundly.
+Projekt zkoumá diffusion jazykový model, který začíná hrubou predikcí a postupně
+ji zpřesňuje pouze tam, kde je to potřeba. Přesnost se nemá jen mechanicky
+měnit podle pevného plánu; model má přidávat výpočet a vyšší přesnost po
+krocích, dokud není aktuální rozhodnutí o tokenu dostatečně jisté.
 
-Dřívější výsledky procházejí novým auditem po nalezení reprodukčních chyb v původním kódu. Dokud nebudou zveřejněné opravené manifests, repository **netvrdí, že progressive precision, Q1 nebo jiný schedule překonává FP32**.
+Cílem je model, který:
 
-## Implementace
+- generuje text diffusion postupem nad více tokeny současně,
+- začíná levným hrubým průchodem,
+- přidává další zpřesnění pouze tam, kde zůstává nejistota,
+- a přestane zvyšovat přesnost, jakmile je výsledek dostatečný.
 
-- Masked/absorbing diffusion a bidirectional Transformer.
-- FP32 master weights; Q1–Q4 jsou simulované v FP32 pomocí STE.
-- Index schedule `0` odpovídá nejvyššímu šumu/coarse kroku, poslední index nejnižšímu šumu/fine kroku.
-- `bits=0` je optional ternary, `1` Q1, `2` Q2, `3` Q3, `4` Q4 a `16` identity/FP32.
-- FP32 baseline používá 32 storage bitů. Průměrná bitová šířka schedule je časová výpočetní charakteristika, nikoli velikost uloženého modelu.
-- Nejsou implementované packed integer weights ani low-bit kernels; aktuálně tedy nevzniká reálná úspora velikosti ani zrychlení.
+Navrženou architekturu, fáze tréninku, metriky a rozhodovací brány popisuje
+[`docs/adaptive-progressive-diffusion-design.md`](docs/adaptive-progressive-diffusion-design.md).
+
+---
+
+## Výzkumná hypotéza
+
+Pracovní hypotéza říká, že diffusion LM lze trénovat přes více přesností a
+používat je jako fáze zpřesnění při generování. Časné hrubé průchody mohou
+používat low-bit výpočet, zatímco pozdější průchody přidají přesnost pouze tam,
+kde je sekvence stále nejednoznačná.
+
+**Dosavadní klíčový výsledek** z původních 18 ablačních běhů
+(6 variant × 3 seedy × 10 000 kroků):
+
+- binární `const_1bit` skončil první s průměrným `best_val_loss` 7,4336 oproti
+  7,4434 u baseline,
+- progresivní schedule `[1,1,1,1,2,2,4,4]` byl statisticky vyrovnaný s FP32,
+- rozdíly jsou malé a rozptyl mezi seedy velký, takže tři seedy neurčují
+  definitivní pořadí,
+- všechny low-bit operace jsou simulované v FP32 pomocí STE, takže zatím
+  nepřinášejí skutečnou úsporu paměti ani rychlosti.
+
+---
+
+## Architektura
+
+Původní bidirectional Transformer má 28,3 milionu parametrů:
+
+- `d_model=512`, `n_layers=6`, `n_heads=8`, `d_ff=2048`, `max_seq_len=256`,
+- každá lineární projekce používá `QuantizedLinear` s přepínáním přesnosti,
+- embeddingy a LayerNorm zůstávají FP32,
+- LM head sdílí token embedding matrix,
+- sinusoidální embedding míry maskování podmiňuje úroveň šumu.
+
+Kvantizační schémata jsou simulovaná v FP32 přes STE:
+
+| Bity | Schéma | Úrovně | Efektivní bity |
+|---|---|---|---:|
+| 1 | binární | 2: `{-1,+1}` × průměr `|w|` | 1,0 |
+| 2 | skutečné 2-bit | 4: `{-3,-1,+1,+3}` × krok | 2,0 |
+| 3 | skutečné 3-bit | 8: `{-7,…,+7}` × krok | 3,0 |
+| 4 | skutečné 4-bit | 16: `{-15,…,+15}` × krok | 4,0 |
+| 16 (interní ID) | FP32 | identita bez kvantizace | 32,0 proxy |
+| 0 | ternární, volitelné | 3: `{-1,0,+1}` × maximum `|w|` | přibližně 1,585 |
+
+---
 
 ## Rychlý start
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements-dev.txt
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 
-python -m pytest -q
 ./run_smoke_test.sh
+
+python -m src.train --config configs/full_baseline.json
+python -m src.train --config configs/full_progressive_1_2_4.json
 ```
 
-Checked-in experimentální konfigurace používají `dropout=0.0` a `weight_decay=0.0`, což odpovídá skutečnému historickému protokolu. Kód nyní podporuje attention dropout a AdamW weight decay, ale jejich zapnutí představuje jiný experimentální protokol.
+---
 
-Cache datasetu je identifikována názvem/configem/revizí datasetu, SHA-256 tokenizeru, splitem, seedem a limity. Workflow nyní používá pinned revizi `b04c8d1ceb2f5cd4588862100d08de323dccfbaa` a ukládá corpus provenance i k tokenizeru. Historická data nemají prokazatelnou immutable upstream revizi, pouze zachované checksumy.
+## Příkazy krok za krokem
 
-Porovnávací evaluace používá pro oba modely shodné batchy a corruption masky. Checkpoint restart obnovuje model, optimizer a vlastní step metadata, ale nikoli všechny iterátory, RNG a historii metrik; jde proto o **warm restart**, ne bitově přesné pokračování.
+### Příprava dat
 
-Poslední lokální kontrola opraveného source-only stromu měla `132 passed`.
+```bash
+python scripts/train_tokenizer.py --vocab-size 16000 --max-articles 500 --max-bytes 5000000
+python scripts/prepare_data.py --max-articles 50000 --max-bytes 500000000 --seq-len 256
+```
 
-## Hlavní omezení
+### Trénování modelů
 
-- malá výzkumná architektura a omezený dataset;
-- simulated quantization bez skutečných low-bit kernelů;
-- historické nonconstant schedule výsledky potřebují opravené směrové popisky;
-- staré runs byly ve skutečnosti unregularized Adam, přestože config uváděl dropout/weight decay;
-- žádné obecné tvrzení o výhodě Q1 nebo progressive precision zatím není oprávněné.
+```bash
+python -m src.train --config configs/full_baseline.json
+python -m src.train --config configs/full_progressive_1_2_4.json
+python -m src.train --config configs/<vlastni-config>.json
+```
 
-## Plán — směřující k plné progressive precision
+### Celá ablační studie
 
-Aktuální implementace je **první krok** k širšímu experimentu.
-Viz [`PROGRESSIVE-PRECISION-PRINCIPLE.md`](PROGRESSIVE-PRECISION-PRINCIPLE.md)
-pro canonical experiment design.
+```bash
+python scripts/ablation_study.py --phase screen
+python scripts/ablation_study.py --phase full --resume
+python scripts/ablation_study.py --analyze-only --phase full
+```
 
-Plná vize zahrnuje:
+### Reprodukce PTQ studie
 
-- **standardní úrovně přesnosti** (1b, 2b, 4b, 8b) oběma směry;
-- **incrementální výpočet** — `y₂b = y₁b + Δ₂b`, ne plný forward recompute;
-- **early exit při inferenci** — stop při 1b, pokud je predikce dostatečně jistá;
-- **maximální znovupoužití mezivýsledků** napříč precision kroky;
-- **bidirectionální experimenty** — Progressive Up (1b→8b) i Progressive Down (8b→1b).
-- **oddělené baseline rodiny** — FP16 a FP32 vést odděleně jako samostatné baseline.
+```bash
+python scripts/ptq_study.py
+python scripts/ptq_study.py --dry-run
+python scripts/ptq_study.py --skip-training
+```
 
-| Funkce | Aktuálně | Cíl |
-|---|---|---|
-| Úrovně přesnosti | 1b, 2b, 4b | 1b, 2b, 4b, 8b |
-| Incrementální výpočet | ❌ plný recompute | ✅ yₙ₊₁ = yₙ + Δ |
-| Early exit | ❌ | ✅ confidence-based |
-| Reuse mezivýsledků | ❌ | ✅ residual/delta weights |
-| Progressive Down | částečný (4→2→1) | plný (8→4→2→1) |
+### Evaluace a generování
 
-## Poslední dokončená kampaň
+```bash
+python -m src.evaluate \
+    --baseline checkpoints/full_baseline/step_0010000.npz \
+    --progressive checkpoints/full_progressive_1_2_4/step_0010000.npz \
+    --config configs/full_progressive_1_2_4.json --eval-steps 100
 
-- Report: [`docs/reports/p1-matched-noise-3node-summary-2026-07-19.md`](docs/reports/p1-matched-noise-3node-summary-2026-07-19.md)
-- Scope: tří-node matched-noise kampaň (`m1-256`, `m1-512`, `m4-air`), 24/24 tasků dokončeno.
-- Výsledek (mean best val loss, n=6 na variantu):
-  - clean-fp32: **7.421699**
-  - constant-q1: 7.427120 (`+0.005420` vůči clean-fp32)
-  - gaussian-matched-fp32: 7.456407 (`+0.034708`)
-  - uniform-matched-fp32: 7.456817 (`+0.035117`)
+python -m src.generate \
+    --checkpoint checkpoints/full_progressive_1_2_4/step_0010000.npz \
+    --config configs/full_progressive_1_2_4.json \
+    --n-sequences 4 --seq-len 128
+```
 
-## Licence
+---
 
-Vlastní zdrojový kód je pod licencí [Apache License 2.0](LICENSE). Externí datasety, závislosti, tokenizery a cizí modely si zachovávají své licence.
+## Stav projektu
+
+> **Aktuální snapshot českého flexibilního modelu (2026-08-18):** model se
+> sdílenými master vahami a `d_model=64` dokončil 3 000 000 aktualizací s
+> konečnými held-out metrikami na všech třech precision routes a pokračuje
+> směrem k 20 000 000 aktualizací. Ověřené metriky, první závěry a omezení jsou
+> v [`docs/cswiki-flexible-project-status-2026-08-18.md`](docs/cswiki-flexible-project-status-2026-08-18.md).
+> Stejný český checkpoint lze převést a dál trénovat přes volitelný
+> PyTorch/CUDA backend; viz [`docs/cuda-training.md`](docs/cuda-training.md).
+
+| Experiment | Stav | Běhy |
+|---|---|---:|
+| Smoke testy | HOTOVO | 2 varianty, 50 kroků |
+| Krátké experimenty | HOTOVO | 3 varianty, seed 42 |
+| Úvodní porovnání 10k | HOTOVO | 2 varianty, seed 42 |
+| Ablační screening 3k | HOTOVO | 6 variant × 3 seedy = 18 |
+| Plná ablace 10k | HOTOVO | 6 variant × 3 seedy = 18 |
+| PTQ studie | HOTOVO | 18/18 evaluací Q1/Q2/Q3/Q4/FP32/ternární |
+
+Úplnou technickou dokumentaci původních studií obsahuje
+[`PROJECT_DOCUMENTATION.md`](PROJECT_DOCUMENTATION.md).
+
+---
+
+## Požadavky a hardware
+
+- hlavní backend: macOS 13.5+ na Apple Silicon a MLX,
+- volitelný backend: Linux nebo Windows s NVIDIA GPU podporující CUDA a PyTorch,
+- CUDA podporuje převod checkpointu a pokračování tréninku, ale pro hlavní MLX
+  implementaci není povinná,
+- 16 GB unified memory stačí pro malé MLX experimenty, ověřeno na M4 16 GB,
+- MLX závislosti: `mlx>=0.21.0`, `tokenizers`, `datasets`, `numpy`, `tqdm`,
+- CUDA závislosti a postup: [`requirements-cuda.txt`](requirements-cuda.txt) a
+  [`docs/cuda-training.md`](docs/cuda-training.md).
+
+---
+
+## Známá omezení
+
+Nejdůležitější omezení: všechny 1bitové až 4bitové operace jsou simulované v
+FP32 přes Straight-Through Estimation. Nejsou implementované packed integer
+váhy ani kernely. Odhadovaná komprese proto není v současném wall-clock čase
+ani paměti skutečně realizovaná.
+
+Stejné omezení platí pro MLX i CUDA. CUDA backend provádí stejné fake-quant
+učení v PyTorch; zatím neposkytuje packed Q2/Q8 kernely ani zaručené low-bit
+zrychlení.
+
+Další omezení:
+
+- malý model a dataset, takže závěry nelze automaticky zobecnit na produkční měřítko,
+- původní ablace má jen tři seedy,
+- Apple Silicon nemusí být mezi samostatnými běhy bitově deterministický,
+- starší `const_4bit` ablace používala 15 úrovní, zatímco PTQ používá 16.
+
+---
+
+*Experimentální výzkumný software bez záruky.*
