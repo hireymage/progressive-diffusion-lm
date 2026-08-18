@@ -2,7 +2,7 @@
 
 [English](dual-m1-campaign.en.md) | [Čeština](dual-m1-campaign.md)
 
-Status: **historická dual-M1 campaign dokončena; P1 matched-noise campaign implementována, ověřena a spuštěna na obou nodech 2026-07-19**.
+Status: **historical dual-M1 campaign completed; P1 matched-noise campaign implemented, verified and launched on both nodes 2026-07-19**.
 
 ## Safety model
 
@@ -110,9 +110,9 @@ Configs:
 - `configs/campaign/m1-512-matched-noise.json` — seeds `47`, `73`;
 - `configs/campaign/m1-256-matched-noise-smoke.json` — 20-step operational smoke only.
 
-Na každý fresh seed běží paired pořadí: clean FP32, constant Q1, Gaussian matched-RMS FP32, Uniform matched-RMS FP32. Každý node provede osm sekvenčních 10k tasků. `expected_metrics_contract` navíc k exit code ověřuje CSV/JSON schema, konečné hodnoty a shodu experiment/model/noise/seed.
+For each fresh seed, the paired sequence runs: clean FP32, constant Q1, Gaussian matched-RMS FP32, Uniform matched-RMS FP32. Each node performs eight sequential 10k tasks. `expected_metrics_contract` additionally verifies CSV/JSON schema, final values, and experiment/model/noise/seed agreement beyond exit code.
 
-Ověření 2026-07-19:
+Verification 2026-07-19:
 
 ```text
 py_compile: exit 0
@@ -124,9 +124,9 @@ m1-512 dry-run: exit 0, 8 tasks
 wrong-node guard: exit 2
 ```
 
-Node-local smoke `20260719-054925_matched-noise-smoke_s911_98480c03` dokončil 20 kroků s exit 0 a semantic contractem. Skutečný injected Gaussian RMS odpovídal Q1 residual RMS přibližně na `0.0341`; všechny CSV/JSON hodnoty byly konečné. Tiny smoke loss není vědecký výsledek.
+Node-local smoke `20260719-054925_matched-noise-smoke_s911_98480c03` completed 20 steps with exit 0 and semantic contract. Actual injected Gaussian RMS matched Q1 residual RMS at approximately `0.0341`; all CSV/JSON values were finite. Tiny smoke loss is not a scientific result.
 
-Launch na M1-256:
+Launch on M1-256:
 
 ```bash
 "$HOME/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-256/env/bin/python" \
@@ -135,7 +135,7 @@ Launch na M1-256:
   --campaign configs/campaign/m1-256-matched-noise.json
 ```
 
-Na M1-512 se používá ověřený node-local source snapshot mimo iCloud, node-local Python a oddělený runtime root:
+On M1-512, verified node-local source snapshot outside iCloud, node-local Python, and separate runtime root are used:
 
 ```bash
 REMOTE_SOURCE="/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-512/<p1-source>"

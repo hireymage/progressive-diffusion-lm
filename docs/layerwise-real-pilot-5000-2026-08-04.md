@@ -1,5 +1,7 @@
 # Reálný layer-wise pilot: FP32 versus progressive
 
+[English](layerwise-real-pilot-5000-2026-08-04.en.md) | [Čeština](layerwise-real-pilot-5000-2026-08-04.md)
+
 Datum: 2026-08-04  
 Zdrojový commit: `223e71f`
 

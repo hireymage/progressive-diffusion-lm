@@ -19,7 +19,7 @@ This makes the model closer to a "coarse map to detailed map" process than to a 
 
 The proposed architecture, training stages, measurements, and decision gates
 for this direction are described in
-[`docs/adaptive-progressive-diffusion-design.md`](docs/adaptive-progressive-diffusion-design.md).
+[`docs/adaptive-progressive-diffusion-design.en.md`](docs/adaptive-progressive-diffusion-design.en.md).
 
 ---
 

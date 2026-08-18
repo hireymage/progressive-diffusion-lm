@@ -1,5 +1,7 @@
 # První 3node smoke: layer-wise grouped precision
 
+[English](layerwise-first-3node-smoke-2026-08-04.en.md) | [Čeština](layerwise-first-3node-smoke-2026-08-04.md)
+
 Datum: 2026-08-04  
 Commit: `ee5737f`
 

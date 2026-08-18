@@ -1,5 +1,7 @@
 # M0 oracle pilot na třech nodech — 2026-08-04
 
+[English](m0-oracle-3node-pilot-2026-08-04.en.md) | [Čeština](m0-oracle-3node-pilot-2026-08-04.md)
+
 ## Verdikt
 
 Pilot potvrdil, že distribuovaná M0 pipeline je reprodukovatelná, ale současný

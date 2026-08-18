@@ -1,5 +1,7 @@
 # Diagnostika kolapsu layer-wise modelu
 
+[English](layerwise-collapse-diagnostics-2026-08-04.en.md) | [Čeština](layerwise-collapse-diagnostics-2026-08-04.md)
+
 Datum: 2026-08-04  
 Zdrojový commit: `a3d41ed`
 

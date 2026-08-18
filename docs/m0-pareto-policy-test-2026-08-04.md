@@ -1,5 +1,7 @@
 # M0 Pareto test adaptivního zastavení — 2026-08-04
 
+[English](m0-pareto-policy-test-2026-08-04.en.md) | [Čeština](m0-pareto-policy-test-2026-08-04.md)
+
 ## Verdikt
 
 Offline held-out test našel jednoduchou adaptivní politiku, která zachovala
