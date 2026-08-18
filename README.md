@@ -2,7 +2,12 @@
 
 [English](README.md) | [Čeština](README.cs.md)
 
+[Documentation](docs/) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Citation](CITATION.cff)
+
 > **Experimental proof-of-concept** on Apple Silicon. Not a production chatbot.
+
+**Release status:** source-code research preview. Model weights are not part of
+this release; the long Czech training run is still in progress.
 
 ## Project Goal
 

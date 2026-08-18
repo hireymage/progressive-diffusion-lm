@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import re
 import shlex
 import subprocess
@@ -23,8 +24,14 @@ DEFAULT_NODES = {
     "m1-256": f"{REMOTE_ROOT}/cswiki-m1-256/run-current",
 }
 DEFAULT_SSH_TARGETS = {
-    "m1-512": ["m1-512", "hozzy@10.68.119.206"],
+    "m1-512": ["m1-512"],
 }
+# Optional comma-separated fallbacks, for example
+# PDLM_M1_512_SSH_TARGETS="m1-512,user@private-host".
+if configured_targets := os.environ.get("PDLM_M1_512_SSH_TARGETS"):
+    DEFAULT_SSH_TARGETS["m1-512"] = [
+        target.strip() for target in configured_targets.split(",") if target.strip()
+    ]
 DEFAULT_TARGETS = {"m4-air": 400000, "m1-512": 3000000, "m1-256": 400000}
 
 

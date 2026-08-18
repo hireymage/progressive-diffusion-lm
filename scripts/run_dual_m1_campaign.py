@@ -374,8 +374,10 @@ def publish_bundle(bundle: Path, shared_results: Path, node: str, run_id: str) -
         destination.parent.mkdir(parents=True, exist_ok=True)
         staging = destination.parent / f".{run_id}.staging-{uuid.uuid4().hex[:8]}"
         shutil.copytree(bundle, staging)
-        make_read_only(staging)
+        # APFS can reject renaming a directory after its own write bit has
+        # been removed. Publish atomically first, then freeze the destination.
         os.replace(staging, destination)
+        make_read_only(destination)
         return destination
     finally:
         os.close(fd)
