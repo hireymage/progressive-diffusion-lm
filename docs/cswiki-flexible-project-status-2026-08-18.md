@@ -1,5 +1,7 @@
 # Stav českého flexibilního modelu — 2026-08-18
 
+[English](cswiki-flexible-project-status-2026-08-18.en.md) | [Čeština](cswiki-flexible-project-status-2026-08-18.md)
+
 ## Co bylo ověřeno
 
 Současný experiment ověřil, že jeden model se sdílenými master vahami lze

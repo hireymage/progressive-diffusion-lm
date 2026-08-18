@@ -1,5 +1,7 @@
 # PyTorch/CUDA pokračování českého flexibilního modelu
 
+[English](cuda-training.en.md) | [Čeština](cuda-training.md)
+
 CUDA backend zachovává architekturu 25 vrstev, český tokenizer/cache, sdílené
 FP32 master váhy a routes `q8_only`, `q8_fp16`, `q2_q8_fp16`. Převádí také
 MLX AdamW momenty `m`, `v` a číslo kroku. Používá kompatibilní AdamW bez bias
