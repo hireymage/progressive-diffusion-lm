@@ -1,0 +1,44 @@
+{
+  "m1-512-progressive-up-s201": [
+    "results/campaign/phase2_m1_512_progressive_up_s201"
+  ],
+  "m1-512-progressive-up-s203": [
+    "results/campaign/phase2_m1_512_progressive_up_s203"
+  ],
+  "m1-512-progressive-down-s201": [
+    "results/campaign/phase2_m1_512_progressive_down_s201"
+  ],
+  "m1-512-progressive-down-s203": [
+    "results/campaign/phase2_m1_512_progressive_down_s203"
+  ],
+  "m1-512-constant-1b-s201": [
+    "results/campaign/phase2_m1_512_constant_1b_s201"
+  ],
+  "m1-512-constant-1b-s203": [
+    "results/campaign/phase2_m1_512_constant_1b_s203"
+  ],
+  "m1-512-constant-2b-s201": [
+    "results/campaign/phase2_m1_512_constant_2b_s201"
+  ],
+  "m1-512-constant-2b-s203": [
+    "results/campaign/phase2_m1_512_constant_2b_s203"
+  ],
+  "m1-512-constant-4b-s201": [
+    "results/campaign/phase2_m1_512_constant_4b_s201"
+  ],
+  "m1-512-constant-4b-s203": [
+    "results/campaign/phase2_m1_512_constant_4b_s203"
+  ],
+  "m1-512-constant-8b-s201": [
+    "results/campaign/phase2_m1_512_constant_8b_s201"
+  ],
+  "m1-512-constant-8b-s203": [
+    "results/campaign/phase2_m1_512_constant_8b_s203"
+  ],
+  "m1-512-baseline-fp16-s201": [
+    "results/campaign/phase2_m1_512_baseline_fp16_s201"
+  ],
+  "m1-512-baseline-fp16-s203": [
+    "results/campaign/phase2_m1_512_baseline_fp16_s203"
+  ]
+}

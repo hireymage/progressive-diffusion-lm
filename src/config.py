@@ -81,6 +81,56 @@ class ModelConfig:
         return self.vocab_size
 
 
+# ``fp32`` is deliberately explicit.  It is not the legacy ``bits=16``
+# shorthand, whose meaning belongs to the older diffusion prototype.
+LAYERWISE_PRECISIONS = ("q1", "q2", "q4", "q8", "fp16", "fp32")
+
+
+@dataclass
+class LayerwiseModelConfig:
+    """Configuration for the separate layer-wise progressive LM prototype.
+
+    This is intentionally independent from :class:`ModelConfig`: legacy
+    ``bits=16`` means the FP32 identity path and must not be reinterpreted as
+    FP16.  The new prototype uses explicit string precision names instead.
+    """
+
+    vocab_size: int = 256
+    pad_token_id: int = 0
+    d_model: int = 256
+    n_layers: int = 25
+    n_heads: int = 8
+    d_ff: int = 1024
+    max_seq_len: int = 64
+    dropout: float = 0.0
+    tie_word_embeddings: bool = True
+    min_exit_layer: int = 5
+    layer_precisions: List[str] = field(
+        default_factory=lambda: ["q1"] * 5 + ["q2"] * 5 + ["q4"] * 5
+        + ["q8"] * 5 + ["fp16"] * 5
+    )
+
+    def __post_init__(self) -> None:
+        if self.n_layers <= 0 or len(self.layer_precisions) != self.n_layers:
+            raise ValueError("layer_precisions length must equal positive n_layers")
+        unsupported = sorted(set(self.layer_precisions) - set(LAYERWISE_PRECISIONS))
+        if unsupported:
+            raise ValueError(f"unsupported layer precisions: {unsupported}")
+        if "fp32" in self.layer_precisions and any(name != "fp32" for name in self.layer_precisions):
+            raise ValueError("fp32 is only supported as an all-layer reference schedule")
+        if not 1 <= self.min_exit_layer <= self.n_layers:
+            raise ValueError("min_exit_layer must be in [1, n_layers]")
+        if self.d_model <= 0 or self.n_heads <= 0 or self.d_model % self.n_heads:
+            raise ValueError("d_model must be positive and divisible by n_heads")
+        if self.d_ff <= 0 or self.max_seq_len <= 0 or self.vocab_size <= 1:
+            raise ValueError("vocab_size, d_ff, and max_seq_len must be positive")
+        if not 0.0 <= self.dropout < 1.0:
+            raise ValueError("dropout must be in [0, 1)")
+
+    def mask_token_id(self) -> int:
+        return self.vocab_size
+
+
 @dataclass
 class DataConfig:
     dataset_name: str = "wikimedia/wikipedia"

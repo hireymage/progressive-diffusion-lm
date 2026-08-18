@@ -1,0 +1,401 @@
+{
+  "status": "complete",
+  "language": "cswiki-only",
+  "checkpoint": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki-real/run-20260804-a-40k/checkpoints/best.npz",
+  "checkpoint_loaded": true,
+  "cache_meta_path": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/cache/meta_seq256_a92b21bd8b1775d0.json",
+  "cache_metadata": {
+    "format": "cswiki-cache-v1",
+    "corpus_sha256": "2de1aea7a9583c93cee87cc96f4804712f6461d8494949cea17886a62e6e9861",
+    "source": {
+      "dump": "/Users/hozzy/data/cswiki/cswiki-20260801-pages-articles.xml.bz2",
+      "dump_filename": "cswiki-20260801-pages-articles.xml.bz2",
+      "sha1": "7501b901ec7889db1460cca3c6d7cc9a1c01ae2c",
+      "manifest": "/Users/hozzy/data/cswiki/cswiki-latest-sha1sums.txt",
+      "manifest_sha256": "0d40b1b56ae81e34d7079a0e152c7ab1f8e02941b2985907f7765a8f28d971c1"
+    },
+    "corpus_metadata_sha256": "be8e0d3237dd41858cc0a35600e22a00df058ab932df46aaf6692590f833c053",
+    "tokenizer_sha256": "318e5f9904f0bf8386bbc07517213d63f7b07f75382ce8aaf98cb3f7405bc0de",
+    "tokenizer_metadata_sha256": "37503d77f505ea24c9ea2e734a5ed7e13c0c7f7aa60837e02f01218096edf995",
+    "seq_len": 256,
+    "split": "article-sha256-mod20-v1",
+    "corpus": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/corpus/cswiki-20260801-50k-500m.jsonl",
+    "tokenizer": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/tokenizer/bpe16k",
+    "n_train_chunks": 272702,
+    "n_val_chunks": 15214,
+    "total_tokens": 73706496,
+    "train_sha256": "43104092ef2168470a3d44c40b5c551399760056d501c17824cc00c42aa89f52",
+    "val_sha256": "d3318e89cf1a7df5f5fcb5386a4813fdec6646db110bd72d67dd00f7d4826547"
+  },
+  "split": "held-out validation only",
+  "eval_sequence_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ],
+  "masking": {
+    "rate": 0.5,
+    "seed": 21160804,
+    "identical_across_routes_and_exits": true
+  },
+  "per_route": {
+    "q8_only": {
+      "schedule": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8"
+      ],
+      "route_exit_rows": [
+        {
+          "loss": 6.263621458586866,
+          "accuracy": 0.10350706283487579,
+          "masked_tokens": 4106,
+          "layer": 5,
+          "precision": "q8",
+          "proxy_cost": 40
+        },
+        {
+          "loss": 6.154253210837935,
+          "accuracy": 0.1100828056502679,
+          "masked_tokens": 4106,
+          "layer": 10,
+          "precision": "q8",
+          "proxy_cost": 80
+        },
+        {
+          "loss": 6.099344267940382,
+          "accuracy": 0.11714564052605943,
+          "masked_tokens": 4106,
+          "layer": 15,
+          "precision": "q8",
+          "proxy_cost": 120
+        },
+        {
+          "loss": 6.078823769202885,
+          "accuracy": 0.11909400876765709,
+          "masked_tokens": 4106,
+          "layer": 20,
+          "precision": "q8",
+          "proxy_cost": 160
+        },
+        {
+          "loss": 6.078229037599336,
+          "accuracy": 0.11958110082805651,
+          "masked_tokens": 4106,
+          "layer": 25,
+          "precision": "q8",
+          "proxy_cost": 200
+        }
+      ],
+      "masked_reconstruction": {
+        "loss": 6.078229037599336,
+        "accuracy": 0.11958110082805651,
+        "masked_tokens": 4106,
+        "examples": [
+          {
+            "target": "upright=0.7|n\u00e1hled|Piktogram turisty '''Turistika''' je z\u00e1jmov\u00e1 \u010dinnost (sport, kon\u00ed\u010dek, hobby) spo\u010d\u00edvaj\u00edc\u00ed v kr\u00e1tkodob\u00e9m cestov\u00e1n\u00ed a pozn\u00e1v\u00e1n\u00ed prost\u0159ed\u00ed, krajiny, pam\u00e1tek, zvyk\u016f a lid\u00ed. Pak se turista vrac\u00ed na m\u00edsta sv\u00e9ho obvykl\u00e9ho pobytu. Klasick\u00e1 turistika je p\u011b\u0161\u00ed a sp\u00ed\u0161e individu\u00e1ln\u00ed, po\u010d\u00e1tkem 20. stolet\u00ed p\u0159ibyla cykloturistika, pozd\u011bji mototuristika a od poloviny 20. stolet\u00ed turistika skupinov\u00e1 a organizovan\u00e1. T\u00edm vznik\u00e1 turistick\u00fd pr\u016fmysl a cestovn\u00ed ruch jako st\u00e1le v\u00fdznamn\u011bj\u0161\u00ed odv\u011btv\u00ed hospod\u00e1\u0159stv\u00ed. V \u010cesku je turistika od 19. stolet\u00ed velice obl\u00edben\u00e1 a komunita turist\u016f roz\u0161\u00ed\u0159en\u00e1. Od roku 1888 maj\u00ed \u010de\u0161t\u00ed turist\u00e9 svoji organizaci, Klub \u010desk\u00fdch turist\u016f (K\u010cT), kter\u00fd udr\u017euje na \u00fazem\u00ed \u010cesk\u00e9 republiky hustou s\u00ed\u0165 zna\u010den\u00fdch stezek pomoc\u00ed turistick\u00fdch zna\u010dek. n\u00e1hled|upright=1.0|Turist\u00e9 na Karlov\u011b most\u011b v Praze n\u00e1hled|upright=1.0|Turist\u00e9 pod Eiffelovou v\u011b\u017e\u00ed v Pa\u0159\u00ed\u017ei vlevo|n\u00e1hled|''Prinzessin Victoria Luise'' v Hamburku, prvn\u00ed lo\u010f nab\u00edzej\u00edc\u00ed turistick\u00e9 vyj\u00ed\u017e\u010fky P\u011b\u0161\u00ed p",
+            "masked_reconstruction": "upright=3|px|n\u00e1hled||||, turitu '''Tuj'''''' je ''\u00e1lov\u00e1 '''||. kon\u00ed.. (bby) naz\u00fdvaj\u00edc\u00ed v& (obou popisov\u00e1n\u00ed a v v prost\u0159ed\u00ed a krajiny a pam\u00e1tek, zvyk\u016f a lid\u00ed. stolet\u00ed se v,, na z\u00e1klad\u011b sv\u00e9ho obvykl\u00e9ho m\u011bsta. Osick\u00e1 turistika je n\u00e1zev a sp\u00ed\u0161e region\u00e1ln\u00ed, po\u010d\u00e1tkem roku., p\u0159ibyla cyklotuvenka., mototuristika a od poloviny 19. V.sk\u00fdch skupinov\u00e1, organizovan\u00e1. T\u00edm je N\u011bmeck\u00fd pr\u016fmysl a cestovn\u00ed a,, st\u00e1le v\u00fdznam.... v \u010cesku. \u010dtverka v 19. stolet\u00ed velice mo\u017en\u00e9, a komunita a roz\u0161\u00ed\u0159en\u00e1. Od roku, maj\u00ed ru\u0161t\u00ed turisty... v \u010desk\u00fdch turist\u016f. n\u00e1hled|T), kter\u00fd udr\u017euje v. \u010cesk\u00e9 republice hust a zna\u010den\u00fdch \u0159ezek...|||||upright|0.0|Turika na b\u00edlov\u011b sest\u011b v&||upright=1px||.,, podstani,covou, v&||n\u00e1hled|''PAze (sinan, Lugo'' ( ''''', jejich\u017e lo\u010f nab\u00edzej\u00edc\u00ed turistick\u00e9 a \u0159e\u017e\u010fky,.."
+          },
+          {
+            "target": "utov\u00e1n\u00ed do vzd\u00e1len\u00fdch krajin za\u010d\u00edn\u00e1 patrn\u011b n\u00e1bo\u017eensk\u00fdmi pout\u011bmi \u010dasto na velk\u00e9 vzd\u00e1lenosti (Mekka, \u0159eka Ganga, Santiago de Compostela, Jeruzal\u00e9m, \u0158\u00edm aj.), p\u0159i nich\u017e poutn\u00edci z\u00e1rove\u0148 sb\u00edrali zaj\u00edmav\u00e9 z\u00e1\u017eitky a n\u011bkdy je pak i publikovali. V \u010desk\u00e9 literatu\u0159e jsou nejstar\u0161\u00ed cestopisy z pout\u00ed do Jeruzal\u00e9ma od Martina Kab\u00e1tn\u00edka (1492) nebo Old\u0159icha Pref\u00e1ta z Vlkanova (1547). Jinou po\u010detnou skupinu poutn\u00edk\u016f tvo\u0159ili pocestn\u00ed studenti a \u0159emesln\u00ed tovary\u0161i na vandru. Turistika v modern\u00edm smyslu slova vznikla koncem 18. stolet\u00ed v souvislosti s romantismem a s objevem kr\u00e1s divok\u00e9 p\u0159\u00edrody, zejm\u00e9na vysok\u00fdch hor a p\u0159\u00edmo\u0159sk\u00fdch kraj\u016f. Kolem roku 1800 se tak\u00e9 poprv\u00e9 objevuje slovo turistika, odvozen\u00e9 z francouzsk\u00e9ho ''tour'', okru\u017en\u00ed cesta, putov\u00e1n\u00ed. Jedn\u00edm z prvn\u00edch slavn\u00fdch turist\u016f v \u010cech\u00e1ch byl Karel Hynek M\u00e1cha. K rozvoji turistiky v\u00fdznamn\u011b p\u0159isp\u011bly \u017eeleznice, kter\u00e9 turist\u016fm umo\u017enily dopravovat se do vysokohorsk\u00fdch oblast\u00ed a jin\u00fdch zaj\u00edmav\u00fdch krajin, kde pak za\u010daly vznikat turistick\u00e9 ubytovny, hotely a po\u010d\u00e1tky turismu jako",
+            "masked_reconstruction": " jmenov\u00e1n\u00ed do \u010dern\u00fdch,, patrn\u011b v..,, \u010dasto na velk\u00e9 \u010d\u00e1sti (obekka,,,oga, v... (poste,. \u010derven\u00e9m, \u0158\u00edm\u016f, z nich\u017e se.. \u0161lechrali zaj\u00edmav\u00fdm Pou\u017eitky..,, i publicovali...... sestopisy z pout\u00ed.. se od. K.anka,.... Old\u0159icha Of\u00e1ta, Vlkanova (1847. Jinou po\u010detnou skupinu poutn\u00edmi a pokl\u00e1stn\u00ed a. a \u0159emesle tr\u00e1.., vandru. V., v modern\u00edm smyslu slova. roku 18. stolet\u00ed v oblasti s Lutis'' a v., kr\u00e1s\u00e1k\u00e9 spole\u010denstv\u00ed, zejm\u00e9na vysok\u00fdch druh\u016f a p\u0159\u00edmo\u0159sk\u00fdch krajem, z roku 16 se tak\u00e9 tak\u00e9 objevuje v.. se odvozen\u00e9 do francouzsk\u00e9ho a (r, okru\u017en\u00ed cesta na put..... \u010dern\u00fdch turist\u016f,, byl Karel Hyj,... a turistiky v\u00fdznamn\u011b zanikly \u017eeleznice, kter\u00e9 turistin\u016fm ovlivnily dopravov\u00e1n\u00ed, do nich \u010cesk\u00fdch oblastech a je zaj\u00edmav\u00fdch druh\u016f, kde pak se znat turistick\u00e9 z\u00e1stavbytovstv\u00ed, (te, na po\u010d\u00e1tky turist\u016f jako"
+          }
+        ]
+      },
+      "all_mask_refinements": [
+        "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||",
+        "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||",
+        "||||||||||||||||||||||||MBA||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MBA||MBA||MBA||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MBA||||||||||||||||||||||||||||||||||||||||||MBA||||||||||||||||||MBA||||||||||MBA||||||||||MBA||MBA||||||||||||||||||||||||||||||||||||||||||||MBA||||||MBA||||||||||||||||||||||||||||||MBA||MBA||||MBA||||",
+        "||||||MBA||||MBA||MBA||||||||MBA||||MBA||MBA||MBA||MBA||MBA||||||||||MBA||||MBA||||||||||MBA||||||||MBA||MBA||||||||||||||||||||||||||MBA||||MBA||||||||||||||||||||MBA||MBA||MBA||||||||MBA||MBA||MBA||MBA||||||||||MBA||||||||||||MBA||||||||||||||||||||||||||MBA||||||MBA||MBA||3||MBA||3||MBA||||||MBA||||||||||||||||||||||MBA||MBA||||||MBA||||MBA||||MBA||MBA||MBA||||||MBA||||||MBA||||MBA||||3||MBA||MBA||||||3||MBA||MBA||||||MBA||||MBA||MBA||||||||MBA||||||||||MBA||||||||MBA||||||||||MBA||3||3||MBA||||MBA||||||||||MBA||||||MBA||||||||MBA||||||MBA||MBA||||||MBA||||"
+      ]
+    },
+    "q8_fp16": {
+      "schedule": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16"
+      ],
+      "route_exit_rows": [
+        {
+          "loss": 6.263621458586866,
+          "accuracy": 0.10350706283487579,
+          "masked_tokens": 4106,
+          "layer": 5,
+          "precision": "q8",
+          "proxy_cost": 40
+        },
+        {
+          "loss": 6.154253210837935,
+          "accuracy": 0.1100828056502679,
+          "masked_tokens": 4106,
+          "layer": 10,
+          "precision": "q8",
+          "proxy_cost": 80
+        },
+        {
+          "loss": 6.099321086059474,
+          "accuracy": 0.11738918655625913,
+          "masked_tokens": 4106,
+          "layer": 15,
+          "precision": "fp16",
+          "proxy_cost": 136
+        },
+        {
+          "loss": 6.07880149036283,
+          "accuracy": 0.11933755479785679,
+          "masked_tokens": 4106,
+          "layer": 20,
+          "precision": "fp16",
+          "proxy_cost": 216
+        },
+        {
+          "loss": 6.07822815697192,
+          "accuracy": 0.11958110082805651,
+          "masked_tokens": 4106,
+          "layer": 25,
+          "precision": "fp16",
+          "proxy_cost": 296
+        }
+      ],
+      "masked_reconstruction": {
+        "loss": 6.07822815697192,
+        "accuracy": 0.11958110082805651,
+        "masked_tokens": 4106,
+        "examples": [
+          {
+            "target": "upright=0.7|n\u00e1hled|Piktogram turisty '''Turistika''' je z\u00e1jmov\u00e1 \u010dinnost (sport, kon\u00ed\u010dek, hobby) spo\u010d\u00edvaj\u00edc\u00ed v kr\u00e1tkodob\u00e9m cestov\u00e1n\u00ed a pozn\u00e1v\u00e1n\u00ed prost\u0159ed\u00ed, krajiny, pam\u00e1tek, zvyk\u016f a lid\u00ed. Pak se turista vrac\u00ed na m\u00edsta sv\u00e9ho obvykl\u00e9ho pobytu. Klasick\u00e1 turistika je p\u011b\u0161\u00ed a sp\u00ed\u0161e individu\u00e1ln\u00ed, po\u010d\u00e1tkem 20. stolet\u00ed p\u0159ibyla cykloturistika, pozd\u011bji mototuristika a od poloviny 20. stolet\u00ed turistika skupinov\u00e1 a organizovan\u00e1. T\u00edm vznik\u00e1 turistick\u00fd pr\u016fmysl a cestovn\u00ed ruch jako st\u00e1le v\u00fdznamn\u011bj\u0161\u00ed odv\u011btv\u00ed hospod\u00e1\u0159stv\u00ed. V \u010cesku je turistika od 19. stolet\u00ed velice obl\u00edben\u00e1 a komunita turist\u016f roz\u0161\u00ed\u0159en\u00e1. Od roku 1888 maj\u00ed \u010de\u0161t\u00ed turist\u00e9 svoji organizaci, Klub \u010desk\u00fdch turist\u016f (K\u010cT), kter\u00fd udr\u017euje na \u00fazem\u00ed \u010cesk\u00e9 republiky hustou s\u00ed\u0165 zna\u010den\u00fdch stezek pomoc\u00ed turistick\u00fdch zna\u010dek. n\u00e1hled|upright=1.0|Turist\u00e9 na Karlov\u011b most\u011b v Praze n\u00e1hled|upright=1.0|Turist\u00e9 pod Eiffelovou v\u011b\u017e\u00ed v Pa\u0159\u00ed\u017ei vlevo|n\u00e1hled|''Prinzessin Victoria Luise'' v Hamburku, prvn\u00ed lo\u010f nab\u00edzej\u00edc\u00ed turistick\u00e9 vyj\u00ed\u017e\u010fky P\u011b\u0161\u00ed p",
+            "masked_reconstruction": "upright=3|px|n\u00e1hled||||, turitu '''Tuj'''''' je ''\u00e1lov\u00e1 '''||. kon\u00ed.. (bby) naz\u00fdvaj\u00edc\u00ed v& (obou popisov\u00e1n\u00ed a v v prost\u0159ed\u00ed a krajiny a pam\u00e1tek, zvyk\u016f a lid\u00ed. stolet\u00ed se v,, na z\u00e1klad\u011b sv\u00e9ho obvykl\u00e9ho m\u011bsta. Osick\u00e1 turistika je n\u00e1zev a sp\u00ed\u0161e region\u00e1ln\u00ed, po\u010d\u00e1tkem roku., p\u0159ibyla cyklotuvenka., mototuristika a od poloviny 19. V.sk\u00fdch skupinov\u00e1, organizovan\u00e1. T\u00edm je N\u011bmeck\u00fd pr\u016fmysl a cestovn\u00ed a,, st\u00e1le v\u00fdznam.... v \u010cesku. \u010dtverka v 19. stolet\u00ed velice mo\u017en\u00e9, a komunita a roz\u0161\u00ed\u0159en\u00e1. Od roku, maj\u00ed ru\u0161t\u00ed turisty... v \u010desk\u00fdch turist\u016f. n\u00e1hled|T), kter\u00fd udr\u017euje v. \u010cesk\u00e9 republice hust a zna\u010den\u00fdch \u0159ezek...|||||upright|0.0|Turika na b\u00edlov\u011b sest\u011b v&||upright=1px||.,, podstani,covou, v&||n\u00e1hled|''PAze (sinan, Lugo'' ( ''''', jejich\u017e lo\u010f nab\u00edzej\u00edc\u00ed turistick\u00e9 a \u0159e\u017e\u010fky,.."
+          },
+          {
+            "target": "utov\u00e1n\u00ed do vzd\u00e1len\u00fdch krajin za\u010d\u00edn\u00e1 patrn\u011b n\u00e1bo\u017eensk\u00fdmi pout\u011bmi \u010dasto na velk\u00e9 vzd\u00e1lenosti (Mekka, \u0159eka Ganga, Santiago de Compostela, Jeruzal\u00e9m, \u0158\u00edm aj.), p\u0159i nich\u017e poutn\u00edci z\u00e1rove\u0148 sb\u00edrali zaj\u00edmav\u00e9 z\u00e1\u017eitky a n\u011bkdy je pak i publikovali. V \u010desk\u00e9 literatu\u0159e jsou nejstar\u0161\u00ed cestopisy z pout\u00ed do Jeruzal\u00e9ma od Martina Kab\u00e1tn\u00edka (1492) nebo Old\u0159icha Pref\u00e1ta z Vlkanova (1547). Jinou po\u010detnou skupinu poutn\u00edk\u016f tvo\u0159ili pocestn\u00ed studenti a \u0159emesln\u00ed tovary\u0161i na vandru. Turistika v modern\u00edm smyslu slova vznikla koncem 18. stolet\u00ed v souvislosti s romantismem a s objevem kr\u00e1s divok\u00e9 p\u0159\u00edrody, zejm\u00e9na vysok\u00fdch hor a p\u0159\u00edmo\u0159sk\u00fdch kraj\u016f. Kolem roku 1800 se tak\u00e9 poprv\u00e9 objevuje slovo turistika, odvozen\u00e9 z francouzsk\u00e9ho ''tour'', okru\u017en\u00ed cesta, putov\u00e1n\u00ed. Jedn\u00edm z prvn\u00edch slavn\u00fdch turist\u016f v \u010cech\u00e1ch byl Karel Hynek M\u00e1cha. K rozvoji turistiky v\u00fdznamn\u011b p\u0159isp\u011bly \u017eeleznice, kter\u00e9 turist\u016fm umo\u017enily dopravovat se do vysokohorsk\u00fdch oblast\u00ed a jin\u00fdch zaj\u00edmav\u00fdch krajin, kde pak za\u010daly vznikat turistick\u00e9 ubytovny, hotely a po\u010d\u00e1tky turismu jako",
+            "masked_reconstruction": " jmenov\u00e1n\u00ed do \u010dern\u00fdch,, patrn\u011b v..,, \u010dasto na velk\u00e9 \u010d\u00e1sti (obekka,,,oga, v... (poste,. \u010derven\u00e9m, \u0158\u00edm\u016f, z nich\u017e se.. \u0161lechrali zaj\u00edmav\u00fdm Pou\u017eitky..,, i publicovali...... sestopisy z pout\u00ed.. se od. K.anka,.... Old\u0159icha Of\u00e1ta, Vlkanova (1847. Jinou po\u010detnou skupinu poutn\u00edmi a pokl\u00e1stn\u00ed a. a \u0159emesle tr\u00e1.., vandru. V., v modern\u00edm smyslu slova. roku 18. stolet\u00ed v oblasti s Lutis'' a v., kr\u00e1s\u00e1k\u00e9 spole\u010denstv\u00ed, zejm\u00e9na vysok\u00fdch druh\u016f a p\u0159\u00edmo\u0159sk\u00fdch krajem, z roku 16 se tak\u00e9 tak\u00e9 objevuje v.. se odvozen\u00e9 do francouzsk\u00e9ho a (r, okru\u017en\u00ed cesta na put..... \u010dern\u00fdch turist\u016f,, byl Karel Hyj,... a turistiky v\u00fdznamn\u011b zanikly \u017eeleznice, kter\u00e9 turistin\u016fm ovlivnily dopravov\u00e1n\u00ed, do nich \u010cesk\u00fdch oblastech a je zaj\u00edmav\u00fdch druh\u016f, kde pak se znat turistick\u00e9 z\u00e1stavbytovstv\u00ed, (te, na po\u010d\u00e1tky turist\u016f jako"
+          }
+        ]
+      },
+      "all_mask_refinements": [
+        "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||",
+        "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||",
+        "||||||||||||||||||||||||MBA||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MBA||MBA||MBA||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||MBA||||||||||||||||||||||||||||||||||||||||||MBA||||||||||||||||||MBA||||||||||MBA||||||||||MBA||MBA||||||||||||||||||||||||||||||||||||||||||||MBA||||||MBA||||||||||||||||||||||||||||||MBA||MBA||||MBA||||",
+        "||||||MBA||||MBA||MBA||||||||MBA||||MBA||MBA||MBA||MBA||MBA||||||||||MBA||||MBA||||||||||MBA||||||||MBA||MBA||||||||||||||||||||||||||MBA||||MBA||||||||||||||||||||MBA||MBA||MBA||||||||MBA||MBA||MBA||MBA||||||||||MBA||||||||||||MBA||||||||||||||||||||||||||MBA||||||MBA||MBA||3||MBA||3||MBA||||||MBA||||||||||||||||||||||MBA||MBA||||||MBA||||MBA||||MBA||MBA||MBA||||||MBA||||||MBA||||MBA||||3||MBA||MBA||||||3||MBA||MBA||||||MBA||||MBA||MBA||||||||MBA||||||||||MBA||||||||MBA||||||||||MBA||3||3||MBA||||MBA||||||||||MBA||||||MBA||||||||MBA||||||MBA||MBA||||||MBA||||"
+      ]
+    },
+    "q2_q8_fp16": {
+      "schedule": [
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16"
+      ],
+      "route_exit_rows": [
+        {
+          "loss": 6.515079078010043,
+          "accuracy": 0.09571358986848515,
+          "masked_tokens": 4106,
+          "layer": 5,
+          "precision": "q2",
+          "proxy_cost": 10
+        },
+        {
+          "loss": 6.3781461539177915,
+          "accuracy": 0.1005845104724793,
+          "masked_tokens": 4106,
+          "layer": 10,
+          "precision": "q8",
+          "proxy_cost": 26
+        },
+        {
+          "loss": 6.313565631175239,
+          "accuracy": 0.10545543107647345,
+          "masked_tokens": 4106,
+          "layer": 15,
+          "precision": "q8",
+          "proxy_cost": 66
+        },
+        {
+          "loss": 6.288686776823145,
+          "accuracy": 0.10569897710667316,
+          "masked_tokens": 4106,
+          "layer": 20,
+          "precision": "fp16",
+          "proxy_cost": 130
+        },
+        {
+          "loss": 6.287055082688143,
+          "accuracy": 0.1069167072576717,
+          "masked_tokens": 4106,
+          "layer": 25,
+          "precision": "fp16",
+          "proxy_cost": 210
+        }
+      ],
+      "masked_reconstruction": {
+        "loss": 6.287055082688143,
+        "accuracy": 0.1069167072576717,
+        "masked_tokens": 4106,
+        "examples": [
+          {
+            "target": "upright=0.7|n\u00e1hled|Piktogram turisty '''Turistika''' je z\u00e1jmov\u00e1 \u010dinnost (sport, kon\u00ed\u010dek, hobby) spo\u010d\u00edvaj\u00edc\u00ed v kr\u00e1tkodob\u00e9m cestov\u00e1n\u00ed a pozn\u00e1v\u00e1n\u00ed prost\u0159ed\u00ed, krajiny, pam\u00e1tek, zvyk\u016f a lid\u00ed. Pak se turista vrac\u00ed na m\u00edsta sv\u00e9ho obvykl\u00e9ho pobytu. Klasick\u00e1 turistika je p\u011b\u0161\u00ed a sp\u00ed\u0161e individu\u00e1ln\u00ed, po\u010d\u00e1tkem 20. stolet\u00ed p\u0159ibyla cykloturistika, pozd\u011bji mototuristika a od poloviny 20. stolet\u00ed turistika skupinov\u00e1 a organizovan\u00e1. T\u00edm vznik\u00e1 turistick\u00fd pr\u016fmysl a cestovn\u00ed ruch jako st\u00e1le v\u00fdznamn\u011bj\u0161\u00ed odv\u011btv\u00ed hospod\u00e1\u0159stv\u00ed. V \u010cesku je turistika od 19. stolet\u00ed velice obl\u00edben\u00e1 a komunita turist\u016f roz\u0161\u00ed\u0159en\u00e1. Od roku 1888 maj\u00ed \u010de\u0161t\u00ed turist\u00e9 svoji organizaci, Klub \u010desk\u00fdch turist\u016f (K\u010cT), kter\u00fd udr\u017euje na \u00fazem\u00ed \u010cesk\u00e9 republiky hustou s\u00ed\u0165 zna\u010den\u00fdch stezek pomoc\u00ed turistick\u00fdch zna\u010dek. n\u00e1hled|upright=1.0|Turist\u00e9 na Karlov\u011b most\u011b v Praze n\u00e1hled|upright=1.0|Turist\u00e9 pod Eiffelovou v\u011b\u017e\u00ed v Pa\u0159\u00ed\u017ei vlevo|n\u00e1hled|''Prinzessin Victoria Luise'' v Hamburku, prvn\u00ed lo\u010f nab\u00edzej\u00edc\u00ed turistick\u00e9 vyj\u00ed\u017e\u010fky P\u011b\u0161\u00ed p",
+            "masked_reconstruction": "upright=||px|n\u00e1hled|||| je turisky '''Tu\u010dn\u00ed'''''' je ''\u0148ov\u00e1 ='''|. kon\u00ed.. (bby) naz\u00fdvaj\u00edc\u00ed v& (obou\u0148ov\u00e1n\u00ed a vck\u00e9ho prost\u0159ed\u00ed, krajiny, pam\u00e1tek, zvyk\u016f a lid\u00ed. stolet\u00ed se v., na z\u00e1klad\u011b sv\u00e9ho obvykl\u00e9ho kostela. Ssick\u00e1 turistika je nap\u0159 a sp\u00ed\u0161e speci\u00e1ln\u00ed, po\u010d\u00e1tkem roku,, p\u0159ibyla cyklotu\u010dn\u00edka,, mototuristika a od poloviny 19. V.sk\u00fdch skupinov\u00e1, organizovan\u00e1. T\u00edm je N\u011bmeck\u00fd pr\u016fmysl a cestovn\u00ed a,, st\u00e1le v\u00fdznam,... v \u010cesku. parka. tzv. stolet\u00ed velice v, a komunita a roz\u0161\u00ed\u0159en\u00e1. Od roku, maj\u00ed ru\u0161t\u00ed turisty,., v \u010desk\u00fdch turist\u016f. n\u00e1hled|T), kter\u00fd udr\u017euje,, \u010cesk\u00e9 republice huj, zna\u010den\u00fdch \u0159ezek..||||||upright|1.0|Turici na b\u00edlov\u011b kost\u011b v [[||upright=1....,, podstani,bovou, v&||px|''|Kaze (sin., Luka'' ( ''''', je lo\u010f nab\u00edd\u011bj\u00edc\u00ed turistick\u00e9, (\u017e\u010fky..."
+          },
+          {
+            "target": "utov\u00e1n\u00ed do vzd\u00e1len\u00fdch krajin za\u010d\u00edn\u00e1 patrn\u011b n\u00e1bo\u017eensk\u00fdmi pout\u011bmi \u010dasto na velk\u00e9 vzd\u00e1lenosti (Mekka, \u0159eka Ganga, Santiago de Compostela, Jeruzal\u00e9m, \u0158\u00edm aj.), p\u0159i nich\u017e poutn\u00edci z\u00e1rove\u0148 sb\u00edrali zaj\u00edmav\u00e9 z\u00e1\u017eitky a n\u011bkdy je pak i publikovali. V \u010desk\u00e9 literatu\u0159e jsou nejstar\u0161\u00ed cestopisy z pout\u00ed do Jeruzal\u00e9ma od Martina Kab\u00e1tn\u00edka (1492) nebo Old\u0159icha Pref\u00e1ta z Vlkanova (1547). Jinou po\u010detnou skupinu poutn\u00edk\u016f tvo\u0159ili pocestn\u00ed studenti a \u0159emesln\u00ed tovary\u0161i na vandru. Turistika v modern\u00edm smyslu slova vznikla koncem 18. stolet\u00ed v souvislosti s romantismem a s objevem kr\u00e1s divok\u00e9 p\u0159\u00edrody, zejm\u00e9na vysok\u00fdch hor a p\u0159\u00edmo\u0159sk\u00fdch kraj\u016f. Kolem roku 1800 se tak\u00e9 poprv\u00e9 objevuje slovo turistika, odvozen\u00e9 z francouzsk\u00e9ho ''tour'', okru\u017en\u00ed cesta, putov\u00e1n\u00ed. Jedn\u00edm z prvn\u00edch slavn\u00fdch turist\u016f v \u010cech\u00e1ch byl Karel Hynek M\u00e1cha. K rozvoji turistiky v\u00fdznamn\u011b p\u0159isp\u011bly \u017eeleznice, kter\u00e9 turist\u016fm umo\u017enily dopravovat se do vysokohorsk\u00fdch oblast\u00ed a jin\u00fdch zaj\u00edmav\u00fdch krajin, kde pak za\u010daly vznikat turistick\u00e9 ubytovny, hotely a po\u010d\u00e1tky turismu jako",
+            "masked_reconstruction": " zachov\u00e1n\u00ed do zelen\u00fdch. se patrn\u011b v..., \u010dasto na velk\u00e9 \u010d\u00e1sti (vekka,..-ga, v... (poste-. obl\u00edben\u00e9m, \u0158\u00edm\u016f, z nich\u017e v..porali zaj\u00edmav\u00fdch p\u0159e\u017eitky..., i publikaceovali v..... sestopisy z pout\u00ed.., od m\u011bsta K.anka,.... Old\u0159icha Rof\u00e1ta, Vlkanova ( 1647. Jinou po\u010detnou skupinu poutn\u00edky a po mostn\u00ed a a a \u0159emesl\u00fd tr\u00e9.., vandru. V., v modern\u00edm smyslu slova, roku 18. stolet\u00ed v oblasti s Lutis) a v. a kr\u00e1stik\u00e9 \u00fazem\u00ed, zejm\u00e9na vysok\u00fdch druh\u016f a p\u0159\u00edmo\u0159sk\u00fdch krajem. z roku. se tak\u00e9 zde objevuje v.. se odvozen\u00e9 v francouzsk\u00e9ho a (rsk\u00e9 okru\u017en\u00ed cesta na put..... \u010dern\u00fdch turist\u016f., byl Karel Hyni..,, a turistiky v\u00fdznamn\u011b zanikly \u017eeleznice, kter\u00e9 turi lid\u016fm ovlivnily dopravci, do \u00fadol\u00ed \u010cesk\u00fdch zem\u00edch a s zaj\u00edmav\u00fdch budov, kde pak se (t turistick\u00e9 plobytovsko, (te. a po\u010d\u00e1tky turitem jako"
+          }
+        ]
+      },
+      "all_mask_refinements": [
+        ",,,,,,,,,,,,,,,,,,,,||.,,,,,,,,,,,,||,,,,,,.,,,,,,,..,,||||...||.....",
+        ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,..|| p\u0159. l.,,,,,,,,,,,,..,,,,,,.,,,,,,,,,,,,,,,,,||,,,,,,.,,,,,,,.. l,,,,.||.||.. l.||. (....",
+        ",,,,,,,,,,,,,,,,.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, p\u0159. l n. l|| p\u0159. l.. n. l.,,,,,,,,,,,,,,,,, p\u0159. l. p\u0159. l...,,,,,,, p\u0159. l.,,,,,,,,,,,,,,,,,,,,,,||,,,,,,.,,,,,,,,,,,.. l.....,,,,.,,,,,,,,,,.. p\u0159.|| l. l||.. l.|| l. (.... l..",
+        ",,, p\u0159,,3,,,,,, p\u0159,, p\u0159,,.), p\u0159,, p\u0159., p\u0159,, p\u0159,,, ov,,,,,,,,0,,,,,,,3,,,, p\u0159,,,,,,,,, p\u0159. l n. l|| p\u0159 p\u0159. l.. n. l.,,,, \u2013, \u2013, \u2013,,, \u2013, \u2013.), p\u0159,, p\u0159,,, p\u0159, p\u0159. l. p\u0159. l.. n., p\u0159, p\u0159, p\u0159, p\u0159,, p\u0159, p\u0159. l. l,, p\u0159, \u2013,, p\u0159,,,,, p\u0159, \u2013,,,,, \u2013,,,,,,,,||3,,,,,,., \u2013,,, Sv\u011bt, \u2013,, \u201315, \u20133,,,,,.. l.. l... l,.), p\u0159, \u2013right, p\u0159.,,,,, Sv\u011bt,,,,, \u2013. p\u0159.. p\u0159. l|| l. l||.. l.|| l. ( p\u0159.... l.."
+      ]
+    }
+  },
+  "worst_route_by_exit": [
+    {
+      "loss": 6.515079078010043,
+      "accuracy": 0.09571358986848515,
+      "masked_tokens": 4106,
+      "layer": 5,
+      "precision": "q2",
+      "proxy_cost": 10,
+      "worst_route": "q2_q8_fp16"
+    },
+    {
+      "loss": 6.3781461539177915,
+      "accuracy": 0.1005845104724793,
+      "masked_tokens": 4106,
+      "layer": 10,
+      "precision": "q8",
+      "proxy_cost": 26,
+      "worst_route": "q2_q8_fp16"
+    },
+    {
+      "loss": 6.313565631175239,
+      "accuracy": 0.10545543107647345,
+      "masked_tokens": 4106,
+      "layer": 15,
+      "precision": "q8",
+      "proxy_cost": 66,
+      "worst_route": "q2_q8_fp16"
+    },
+    {
+      "loss": 6.288686776823145,
+      "accuracy": 0.10569897710667316,
+      "masked_tokens": 4106,
+      "layer": 20,
+      "precision": "fp16",
+      "proxy_cost": 130,
+      "worst_route": "q2_q8_fp16"
+    },
+    {
+      "loss": 6.287055082688143,
+      "accuracy": 0.1069167072576717,
+      "masked_tokens": 4106,
+      "layer": 25,
+      "precision": "fp16",
+      "proxy_cost": 210,
+      "worst_route": "q2_q8_fp16"
+    }
+  ],
+  "output_path": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki-real/run-20260804-a-40k/diagnostics.json",
+  "limits": [
+    "Only checksum-verified cswiki-cache-v1 validation rows are used; train rows are not inspected.",
+    "Route costs are cumulative precision proxies, not measured runtime.",
+    "All-mask refinements are deterministic diagnostic decoding, not a trained diffusion sampler."
+  ]
+}

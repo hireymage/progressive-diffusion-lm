@@ -7,6 +7,7 @@ mlx>=0.21.0
 # Tokenization
 tokenizers>=0.15.0
 sentencepiece>=0.1.99
+mwparserfromhell>=0.6.6
 
 # Dataset streaming from Hugging Face
 datasets>=2.14.0

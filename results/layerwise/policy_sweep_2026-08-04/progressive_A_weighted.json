@@ -1,0 +1,525 @@
+{
+  "offline_only": true,
+  "cache_meta_path": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/data/cache/meta_seq256_c4a40531c04a048e.json",
+  "cache_metadata": {
+    "dataset_name": "wikimedia/wikipedia",
+    "dataset_config": "20231101.en",
+    "dataset_revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+    "tokenizer_sha256": "344c822c8014a67827590390733b32ee940d43d4f589191e11abcc6faf332b66",
+    "seq_len": 256,
+    "max_articles": 50000,
+    "max_text_bytes": 500000000,
+    "train_split": 0.95,
+    "seed": 42,
+    "n_train_chunks": 256180,
+    "n_val_chunks": 13484,
+    "total_tokens": 69033984,
+    "train_sha256": "963d492e55f499f3bb2d7f37d9a8bf87b5c25c8f0541a425608aec3f7c3fe3d8",
+    "val_sha256": "f691bc4100cd534271e2558b49a26365c1135e8c5f86c16fe5823e9a0a5fdb30"
+  },
+  "tokenizer": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/tokenizer/wiki_bpe",
+  "seed": 20260804,
+  "result": {
+    "mode": "policy-sweep",
+    "checkpoint": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/quality-gate-progressive-A-weighted/checkpoints/latest.npz",
+    "checkpoint_loaded": true,
+    "eval_sequence_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "masking": {
+      "rate": 0.5,
+      "seed": 21160804
+    },
+    "milestones": [
+      {
+        "layer": 5,
+        "precision": "q1",
+        "proxy_cost": 5.0
+      },
+      {
+        "layer": 10,
+        "precision": "q2",
+        "proxy_cost": 15.0
+      },
+      {
+        "layer": 15,
+        "precision": "q4",
+        "proxy_cost": 35.0
+      },
+      {
+        "layer": 20,
+        "precision": "q8",
+        "proxy_cost": 75.0
+      },
+      {
+        "layer": 25,
+        "precision": "fp16",
+        "proxy_cost": 155.0
+      }
+    ],
+    "policy": {
+      "kind": "token-wise simulated stable-confidence routing",
+      "confidence_metric": "top-1 softmax probability",
+      "thresholds": [
+        0.5,
+        0.7,
+        0.8,
+        0.9,
+        0.95,
+        0.99
+      ],
+      "rows": [
+        {
+          "accuracy": 0.9054191828091914,
+          "mean_proxy_cost": 62.77507646459101,
+          "savings_vs_full": 0.594999506680058,
+          "exit_distribution": [
+            {
+              "layer": 5,
+              "count": 0
+            },
+            {
+              "layer": 10,
+              "count": 3494
+            },
+            {
+              "layer": 15,
+              "count": 2800
+            },
+            {
+              "layer": 20,
+              "count": 4385
+            },
+            {
+              "layer": 25,
+              "count": 2072
+            }
+          ],
+          "masked_tokens": 12751,
+          "confidence_threshold": 0.5
+        },
+        {
+          "accuracy": 0.9465924241235981,
+          "mean_proxy_cost": 71.55085875617598,
+          "savings_vs_full": 0.5383815564117678,
+          "exit_distribution": [
+            {
+              "layer": 5,
+              "count": 0
+            },
+            {
+              "layer": 10,
+              "count": 2519
+            },
+            {
+              "layer": 15,
+              "count": 2755
+            },
+            {
+              "layer": 20,
+              "count": 4760
+            },
+            {
+              "layer": 25,
+              "count": 2717
+            }
+          ],
+          "masked_tokens": 12751,
+          "confidence_threshold": 0.7
+        },
+        {
+          "accuracy": 0.9613363657752333,
+          "mean_proxy_cost": 77.32138655791702,
+          "savings_vs_full": 0.501152344787632,
+          "exit_distribution": [
+            {
+              "layer": 5,
+              "count": 0
+            },
+            {
+              "layer": 10,
+              "count": 1978
+            },
+            {
+              "layer": 15,
+              "count": 2673
+            },
+            {
+              "layer": 20,
+              "count": 4910
+            },
+            {
+              "layer": 25,
+              "count": 3190
+            }
+          ],
+          "masked_tokens": 12751,
+          "confidence_threshold": 0.8
+        },
+        {
+          "accuracy": 0.9698062897027684,
+          "mean_proxy_cost": 86.52537055917183,
+          "savings_vs_full": 0.4417718028440527,
+          "exit_distribution": [
+            {
+              "layer": 5,
+              "count": 0
+            },
+            {
+              "layer": 10,
+              "count": 1278
+            },
+            {
+              "layer": 15,
+              "count": 2509
+            },
+            {
+              "layer": 20,
+              "count": 4914
+            },
+            {
+              "layer": 25,
+              "count": 4050
+            }
+          ],
+          "masked_tokens": 12751,
+          "confidence_threshold": 0.9
+        },
+        {
+          "accuracy": 0.9720021959062034,
+          "mean_proxy_cost": 96.5104697670771,
+          "savings_vs_full": 0.3773518079543413,
+          "exit_distribution": [
+            {
+              "layer": 5,
+              "count": 0
+            },
+            {
+              "layer": 10,
+              "count": 802
+            },
+            {
+              "layer": 15,
+              "count": 2126
+            },
+            {
+              "layer": 20,
+              "count": 4730
+            },
+            {
+              "layer": 25,
+              "count": 5093
+            }
+          ],
+          "masked_tokens": 12751,
+          "confidence_threshold": 0.95
+        },
+        {
+          "accuracy": 0.9727080229001647,
+          "mean_proxy_cost": 120.07411183436594,
+          "savings_vs_full": 0.22532831074602622,
+          "exit_distribution": [
+            {
+              "layer": 5,
+              "count": 0
+            },
+            {
+              "layer": 10,
+              "count": 197
+            },
+            {
+              "layer": 15,
+              "count": 1114
+            },
+            {
+              "layer": 20,
+              "count": 3551
+            },
+            {
+              "layer": 25,
+              "count": 7889
+            }
+          ],
+          "masked_tokens": 12751,
+          "confidence_threshold": 0.99
+        }
+      ]
+    },
+    "fixed_exits": [
+      {
+        "accuracy": 0.31809269861187356,
+        "mean_proxy_cost": 5.0,
+        "savings_vs_full": 0.967741935483871,
+        "exit_distribution": [
+          {
+            "layer": 5,
+            "count": 12751
+          },
+          {
+            "layer": 10,
+            "count": 0
+          },
+          {
+            "layer": 15,
+            "count": 0
+          },
+          {
+            "layer": 20,
+            "count": 0
+          },
+          {
+            "layer": 25,
+            "count": 0
+          }
+        ],
+        "masked_tokens": 12751,
+        "layer": 5
+      },
+      {
+        "accuracy": 0.46357148458944397,
+        "mean_proxy_cost": 15.0,
+        "savings_vs_full": 0.9032258064516129,
+        "exit_distribution": [
+          {
+            "layer": 5,
+            "count": 0
+          },
+          {
+            "layer": 10,
+            "count": 12751
+          },
+          {
+            "layer": 15,
+            "count": 0
+          },
+          {
+            "layer": 20,
+            "count": 0
+          },
+          {
+            "layer": 25,
+            "count": 0
+          }
+        ],
+        "masked_tokens": 12751,
+        "layer": 10
+      },
+      {
+        "accuracy": 0.793035840326249,
+        "mean_proxy_cost": 35.0,
+        "savings_vs_full": 0.7741935483870968,
+        "exit_distribution": [
+          {
+            "layer": 5,
+            "count": 0
+          },
+          {
+            "layer": 10,
+            "count": 0
+          },
+          {
+            "layer": 15,
+            "count": 12751
+          },
+          {
+            "layer": 20,
+            "count": 0
+          },
+          {
+            "layer": 25,
+            "count": 0
+          }
+        ],
+        "masked_tokens": 12751,
+        "layer": 15
+      },
+      {
+        "accuracy": 0.9391420280762293,
+        "mean_proxy_cost": 75.0,
+        "savings_vs_full": 0.5161290322580645,
+        "exit_distribution": [
+          {
+            "layer": 5,
+            "count": 0
+          },
+          {
+            "layer": 10,
+            "count": 0
+          },
+          {
+            "layer": 15,
+            "count": 0
+          },
+          {
+            "layer": 20,
+            "count": 12751
+          },
+          {
+            "layer": 25,
+            "count": 0
+          }
+        ],
+        "masked_tokens": 12751,
+        "layer": 20
+      },
+      {
+        "accuracy": 0.9725511724570622,
+        "mean_proxy_cost": 155.0,
+        "savings_vs_full": 0.0,
+        "exit_distribution": [
+          {
+            "layer": 5,
+            "count": 0
+          },
+          {
+            "layer": 10,
+            "count": 0
+          },
+          {
+            "layer": 15,
+            "count": 0
+          },
+          {
+            "layer": 20,
+            "count": 0
+          },
+          {
+            "layer": 25,
+            "count": 12751
+          }
+        ],
+        "masked_tokens": 12751,
+        "layer": 25
+      }
+    ],
+    "oracle": {
+      "accuracy": 0.9856481844561211,
+      "mean_proxy_cost": 31.98376597913889,
+      "savings_vs_full": 0.793653122715233,
+      "exit_distribution": [
+        {
+          "layer": 5,
+          "count": 4056
+        },
+        {
+          "layer": 10,
+          "count": 2307
+        },
+        {
+          "layer": 15,
+          "count": 4194
+        },
+        {
+          "layer": 20,
+          "count": 1674
+        },
+        {
+          "layer": 25,
+          "count": 520
+        }
+      ],
+      "masked_tokens": 12751,
+      "label": "ground-truth oracle earliest-correct upper bound (non-deployable)"
+    },
+    "limits": "Algorithmic token-wise/oracle simulation only: it is not an executable sparse speedup or current sequence-wide controller. Proxy-cost savings are simulated per-token accounting, not measured runtime savings."
+  }
+}

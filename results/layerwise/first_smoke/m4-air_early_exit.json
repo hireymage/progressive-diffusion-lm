@@ -1,0 +1,10 @@
+{
+  "exit_layer": 5,
+  "proxy_cost": 5,
+  "mean_margin": 0.17839545011520386,
+  "logits_shape": [
+    1,
+    8,
+    64
+  ]
+}

@@ -1,0 +1,211 @@
+{
+  "status": "complete",
+  "language": "cswiki-only",
+  "mode": "prompt-continuation",
+  "checkpoint": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki-eval/milestone-200k/checkpoint/best.npz",
+  "checkpoint_loaded": true,
+  "cache_meta_path": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/cache/meta_seq256_a92b21bd8b1775d0.json",
+  "tokenizer": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/tokenizer/bpe16k",
+  "per_route": {
+    "q8_only": {
+      "schedule": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8"
+      ],
+      "prompt_continuation": {
+        "prompt": "Ko\u010dka leze d\u00edrou",
+        "prompt_token_ids": [
+          3,
+          3007,
+          1054,
+          413,
+          339,
+          916,
+          583
+        ],
+        "terminal_eos_id": 4,
+        "max_new_tokens": 5,
+        "passes": 4,
+        "continuation_token_ids": [
+          3,
+          3007,
+          1054,
+          413,
+          339,
+          916,
+          583,
+          16,
+          16,
+          3119,
+          350,
+          16,
+          4
+        ],
+        "refinements": [
+          "Ko\u010dka leze d\u00edrou,,",
+          "Ko\u010dka leze d\u00edrou,,,",
+          "Ko\u010dka leze d\u00edrou,,ov\u00e1,",
+          "Ko\u010dka leze d\u00edrou,, Sv\u011btov\u00e1,"
+        ]
+      }
+    },
+    "q8_fp16": {
+      "schedule": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16"
+      ],
+      "prompt_continuation": {
+        "prompt": "Ko\u010dka leze d\u00edrou",
+        "prompt_token_ids": [
+          3,
+          3007,
+          1054,
+          413,
+          339,
+          916,
+          583
+        ],
+        "terminal_eos_id": 4,
+        "max_new_tokens": 5,
+        "passes": 4,
+        "continuation_token_ids": [
+          3,
+          3007,
+          1054,
+          413,
+          339,
+          916,
+          583,
+          16,
+          16,
+          3119,
+          350,
+          16,
+          4
+        ],
+        "refinements": [
+          "Ko\u010dka leze d\u00edrou,,",
+          "Ko\u010dka leze d\u00edrou,,,",
+          "Ko\u010dka leze d\u00edrou,,ov\u00e1,",
+          "Ko\u010dka leze d\u00edrou,, Sv\u011btov\u00e1,"
+        ]
+      }
+    },
+    "q2_q8_fp16": {
+      "schedule": [
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16"
+      ],
+      "prompt_continuation": {
+        "prompt": "Ko\u010dka leze d\u00edrou",
+        "prompt_token_ids": [
+          3,
+          3007,
+          1054,
+          413,
+          339,
+          916,
+          583
+        ],
+        "terminal_eos_id": 4,
+        "max_new_tokens": 5,
+        "passes": 4,
+        "continuation_token_ids": [
+          3,
+          3007,
+          1054,
+          413,
+          339,
+          916,
+          583,
+          16,
+          16,
+          214,
+          2785,
+          16,
+          4
+        ],
+        "refinements": [
+          "Ko\u010dka leze d\u00edrou,,",
+          "Ko\u010dka leze d\u00edrou,,,",
+          "Ko\u010dka leze d\u00edrou,, a,",
+          "Ko\u010dka leze d\u00edrou,, a um\u011bn\u00ed,"
+        ]
+      }
+    }
+  },
+  "output_path": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki-eval/milestone-200k/results/prompt-kocka.json",
+  "limits": [
+    "Prompt prefix is held fixed by token id on every pass.",
+    "Four confidence-ranked infill passes are diagnostic decoding, not measured serving latency."
+  ]
+}

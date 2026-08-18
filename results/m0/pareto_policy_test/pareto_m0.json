@@ -1,0 +1,6560 @@
+{
+  "adaptive_calibration_pareto_frontier": [
+    {
+      "accuracy": 0.04164054804334199,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "confidence_ge_or_le_0.000841604245418"
+    },
+    {
+      "accuracy": 0.041730097609026594,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 1.0085967583057223,
+      "name": "entropy_ge_or_le_7.47831821064"
+    },
+    {
+      "accuracy": 0.042715142831557265,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 1.1126533536312349,
+      "name": "confidence_ge_or_le_0.032776569665"
+    },
+    {
+      "accuracy": 0.04280469239724188,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 1.9739410763857794,
+      "name": "margin_ge_or_le_0.000904972465278"
+    },
+    {
+      "accuracy": 0.04495388197367243,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 6.958628100653712,
+      "name": "confidence_ge_or_le_0.0391589802693"
+    },
+    {
+      "accuracy": 0.0459389271962031,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 6.968299453747649,
+      "name": "margin_ge_or_le_0.00149101674556"
+    },
+    {
+      "accuracy": 0.04665532372167995,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 10.26945464314498,
+      "name": "margin_ge_or_le_0.00243663603834"
+    }
+  ],
+  "adaptive_calibration_selected_heldout": [
+    {
+      "accuracy": 0.04663749943620044,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 11167,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1034,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04663749943620044,
+        "correct_tokens": 1034,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 22171,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05054964858533069,
+          "correct_tokens": 561,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11098,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04271651765555857,
+          "correct_tokens": 473,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11073,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "confidence_ge_or_le_0.000841604245418",
+      "terminal_stage_counts": {
+        "1": 22171,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 0.0008416042454183638,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.047674890622885754,
+      "calibration": {
+        "accuracy": 0.042715142831557265,
+        "correct_tokens": 477,
+        "mean_cumulative_proxy_cost": 1.1126533536312349,
+        "terminal_stage_counts": {
+          "1": 10848,
+          "16": 0,
+          "2": 164,
+          "4": 155,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1057,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.047674890622885754,
+        "correct_tokens": 1057,
+        "mean_cumulative_proxy_cost": 1.1202471697262188,
+        "terminal_stage_counts": {
+          "1": 21564,
+          "16": 0,
+          "2": 244,
+          "4": 363,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 1.0989367453595242,
+          "terminal_stage_counts": {
+            "1": 10847,
+            "16": 0,
+            "2": 102,
+            "4": 149,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04416147385532376,
+          "correct_tokens": 489,
+          "mean_cumulative_proxy_cost": 1.141605707576989,
+          "terminal_stage_counts": {
+            "1": 10717,
+            "16": 0,
+            "2": 142,
+            "4": 214,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 1.1202471697262188,
+      "name": "confidence_ge_or_le_0.032776569665",
+      "terminal_stage_counts": {
+        "1": 21564,
+        "16": 0,
+        "2": 244,
+        "4": 363,
+        "8": 0
+      },
+      "threshold": 0.03277656966503455,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04844165802174011,
+      "calibration": {
+        "accuracy": 0.04495388197367243,
+        "correct_tokens": 502,
+        "mean_cumulative_proxy_cost": 6.958628100653712,
+        "terminal_stage_counts": {
+          "1": 9559,
+          "16": 1430,
+          "2": 77,
+          "4": 101,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1074,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04844165802174011,
+        "correct_tokens": 1074,
+        "mean_cumulative_proxy_cost": 4.8679355915384965,
+        "terminal_stage_counts": {
+          "1": 20113,
+          "16": 1843,
+          "2": 84,
+          "4": 128,
+          "8": 3
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 3.3816903946657053,
+          "terminal_stage_counts": {
+            "1": 10448,
+            "16": 568,
+            "2": 47,
+            "4": 35,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04578704958005961,
+          "correct_tokens": 507,
+          "mean_cumulative_proxy_cost": 6.357536349679401,
+          "terminal_stage_counts": {
+            "1": 9665,
+            "16": 1275,
+            "2": 37,
+            "4": 93,
+            "8": 3
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 4.8679355915384965,
+      "name": "confidence_ge_or_le_0.0391589802693",
+      "terminal_stage_counts": {
+        "1": 20113,
+        "16": 1843,
+        "2": 84,
+        "4": 128,
+        "8": 3
+      },
+      "threshold": 0.03915898026934868,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.046682603400838935,
+      "calibration": {
+        "accuracy": 0.041730097609026594,
+        "correct_tokens": 466,
+        "mean_cumulative_proxy_cost": 1.0085967583057223,
+        "terminal_stage_counts": {
+          "1": 11151,
+          "16": 0,
+          "2": 0,
+          "4": 16,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1035,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.046682603400838935,
+        "correct_tokens": 1035,
+        "mean_cumulative_proxy_cost": 1.0066753867664968,
+        "terminal_stage_counts": {
+          "1": 22131,
+          "16": 0,
+          "2": 23,
+          "4": 17,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0036042530185618,
+          "terminal_stage_counts": {
+            "1": 11078,
+            "16": 0,
+            "2": 20,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04289713718052922,
+          "correct_tokens": 475,
+          "mean_cumulative_proxy_cost": 1.009753454348415,
+          "terminal_stage_counts": {
+            "1": 11053,
+            "16": 0,
+            "2": 3,
+            "4": 17,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0066753867664968,
+      "name": "entropy_ge_or_le_7.47831821064",
+      "terminal_stage_counts": {
+        "1": 22131,
+        "16": 0,
+        "2": 23,
+        "4": 17,
+        "8": 0
+      },
+      "threshold": 7.478318210644733,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04785530648143972,
+      "calibration": {
+        "accuracy": 0.04280469239724188,
+        "correct_tokens": 478,
+        "mean_cumulative_proxy_cost": 1.9739410763857794,
+        "terminal_stage_counts": {
+          "1": 9473,
+          "16": 124,
+          "2": 1176,
+          "4": 337,
+          "8": 57
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1061,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04785530648143972,
+        "correct_tokens": 1061,
+        "mean_cumulative_proxy_cost": 1.5705651526769202,
+        "terminal_stage_counts": {
+          "1": 19772,
+          "16": 155,
+          "2": 2060,
+          "4": 147,
+          "8": 37
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05127049918904307,
+          "correct_tokens": 569,
+          "mean_cumulative_proxy_cost": 1.3094251216435393,
+          "terminal_stage_counts": {
+            "1": 10093,
+            "16": 27,
+            "2": 933,
+            "4": 38,
+            "8": 7
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.044432403142779735,
+          "correct_tokens": 492,
+          "mean_cumulative_proxy_cost": 1.8322947710647521,
+          "terminal_stage_counts": {
+            "1": 9679,
+            "16": 128,
+            "2": 1127,
+            "4": 109,
+            "8": 30
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 1.5705651526769202,
+      "name": "margin_ge_or_le_0.000904972465278",
+      "terminal_stage_counts": {
+        "1": 19772,
+        "16": 155,
+        "2": 2060,
+        "4": 147,
+        "8": 37
+      },
+      "threshold": 0.0009049724652782365,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.048396554057101616,
+      "calibration": {
+        "accuracy": 0.0459389271962031,
+        "correct_tokens": 513,
+        "mean_cumulative_proxy_cost": 6.968299453747649,
+        "terminal_stage_counts": {
+          "1": 7321,
+          "16": 1278,
+          "2": 1887,
+          "4": 681,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1073,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.048396554057101616,
+        "correct_tokens": 1073,
+        "mean_cumulative_proxy_cost": 4.0801497451626,
+        "terminal_stage_counts": {
+          "1": 16776,
+          "16": 1148,
+          "2": 2582,
+          "4": 1624,
+          "8": 41
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 2.403315912777077,
+          "terminal_stage_counts": {
+            "1": 9217,
+            "16": 202,
+            "2": 948,
+            "4": 731,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04560643005508896,
+          "correct_tokens": 505,
+          "mean_cumulative_proxy_cost": 5.760769439176375,
+          "terminal_stage_counts": {
+            "1": 7559,
+            "16": 946,
+            "2": 1634,
+            "4": 893,
+            "8": 41
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 4.0801497451626,
+      "name": "margin_ge_or_le_0.00149101674556",
+      "terminal_stage_counts": {
+        "1": 16776,
+        "16": 1148,
+        "2": 2582,
+        "4": 1624,
+        "8": 41
+      },
+      "threshold": 0.0014910167455584149,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04916332145595598,
+      "calibration": {
+        "accuracy": 0.04665532372167995,
+        "correct_tokens": 521,
+        "mean_cumulative_proxy_cost": 10.26945464314498,
+        "terminal_stage_counts": {
+          "1": 5799,
+          "16": 1941,
+          "2": 1726,
+          "4": 1630,
+          "8": 71
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1090,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04916332145595598,
+        "correct_tokens": 1090,
+        "mean_cumulative_proxy_cost": 8.953633124351631,
+        "terminal_stage_counts": {
+          "1": 10705,
+          "16": 3203,
+          "2": 5258,
+          "4": 2948,
+          "8": 57
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 6.7062533789872045,
+          "terminal_stage_counts": {
+            "1": 5904,
+            "16": 1101,
+            "2": 2969,
+            "4": 1124,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.047141696017339474,
+          "correct_tokens": 522,
+          "mean_cumulative_proxy_cost": 11.206086877991511,
+          "terminal_stage_counts": {
+            "1": 4801,
+            "16": 2102,
+            "2": 2289,
+            "4": 1824,
+            "8": 57
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 8.953633124351631,
+      "name": "margin_ge_or_le_0.00243663603834",
+      "terminal_stage_counts": {
+        "1": 10705,
+        "16": 3203,
+        "2": 5258,
+        "4": 2948,
+        "8": 57
+      },
+      "threshold": 0.002436636038340413,
+      "tokens": 22171
+    }
+  ],
+  "all_deployable_calibration_pareto_frontier": [
+    {
+      "accuracy": 0.04164054804334199,
+      "cost_mode": "cumulative_ladder",
+      "family": "ladder_stop",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "ladder_stop_q1"
+    },
+    {
+      "accuracy": 0.041730097609026594,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 1.0085967583057223,
+      "name": "entropy_ge_or_le_7.47831821064"
+    },
+    {
+      "accuracy": 0.042715142831557265,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 1.1126533536312349,
+      "name": "confidence_ge_or_le_0.032776569665"
+    },
+    {
+      "accuracy": 0.04280469239724188,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 1.9739410763857794,
+      "name": "margin_ge_or_le_0.000904972465278"
+    },
+    {
+      "accuracy": 0.04567027849914928,
+      "cost_mode": "direct_precision",
+      "family": "direct_baseline",
+      "mean_cumulative_proxy_cost": 2.0,
+      "name": "direct_q2"
+    },
+    {
+      "accuracy": 0.046565774155995346,
+      "cost_mode": "direct_precision",
+      "family": "direct_baseline",
+      "mean_cumulative_proxy_cost": 4.0,
+      "name": "direct_q4"
+    },
+    {
+      "accuracy": 0.04665532372167995,
+      "cost_mode": "cumulative_ladder",
+      "family": "adaptive",
+      "mean_cumulative_proxy_cost": 10.26945464314498,
+      "name": "margin_ge_or_le_0.00243663603834"
+    }
+  ],
+  "all_deployable_calibration_selected_heldout": [
+    {
+      "accuracy": 0.04663749943620044,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 11167,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1034,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "ladder_stop",
+      "heldout_aggregate": {
+        "accuracy": 0.04663749943620044,
+        "correct_tokens": 1034,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 22171,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05054964858533069,
+          "correct_tokens": 561,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11098,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04271651765555857,
+          "correct_tokens": 473,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11073,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "ladder_stop_q1",
+      "terminal_stage_counts": {
+        "1": 22171,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 1.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.047719994587524246,
+      "calibration": {
+        "accuracy": 0.04567027849914928,
+        "correct_tokens": 510,
+        "mean_cumulative_proxy_cost": 2.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 11167,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1058,
+      "cost_mode": "direct_precision",
+      "deployable": true,
+      "family": "direct_baseline",
+      "heldout_aggregate": {
+        "accuracy": 0.047719994587524246,
+        "correct_tokens": 1058,
+        "mean_cumulative_proxy_cost": 2.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 22171,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05091007388718688,
+          "correct_tokens": 565,
+          "mean_cumulative_proxy_cost": 2.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 11098,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.044522712905265056,
+          "correct_tokens": 493,
+          "mean_cumulative_proxy_cost": 2.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 11073,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 2.0,
+      "name": "direct_q2",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 0,
+        "2": 22171,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 2.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04853186595101709,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 4.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 11167,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1076,
+      "cost_mode": "direct_precision",
+      "deployable": true,
+      "family": "direct_baseline",
+      "heldout_aggregate": {
+        "accuracy": 0.04853186595101709,
+        "correct_tokens": 1076,
+        "mean_cumulative_proxy_cost": 4.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 22171,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 4.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 11098,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04596766910503025,
+          "correct_tokens": 509,
+          "mean_cumulative_proxy_cost": 4.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 11073,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 4.0,
+      "name": "direct_q4",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 0,
+        "2": 0,
+        "4": 22171,
+        "8": 0
+      },
+      "threshold": 4.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.047674890622885754,
+      "calibration": {
+        "accuracy": 0.042715142831557265,
+        "correct_tokens": 477,
+        "mean_cumulative_proxy_cost": 1.1126533536312349,
+        "terminal_stage_counts": {
+          "1": 10848,
+          "16": 0,
+          "2": 164,
+          "4": 155,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1057,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.047674890622885754,
+        "correct_tokens": 1057,
+        "mean_cumulative_proxy_cost": 1.1202471697262188,
+        "terminal_stage_counts": {
+          "1": 21564,
+          "16": 0,
+          "2": 244,
+          "4": 363,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 1.0989367453595242,
+          "terminal_stage_counts": {
+            "1": 10847,
+            "16": 0,
+            "2": 102,
+            "4": 149,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04416147385532376,
+          "correct_tokens": 489,
+          "mean_cumulative_proxy_cost": 1.141605707576989,
+          "terminal_stage_counts": {
+            "1": 10717,
+            "16": 0,
+            "2": 142,
+            "4": 214,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 1.1202471697262188,
+      "name": "confidence_ge_or_le_0.032776569665",
+      "terminal_stage_counts": {
+        "1": 21564,
+        "16": 0,
+        "2": 244,
+        "4": 363,
+        "8": 0
+      },
+      "threshold": 0.03277656966503455,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.046682603400838935,
+      "calibration": {
+        "accuracy": 0.041730097609026594,
+        "correct_tokens": 466,
+        "mean_cumulative_proxy_cost": 1.0085967583057223,
+        "terminal_stage_counts": {
+          "1": 11151,
+          "16": 0,
+          "2": 0,
+          "4": 16,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1035,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.046682603400838935,
+        "correct_tokens": 1035,
+        "mean_cumulative_proxy_cost": 1.0066753867664968,
+        "terminal_stage_counts": {
+          "1": 22131,
+          "16": 0,
+          "2": 23,
+          "4": 17,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0036042530185618,
+          "terminal_stage_counts": {
+            "1": 11078,
+            "16": 0,
+            "2": 20,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04289713718052922,
+          "correct_tokens": 475,
+          "mean_cumulative_proxy_cost": 1.009753454348415,
+          "terminal_stage_counts": {
+            "1": 11053,
+            "16": 0,
+            "2": 3,
+            "4": 17,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0066753867664968,
+      "name": "entropy_ge_or_le_7.47831821064",
+      "terminal_stage_counts": {
+        "1": 22131,
+        "16": 0,
+        "2": 23,
+        "4": 17,
+        "8": 0
+      },
+      "threshold": 7.478318210644733,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04785530648143972,
+      "calibration": {
+        "accuracy": 0.04280469239724188,
+        "correct_tokens": 478,
+        "mean_cumulative_proxy_cost": 1.9739410763857794,
+        "terminal_stage_counts": {
+          "1": 9473,
+          "16": 124,
+          "2": 1176,
+          "4": 337,
+          "8": 57
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1061,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04785530648143972,
+        "correct_tokens": 1061,
+        "mean_cumulative_proxy_cost": 1.5705651526769202,
+        "terminal_stage_counts": {
+          "1": 19772,
+          "16": 155,
+          "2": 2060,
+          "4": 147,
+          "8": 37
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05127049918904307,
+          "correct_tokens": 569,
+          "mean_cumulative_proxy_cost": 1.3094251216435393,
+          "terminal_stage_counts": {
+            "1": 10093,
+            "16": 27,
+            "2": 933,
+            "4": 38,
+            "8": 7
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.044432403142779735,
+          "correct_tokens": 492,
+          "mean_cumulative_proxy_cost": 1.8322947710647521,
+          "terminal_stage_counts": {
+            "1": 9679,
+            "16": 128,
+            "2": 1127,
+            "4": 109,
+            "8": 30
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 1.5705651526769202,
+      "name": "margin_ge_or_le_0.000904972465278",
+      "terminal_stage_counts": {
+        "1": 19772,
+        "16": 155,
+        "2": 2060,
+        "4": 147,
+        "8": 37
+      },
+      "threshold": 0.0009049724652782365,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04916332145595598,
+      "calibration": {
+        "accuracy": 0.04665532372167995,
+        "correct_tokens": 521,
+        "mean_cumulative_proxy_cost": 10.26945464314498,
+        "terminal_stage_counts": {
+          "1": 5799,
+          "16": 1941,
+          "2": 1726,
+          "4": 1630,
+          "8": 71
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1090,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04916332145595598,
+        "correct_tokens": 1090,
+        "mean_cumulative_proxy_cost": 8.953633124351631,
+        "terminal_stage_counts": {
+          "1": 10705,
+          "16": 3203,
+          "2": 5258,
+          "4": 2948,
+          "8": 57
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 6.7062533789872045,
+          "terminal_stage_counts": {
+            "1": 5904,
+            "16": 1101,
+            "2": 2969,
+            "4": 1124,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.047141696017339474,
+          "correct_tokens": 522,
+          "mean_cumulative_proxy_cost": 11.206086877991511,
+          "terminal_stage_counts": {
+            "1": 4801,
+            "16": 2102,
+            "2": 2289,
+            "4": 1824,
+            "8": 57
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 8.953633124351631,
+      "name": "margin_ge_or_le_0.00243663603834",
+      "terminal_stage_counts": {
+        "1": 10705,
+        "16": 3203,
+        "2": 5258,
+        "4": 2948,
+        "8": 57
+      },
+      "threshold": 0.002436636038340413,
+      "tokens": 22171
+    }
+  ],
+  "analysis_type": "m0_offline_adaptive_policy_pareto",
+  "calibration": {
+    "fixture_seed": 20260804,
+    "source": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-256_s20260804",
+    "threshold_source": "feature quantiles from calibration run only",
+    "tokens": 11167
+  },
+  "cumulative_proxy_costs": {
+    "1": 1,
+    "16": 47,
+    "2": 3,
+    "4": 7,
+    "8": 15
+  },
+  "direct_proxy_costs": {
+    "1": 1,
+    "16": 32,
+    "2": 2,
+    "4": 4,
+    "8": 8
+  },
+  "heldout_paired_cluster_bootstrap": {
+    "confidence_ge_or_le_0.000841604245418": {
+      "direct_q1": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          0.0,
+          0.0
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          0.0,
+          0.0
+        ],
+        "point_accuracy_delta": 0.0,
+        "point_mean_cost_delta": 0.0
+      },
+      "direct_q2": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.003185141647958651,
+          0.0008433421727714962
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -1.0,
+          -1.0
+        ],
+        "point_accuracy_delta": -0.0010824951513238013,
+        "point_mean_cost_delta": -1.0
+      },
+      "direct_q4": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.004325963283581666,
+          0.00035246617984518053
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -3.0,
+          -3.0
+        ],
+        "point_accuracy_delta": -0.0018943665148166524,
+        "point_mean_cost_delta": -3.0
+      },
+      "direct_q8": {
+        "accuracy_ci_excludes_zero": true,
+        "accuracy_delta_ci_95": [
+          -0.004465501853982866,
+          -0.00017286312087321865
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -7.0,
+          -7.0
+        ],
+        "point_accuracy_delta": -0.0021649903026476026,
+        "point_mean_cost_delta": -7.0
+      },
+      "direct_qfp32": {
+        "accuracy_ci_excludes_zero": true,
+        "accuracy_delta_ci_95": [
+          -0.004465501853982866,
+          -0.00017286312087321865
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -31.0,
+          -31.0
+        ],
+        "point_accuracy_delta": -0.0021649903026476026,
+        "point_mean_cost_delta": -31.0
+      }
+    },
+    "confidence_ge_or_le_0.032776569665": {
+      "direct_q1": {
+        "accuracy_ci_excludes_zero": true,
+        "accuracy_delta_ci_95": [
+          0.000351541058156323,
+          0.0018429734566415728
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          0.06922712340134297,
+          0.17736502880703506
+        ],
+        "point_accuracy_delta": 0.0010373911866853097,
+        "point_mean_cost_delta": 0.12024716972621893
+      },
+      "direct_q2": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.002136676862488128,
+          0.0018075974538869105
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -0.930772876598657,
+          -0.8226349711929649
+        ],
+        "point_accuracy_delta": -4.510396463849172e-05,
+        "point_mean_cost_delta": -0.879752830273781
+      },
+      "direct_q4": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.00303176684004136,
+          0.0012227891613669365
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -2.930772876598657,
+          -2.822634971192965
+        ],
+        "point_accuracy_delta": -0.0008569753281313428,
+        "point_mean_cost_delta": -2.879752830273781
+      },
+      "direct_q8": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0030888027041588912,
+          0.0006664416583164087
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -6.930772876598658,
+          -6.822634971192965
+        ],
+        "point_accuracy_delta": -0.0011275991159622931,
+        "point_mean_cost_delta": -6.879752830273781
+      },
+      "direct_qfp32": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0030888027041588912,
+          0.0006664416583164087
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -30.930772876598656,
+          -30.822634971192965
+        ],
+        "point_accuracy_delta": -0.0011275991159622931,
+        "point_mean_cost_delta": -30.87975283027378
+      }
+    },
+    "confidence_ge_or_le_0.0391589802693": {
+      "direct_q1": {
+        "accuracy_ci_excludes_zero": true,
+        "accuracy_delta_ci_95": [
+          0.0005009327922989742,
+          0.0033142649469943067
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          1.6803122838521714,
+          6.3339464059205275
+        ],
+        "point_accuracy_delta": 0.001804158585539669,
+        "point_mean_cost_delta": 3.867935591538496
+      },
+      "direct_q2": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0005426177302085396,
+          0.002128595730229864
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          0.6803122838521714,
+          5.3339464059205275
+        ],
+        "point_accuracy_delta": 0.0007216634342158676,
+        "point_mean_cost_delta": 2.867935591538496
+      },
+      "direct_q4": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0016176668663692257,
+          0.0016385442458090468
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -1.3196877161478286,
+          3.3339464059205275
+        ],
+        "point_accuracy_delta": -9.020792927698345e-05,
+        "point_mean_cost_delta": 0.8679355915384962
+      },
+      "direct_q8": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0016973140226474739,
+          0.0008383555726644492
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -5.319687716147829,
+          -0.6660535940794726
+        ],
+        "point_accuracy_delta": -0.0003608317171079338,
+        "point_mean_cost_delta": -3.132064408461504
+      },
+      "direct_qfp32": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0016973140226474739,
+          0.0008383555726644492
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -29.31968771614783,
+          -24.66605359407947
+        ],
+        "point_accuracy_delta": -0.0003608317171079338,
+        "point_mean_cost_delta": -27.132064408461503
+      }
+    },
+    "entropy_ge_or_le_7.47831821064": {
+      "direct_q1": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.00013454845580607616,
+          0.00027093176532250787
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          0.0,
+          0.01767942922326836
+        ],
+        "point_accuracy_delta": 4.510396463849172e-05,
+        "point_mean_cost_delta": 0.006675386766496775
+      },
+      "direct_q2": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0031546259964624623,
+          0.000856065099668692
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -1.0,
+          -0.9823205707767316
+        ],
+        "point_accuracy_delta": -0.0010373911866853097,
+        "point_mean_cost_delta": -0.9933246132335032
+      },
+      "direct_q4": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0042833729841289326,
+          0.00035376523328617675
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -3.0,
+          -2.9823205707767317
+        ],
+        "point_accuracy_delta": -0.0018492625501781606,
+        "point_mean_cost_delta": -2.9933246132335034
+      },
+      "direct_q8": {
+        "accuracy_ci_excludes_zero": true,
+        "accuracy_delta_ci_95": [
+          -0.004363679871358949,
+          -0.00014821948742368884
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -7.0,
+          -6.982320570776731
+        ],
+        "point_accuracy_delta": -0.002119886338009111,
+        "point_mean_cost_delta": -6.993324613233503
+      },
+      "direct_qfp32": {
+        "accuracy_ci_excludes_zero": true,
+        "accuracy_delta_ci_95": [
+          -0.004363679871358949,
+          -0.00014821948742368884
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -31.0,
+          -30.98232057077673
+        ],
+        "point_accuracy_delta": -0.002119886338009111,
+        "point_mean_cost_delta": -30.993324613233504
+      }
+    },
+    "margin_ge_or_le_0.000904972465278": {
+      "direct_q1": {
+        "accuracy_ci_excludes_zero": true,
+        "accuracy_delta_ci_95": [
+          0.0002588605866988855,
+          0.0022921387228824275
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          0.2489832146105685,
+          0.9785000039872623
+        ],
+        "point_accuracy_delta": 0.0012178070452392765,
+        "point_mean_cost_delta": 0.5705651526769203
+      },
+      "direct_q2": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0015728329729233785,
+          0.0018180209991627769
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -0.7510167853894315,
+          -0.02149999601273763
+        ],
+        "point_accuracy_delta": 0.00013531189391547516,
+        "point_mean_cost_delta": -0.4294348473230797
+      },
+      "direct_q4": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0028994171045298753,
+          0.001520176197236084
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -2.751016785389431,
+          -2.021499996012738
+        ],
+        "point_accuracy_delta": -0.0006765594695773759,
+        "point_mean_cost_delta": -2.42943484732308
+      },
+      "direct_q8": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.003019091142414504,
+          0.0009527155373997327
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -6.751016785389432,
+          -6.0214999960127376
+        ],
+        "point_accuracy_delta": -0.0009471832574083262,
+        "point_mean_cost_delta": -6.42943484732308
+      },
+      "direct_qfp32": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.003019091142414504,
+          0.0009527155373997327
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -30.75101678538943,
+          -30.021499996012736
+        ],
+        "point_accuracy_delta": -0.0009471832574083262,
+        "point_mean_cost_delta": -30.42943484732308
+      }
+    },
+    "margin_ge_or_le_0.00149101674556": {
+      "direct_q1": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -8.880108499442548e-05,
+          0.00375786403726918
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          1.3226931197772591,
+          5.2820956248338415
+        ],
+        "point_accuracy_delta": 0.0017590546209011772,
+        "point_mean_cost_delta": 3.0801497451625997
+      },
+      "direct_q2": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.00022275273259689916,
+          0.0018648700831252047
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          0.322693119777259,
+          4.2820956248338415
+        ],
+        "point_accuracy_delta": 0.0006765594695773759,
+        "point_mean_cost_delta": 2.0801497451625997
+      },
+      "direct_q4": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0018753112558725152,
+          0.0016990079645856357
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -1.6773068802227409,
+          2.2820956248338415
+        ],
+        "point_accuracy_delta": -0.00013531189391547516,
+        "point_mean_cost_delta": 0.08014974516259979
+      },
+      "direct_q8": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0019516669947131449,
+          0.0008431476726026152
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -5.6773068802227415,
+          -1.717904375166159
+        ],
+        "point_accuracy_delta": -0.0004059356817464255,
+        "point_mean_cost_delta": -3.9198502548374003
+      },
+      "direct_qfp32": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.0019516669947131449,
+          0.0008431476726026152
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -29.67730688022274,
+          -25.71790437516616
+        ],
+        "point_accuracy_delta": -0.0004059356817464255,
+        "point_mean_cost_delta": -27.9198502548374
+      }
+    },
+    "margin_ge_or_le_0.00243663603834": {
+      "direct_q1": {
+        "accuracy_ci_excludes_zero": true,
+        "accuracy_delta_ci_95": [
+          0.0005290701813306032,
+          0.004679666123103286
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          5.576741788423363,
+          10.538742227149529
+        ],
+        "point_accuracy_delta": 0.0025258220197555367,
+        "point_mean_cost_delta": 7.95363312435163
+      },
+      "direct_q2": {
+        "accuracy_ci_excludes_zero": true,
+        "accuracy_delta_ci_95": [
+          0.00022435433680387753,
+          0.003012108830926844
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          4.576741788423363,
+          9.538742227149529
+        ],
+        "point_accuracy_delta": 0.0014433268684317351,
+        "point_mean_cost_delta": 6.95363312435163
+      },
+      "direct_q4": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.00013856403314097622,
+          0.0020450827650418113
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          2.576741788423363,
+          7.538742227149528
+        ],
+        "point_accuracy_delta": 0.0006314555049388842,
+        "point_mean_cost_delta": 4.95363312435163
+      },
+      "direct_q8": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.00013856403314097622,
+          0.001210184115253064
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -1.4232582115766366,
+          3.538742227149528
+        ],
+        "point_accuracy_delta": 0.0003608317171079338,
+        "point_mean_cost_delta": 0.9536331243516305
+      },
+      "direct_qfp32": {
+        "accuracy_ci_excludes_zero": false,
+        "accuracy_delta_ci_95": [
+          -0.00013856403314097622,
+          0.001210184115253064
+        ],
+        "bootstrap_iterations": 2000,
+        "bootstrap_seed": 20260807,
+        "cluster_count": 20,
+        "cluster_definition": "(heldout_source, fixture_index)",
+        "mean_cost_delta_ci_95": [
+          -25.423258211576638,
+          -20.461257772850473
+        ],
+        "point_accuracy_delta": 0.0003608317171079338,
+        "point_mean_cost_delta": -23.04636687564837
+      }
+    }
+  },
+  "heldout_sources": [
+    "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805",
+    "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806"
+  ],
+  "methodology": {
+    "bootstrap": "Deterministic paired cluster bootstrap is held-out evaluation-only and does not alter policy selection.",
+    "heldout_labels": "Evaluation-only: held-out outcomes do not select policies or alter either calibration-selected held-out report.",
+    "policy_selection": "Calibration labels choose frozen adaptive-only and all-deployable calibration frontiers; the all-deployable comparison includes direct baselines.",
+    "threshold_candidates": "Feature quantiles from the calibration run only."
+  },
+  "observed_heldout_frontier": [
+    {
+      "accuracy": 0.04663749943620044,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 11167,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1034,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "ladder_stop",
+      "heldout_aggregate": {
+        "accuracy": 0.04663749943620044,
+        "correct_tokens": 1034,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 22171,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05054964858533069,
+          "correct_tokens": 561,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11098,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04271651765555857,
+          "correct_tokens": 473,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11073,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "ladder_stop_q1",
+      "terminal_stage_counts": {
+        "1": 22171,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 1.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.046682603400838935,
+      "calibration": {
+        "accuracy": 0.041730097609026594,
+        "correct_tokens": 466,
+        "mean_cumulative_proxy_cost": 1.0085967583057223,
+        "terminal_stage_counts": {
+          "1": 11151,
+          "16": 0,
+          "2": 0,
+          "4": 16,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1035,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.046682603400838935,
+        "correct_tokens": 1035,
+        "mean_cumulative_proxy_cost": 1.0066753867664968,
+        "terminal_stage_counts": {
+          "1": 22131,
+          "16": 0,
+          "2": 23,
+          "4": 17,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0036042530185618,
+          "terminal_stage_counts": {
+            "1": 11078,
+            "16": 0,
+            "2": 20,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04289713718052922,
+          "correct_tokens": 475,
+          "mean_cumulative_proxy_cost": 1.009753454348415,
+          "terminal_stage_counts": {
+            "1": 11053,
+            "16": 0,
+            "2": 3,
+            "4": 17,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0066753867664968,
+      "name": "entropy_ge_or_le_7.47831821064",
+      "terminal_stage_counts": {
+        "1": 22131,
+        "16": 0,
+        "2": 23,
+        "4": 17,
+        "8": 0
+      },
+      "threshold": 7.478318210644733,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04681791529475441,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.2183218411390704,
+        "terminal_stage_counts": {
+          "1": 11114,
+          "16": 53,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1038,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04681791529475441,
+        "correct_tokens": 1038,
+        "mean_cumulative_proxy_cost": 1.0795633936222995,
+        "terminal_stage_counts": {
+          "1": 22077,
+          "16": 30,
+          "2": 0,
+          "4": 64,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0145972247251758,
+          "terminal_stage_counts": {
+            "1": 11071,
+            "16": 0,
+            "2": 0,
+            "4": 27,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04316806646798519,
+          "correct_tokens": 478,
+          "mean_cumulative_proxy_cost": 1.14467623950149,
+          "terminal_stage_counts": {
+            "1": 11006,
+            "16": 30,
+            "2": 0,
+            "4": 37,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0795633936222995,
+      "name": "entropy_ge_or_le_7.31127704957",
+      "terminal_stage_counts": {
+        "1": 22077,
+        "16": 30,
+        "2": 0,
+        "4": 64,
+        "8": 0
+      },
+      "threshold": 7.311277049565737,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.047674890622885754,
+      "calibration": {
+        "accuracy": 0.042715142831557265,
+        "correct_tokens": 477,
+        "mean_cumulative_proxy_cost": 1.1126533536312349,
+        "terminal_stage_counts": {
+          "1": 10848,
+          "16": 0,
+          "2": 164,
+          "4": 155,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1057,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.047674890622885754,
+        "correct_tokens": 1057,
+        "mean_cumulative_proxy_cost": 1.1202471697262188,
+        "terminal_stage_counts": {
+          "1": 21564,
+          "16": 0,
+          "2": 244,
+          "4": 363,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 1.0989367453595242,
+          "terminal_stage_counts": {
+            "1": 10847,
+            "16": 0,
+            "2": 102,
+            "4": 149,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04416147385532376,
+          "correct_tokens": 489,
+          "mean_cumulative_proxy_cost": 1.141605707576989,
+          "terminal_stage_counts": {
+            "1": 10717,
+            "16": 0,
+            "2": 142,
+            "4": 214,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 1.1202471697262188,
+      "name": "confidence_ge_or_le_0.032776569665",
+      "terminal_stage_counts": {
+        "1": 21564,
+        "16": 0,
+        "2": 244,
+        "4": 363,
+        "8": 0
+      },
+      "threshold": 0.03277656966503455,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04776509855216274,
+      "calibration": {
+        "accuracy": 0.04262559326587266,
+        "correct_tokens": 476,
+        "mean_cumulative_proxy_cost": 1.2294259872839617,
+        "terminal_stage_counts": {
+          "1": 10848,
+          "16": 8,
+          "2": 0,
+          "4": 270,
+          "8": 41
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1059,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04776509855216274,
+        "correct_tokens": 1059,
+        "mean_cumulative_proxy_cost": 1.262054034549637,
+        "terminal_stage_counts": {
+          "1": 21564,
+          "16": 34,
+          "2": 0,
+          "4": 472,
+          "8": 101
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 1.1789511623715985,
+          "terminal_stage_counts": {
+            "1": 10847,
+            "16": 0,
+            "2": 0,
+            "4": 191,
+            "8": 60
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04434209338029441,
+          "correct_tokens": 491,
+          "mean_cumulative_proxy_cost": 1.3453445317438815,
+          "terminal_stage_counts": {
+            "1": 10717,
+            "16": 34,
+            "2": 0,
+            "4": 281,
+            "8": 41
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 1.262054034549637,
+      "name": "confidence_agreement_0.032776569665",
+      "terminal_stage_counts": {
+        "1": 21564,
+        "16": 34,
+        "2": 0,
+        "4": 472,
+        "8": 101
+      },
+      "threshold": 0.03277656966503455,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04785530648143972,
+      "calibration": {
+        "accuracy": 0.04280469239724188,
+        "correct_tokens": 478,
+        "mean_cumulative_proxy_cost": 1.9739410763857794,
+        "terminal_stage_counts": {
+          "1": 9473,
+          "16": 124,
+          "2": 1176,
+          "4": 337,
+          "8": 57
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1061,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04785530648143972,
+        "correct_tokens": 1061,
+        "mean_cumulative_proxy_cost": 1.5705651526769202,
+        "terminal_stage_counts": {
+          "1": 19772,
+          "16": 155,
+          "2": 2060,
+          "4": 147,
+          "8": 37
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05127049918904307,
+          "correct_tokens": 569,
+          "mean_cumulative_proxy_cost": 1.3094251216435393,
+          "terminal_stage_counts": {
+            "1": 10093,
+            "16": 27,
+            "2": 933,
+            "4": 38,
+            "8": 7
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.044432403142779735,
+          "correct_tokens": 492,
+          "mean_cumulative_proxy_cost": 1.8322947710647521,
+          "terminal_stage_counts": {
+            "1": 9679,
+            "16": 128,
+            "2": 1127,
+            "4": 109,
+            "8": 30
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 1.5705651526769202,
+      "name": "margin_ge_or_le_0.000904972465278",
+      "terminal_stage_counts": {
+        "1": 19772,
+        "16": 155,
+        "2": 2060,
+        "4": 147,
+        "8": 37
+      },
+      "threshold": 0.0009049724652782365,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04853186595101709,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 4.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 11167,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1076,
+      "cost_mode": "direct_precision",
+      "deployable": true,
+      "family": "direct_baseline",
+      "heldout_aggregate": {
+        "accuracy": 0.04853186595101709,
+        "correct_tokens": 1076,
+        "mean_cumulative_proxy_cost": 4.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 22171,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 4.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 11098,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04596766910503025,
+          "correct_tokens": 509,
+          "mean_cumulative_proxy_cost": 4.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 11073,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 4.0,
+      "name": "direct_q4",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 0,
+        "2": 0,
+        "4": 22171,
+        "8": 0
+      },
+      "threshold": 4.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 8.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 11167
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "direct_precision",
+      "deployable": true,
+      "family": "direct_baseline",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 8.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 22171
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 8.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 11098
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 8.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 11073
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 8.0,
+      "name": "direct_q8",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 22171
+      },
+      "threshold": 8.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04916332145595598,
+      "calibration": {
+        "accuracy": 0.04665532372167995,
+        "correct_tokens": 521,
+        "mean_cumulative_proxy_cost": 10.26945464314498,
+        "terminal_stage_counts": {
+          "1": 5799,
+          "16": 1941,
+          "2": 1726,
+          "4": 1630,
+          "8": 71
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1090,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04916332145595598,
+        "correct_tokens": 1090,
+        "mean_cumulative_proxy_cost": 8.953633124351631,
+        "terminal_stage_counts": {
+          "1": 10705,
+          "16": 3203,
+          "2": 5258,
+          "4": 2948,
+          "8": 57
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 6.7062533789872045,
+          "terminal_stage_counts": {
+            "1": 5904,
+            "16": 1101,
+            "2": 2969,
+            "4": 1124,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.047141696017339474,
+          "correct_tokens": 522,
+          "mean_cumulative_proxy_cost": 11.206086877991511,
+          "terminal_stage_counts": {
+            "1": 4801,
+            "16": 2102,
+            "2": 2289,
+            "4": 1824,
+            "8": 57
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 8.953633124351631,
+      "name": "margin_ge_or_le_0.00243663603834",
+      "terminal_stage_counts": {
+        "1": 10705,
+        "16": 3203,
+        "2": 5258,
+        "4": 2948,
+        "8": 57
+      },
+      "threshold": 0.002436636038340413,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04920842542059447,
+      "calibration": {
+        "accuracy": 0.04665532372167995,
+        "correct_tokens": 521,
+        "mean_cumulative_proxy_cost": 14.688009313154831,
+        "terminal_stage_counts": {
+          "1": 4016,
+          "16": 3028,
+          "2": 2879,
+          "4": 1201,
+          "8": 43
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1091,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04920842542059447,
+        "correct_tokens": 1091,
+        "mean_cumulative_proxy_cost": 12.346082720671147,
+        "terminal_stage_counts": {
+          "1": 7688,
+          "16": 4687,
+          "2": 5782,
+          "4": 3976,
+          "8": 38
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05127049918904307,
+          "correct_tokens": 569,
+          "mean_cumulative_proxy_cost": 9.74355739772932,
+          "terminal_stage_counts": {
+            "1": 4120,
+            "16": 1688,
+            "2": 3146,
+            "4": 2115,
+            "8": 29
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.047141696017339474,
+          "correct_tokens": 522,
+          "mean_cumulative_proxy_cost": 14.954483879707396,
+          "terminal_stage_counts": {
+            "1": 3568,
+            "16": 2999,
+            "2": 2636,
+            "4": 1861,
+            "8": 9
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 12.346082720671147,
+      "name": "margin_ge_or_le_0.0029762543784",
+      "terminal_stage_counts": {
+        "1": 7688,
+        "16": 4687,
+        "2": 5782,
+        "4": 3976,
+        "8": 38
+      },
+      "threshold": 0.002976254378398227,
+      "tokens": 22171
+    }
+  ],
+  "observed_heldout_frontier_note": "Diagnostic only; never used for policy selection.",
+  "oracle_upper_bound": {
+    "accuracy": 0.05358350999052817,
+    "calibration": {
+      "accuracy": 0.050505955046118024,
+      "correct_tokens": 564,
+      "mean_cumulative_proxy_cost": 44.70018805408794,
+      "terminal_stage_counts": {
+        "1": 465,
+        "16": 10603,
+        "2": 87,
+        "4": 10,
+        "8": 2
+      },
+      "tokens": 11167
+    },
+    "correct_tokens": 1188,
+    "cost_mode": "cumulative_ladder",
+    "deployable": false,
+    "family": "oracle",
+    "heldout_aggregate": {
+      "accuracy": 0.05358350999052817,
+      "correct_tokens": 1188,
+      "mean_cumulative_proxy_cost": 44.55644761174507,
+      "terminal_stage_counts": {
+        "1": 1034,
+        "16": 20983,
+        "2": 113,
+        "4": 41,
+        "8": 0
+      },
+      "tokens": 22171
+    },
+    "heldout_by_run": {
+      "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+        "accuracy": 0.05550549648585331,
+        "correct_tokens": 616,
+        "mean_cumulative_proxy_cost": 44.46350693818706,
+        "terminal_stage_counts": {
+          "1": 561,
+          "16": 10482,
+          "2": 36,
+          "4": 19,
+          "8": 0
+        },
+        "tokens": 11098
+      },
+      "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+        "accuracy": 0.05165718414160571,
+        "correct_tokens": 572,
+        "mean_cumulative_proxy_cost": 44.64959812155694,
+        "terminal_stage_counts": {
+          "1": 473,
+          "16": 10501,
+          "2": 77,
+          "4": 22,
+          "8": 0
+        },
+        "tokens": 11073
+      }
+    },
+    "kind": "oracle",
+    "mean_cumulative_proxy_cost": 44.55644761174507,
+    "name": "oracle_upper_bound",
+    "terminal_stage_counts": {
+      "1": 1034,
+      "16": 20983,
+      "2": 113,
+      "4": 41,
+      "8": 0
+    },
+    "threshold": null,
+    "tokens": 22171
+  },
+  "policies": [
+    {
+      "accuracy": 0.04663749943620044,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 11167,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1034,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "ladder_stop",
+      "heldout_aggregate": {
+        "accuracy": 0.04663749943620044,
+        "correct_tokens": 1034,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 22171,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05054964858533069,
+          "correct_tokens": 561,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11098,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04271651765555857,
+          "correct_tokens": 473,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11073,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "ladder_stop_q1",
+      "terminal_stage_counts": {
+        "1": 22171,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 1.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.047719994587524246,
+      "calibration": {
+        "accuracy": 0.04567027849914928,
+        "correct_tokens": 510,
+        "mean_cumulative_proxy_cost": 3.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 11167,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1058,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "ladder_stop",
+      "heldout_aggregate": {
+        "accuracy": 0.047719994587524246,
+        "correct_tokens": 1058,
+        "mean_cumulative_proxy_cost": 3.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 22171,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05091007388718688,
+          "correct_tokens": 565,
+          "mean_cumulative_proxy_cost": 3.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 11098,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.044522712905265056,
+          "correct_tokens": 493,
+          "mean_cumulative_proxy_cost": 3.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 11073,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 3.0,
+      "name": "ladder_stop_q2",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 0,
+        "2": 22171,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 2.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04853186595101709,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 7.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 11167,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1076,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "ladder_stop",
+      "heldout_aggregate": {
+        "accuracy": 0.04853186595101709,
+        "correct_tokens": 1076,
+        "mean_cumulative_proxy_cost": 7.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 22171,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 7.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 11098,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04596766910503025,
+          "correct_tokens": 509,
+          "mean_cumulative_proxy_cost": 7.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 11073,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 7.0,
+      "name": "ladder_stop_q4",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 0,
+        "2": 0,
+        "4": 22171,
+        "8": 0
+      },
+      "threshold": 4.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 15.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 11167
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "ladder_stop",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 15.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 22171
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 15.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 11098
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 15.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 11073
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 15.0,
+      "name": "ladder_stop_q8",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 22171
+      },
+      "threshold": 8.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 47.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 11167,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "ladder_stop",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 47.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 22171,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 47.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 11098,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 47.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 11073,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 47.0,
+      "name": "ladder_stop_q16",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 22171,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 16.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04663749943620044,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 11167,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1034,
+      "cost_mode": "direct_precision",
+      "deployable": true,
+      "family": "direct_baseline",
+      "heldout_aggregate": {
+        "accuracy": 0.04663749943620044,
+        "correct_tokens": 1034,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 22171,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05054964858533069,
+          "correct_tokens": 561,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11098,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04271651765555857,
+          "correct_tokens": 473,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11073,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "direct_q1",
+      "terminal_stage_counts": {
+        "1": 22171,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 1.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.047719994587524246,
+      "calibration": {
+        "accuracy": 0.04567027849914928,
+        "correct_tokens": 510,
+        "mean_cumulative_proxy_cost": 2.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 11167,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1058,
+      "cost_mode": "direct_precision",
+      "deployable": true,
+      "family": "direct_baseline",
+      "heldout_aggregate": {
+        "accuracy": 0.047719994587524246,
+        "correct_tokens": 1058,
+        "mean_cumulative_proxy_cost": 2.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 22171,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05091007388718688,
+          "correct_tokens": 565,
+          "mean_cumulative_proxy_cost": 2.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 11098,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.044522712905265056,
+          "correct_tokens": 493,
+          "mean_cumulative_proxy_cost": 2.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 11073,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 2.0,
+      "name": "direct_q2",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 0,
+        "2": 22171,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 2.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04853186595101709,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 4.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 11167,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1076,
+      "cost_mode": "direct_precision",
+      "deployable": true,
+      "family": "direct_baseline",
+      "heldout_aggregate": {
+        "accuracy": 0.04853186595101709,
+        "correct_tokens": 1076,
+        "mean_cumulative_proxy_cost": 4.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 22171,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 4.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 11098,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04596766910503025,
+          "correct_tokens": 509,
+          "mean_cumulative_proxy_cost": 4.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 11073,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 4.0,
+      "name": "direct_q4",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 0,
+        "2": 0,
+        "4": 22171,
+        "8": 0
+      },
+      "threshold": 4.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 8.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 11167
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "direct_precision",
+      "deployable": true,
+      "family": "direct_baseline",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 8.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 22171
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 8.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 11098
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 8.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 11073
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 8.0,
+      "name": "direct_q8",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 22171
+      },
+      "threshold": 8.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 32.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 11167,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "direct_precision",
+      "deployable": true,
+      "family": "direct_baseline",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 32.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 22171,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 32.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 11098,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 32.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 11073,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "fixed_stop",
+      "mean_cumulative_proxy_cost": 32.0,
+      "name": "direct_qfp32",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 22171,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 16.0,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04663749943620044,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 11167,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1034,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04663749943620044,
+        "correct_tokens": 1034,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 22171,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05054964858533069,
+          "correct_tokens": 561,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11098,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04271651765555857,
+          "correct_tokens": 473,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11073,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "confidence_ge_or_le_0.000841604245418",
+      "terminal_stage_counts": {
+        "1": 22171,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 0.0008416042454183638,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.047674890622885754,
+      "calibration": {
+        "accuracy": 0.042715142831557265,
+        "correct_tokens": 477,
+        "mean_cumulative_proxy_cost": 1.1126533536312349,
+        "terminal_stage_counts": {
+          "1": 10848,
+          "16": 0,
+          "2": 164,
+          "4": 155,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1057,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.047674890622885754,
+        "correct_tokens": 1057,
+        "mean_cumulative_proxy_cost": 1.1202471697262188,
+        "terminal_stage_counts": {
+          "1": 21564,
+          "16": 0,
+          "2": 244,
+          "4": 363,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 1.0989367453595242,
+          "terminal_stage_counts": {
+            "1": 10847,
+            "16": 0,
+            "2": 102,
+            "4": 149,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04416147385532376,
+          "correct_tokens": 489,
+          "mean_cumulative_proxy_cost": 1.141605707576989,
+          "terminal_stage_counts": {
+            "1": 10717,
+            "16": 0,
+            "2": 142,
+            "4": 214,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 1.1202471697262188,
+      "name": "confidence_ge_or_le_0.032776569665",
+      "terminal_stage_counts": {
+        "1": 21564,
+        "16": 0,
+        "2": 244,
+        "4": 363,
+        "8": 0
+      },
+      "threshold": 0.03277656966503455,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.047674890622885754,
+      "calibration": {
+        "accuracy": 0.042715142831557265,
+        "correct_tokens": 477,
+        "mean_cumulative_proxy_cost": 1.1126533536312349,
+        "terminal_stage_counts": {
+          "1": 10848,
+          "16": 0,
+          "2": 164,
+          "4": 155,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1057,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.047674890622885754,
+        "correct_tokens": 1057,
+        "mean_cumulative_proxy_cost": 1.1221415362410356,
+        "terminal_stage_counts": {
+          "1": 21563,
+          "16": 0,
+          "2": 235,
+          "4": 373,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 1.0991169580104523,
+          "terminal_stage_counts": {
+            "1": 10846,
+            "16": 0,
+            "2": 103,
+            "4": 149,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04416147385532376,
+          "correct_tokens": 489,
+          "mean_cumulative_proxy_cost": 1.145218098076402,
+          "terminal_stage_counts": {
+            "1": 10717,
+            "16": 0,
+            "2": 132,
+            "4": 224,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 1.1221415362410356,
+      "name": "confidence_ge_or_le_0.0334073423689",
+      "terminal_stage_counts": {
+        "1": 21563,
+        "16": 0,
+        "2": 235,
+        "4": 373,
+        "8": 0
+      },
+      "threshold": 0.03340734236894569,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.047674890622885754,
+      "calibration": {
+        "accuracy": 0.04262559326587266,
+        "correct_tokens": 476,
+        "mean_cumulative_proxy_cost": 1.5364018984507926,
+        "terminal_stage_counts": {
+          "1": 10848,
+          "16": 118,
+          "2": 161,
+          "4": 40,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1057,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.047674890622885754,
+        "correct_tokens": 1057,
+        "mean_cumulative_proxy_cost": 1.5075098101123088,
+        "terminal_stage_counts": {
+          "1": 21559,
+          "16": 198,
+          "2": 93,
+          "4": 317,
+          "8": 4
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 1.5000901063254641,
+          "terminal_stage_counts": {
+            "1": 10843,
+            "16": 105,
+            "2": 51,
+            "4": 96,
+            "8": 3
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04416147385532376,
+          "correct_tokens": 489,
+          "mean_cumulative_proxy_cost": 1.5149462656913213,
+          "terminal_stage_counts": {
+            "1": 10716,
+            "16": 93,
+            "2": 42,
+            "4": 221,
+            "8": 1
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 1.5075098101123088,
+      "name": "confidence_ge_or_le_0.0370916567725",
+      "terminal_stage_counts": {
+        "1": 21559,
+        "16": 198,
+        "2": 93,
+        "4": 317,
+        "8": 4
+      },
+      "threshold": 0.03709165677250801,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04844165802174011,
+      "calibration": {
+        "accuracy": 0.04495388197367243,
+        "correct_tokens": 502,
+        "mean_cumulative_proxy_cost": 6.958628100653712,
+        "terminal_stage_counts": {
+          "1": 9559,
+          "16": 1430,
+          "2": 77,
+          "4": 101,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1074,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04844165802174011,
+        "correct_tokens": 1074,
+        "mean_cumulative_proxy_cost": 4.8679355915384965,
+        "terminal_stage_counts": {
+          "1": 20113,
+          "16": 1843,
+          "2": 84,
+          "4": 128,
+          "8": 3
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 3.3816903946657053,
+          "terminal_stage_counts": {
+            "1": 10448,
+            "16": 568,
+            "2": 47,
+            "4": 35,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04578704958005961,
+          "correct_tokens": 507,
+          "mean_cumulative_proxy_cost": 6.357536349679401,
+          "terminal_stage_counts": {
+            "1": 9665,
+            "16": 1275,
+            "2": 37,
+            "4": 93,
+            "8": 3
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 4.8679355915384965,
+      "name": "confidence_ge_or_le_0.0391589802693",
+      "terminal_stage_counts": {
+        "1": 20113,
+        "16": 1843,
+        "2": 84,
+        "4": 128,
+        "8": 3
+      },
+      "threshold": 0.03915898026934868,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.048576969915655584,
+      "calibration": {
+        "accuracy": 0.045849377630518495,
+        "correct_tokens": 512,
+        "mean_cumulative_proxy_cost": 13.304647622459031,
+        "terminal_stage_counts": {
+          "1": 7854,
+          "16": 2943,
+          "2": 48,
+          "4": 322,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1077,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.048576969915655584,
+        "correct_tokens": 1077,
+        "mean_cumulative_proxy_cost": 12.436110234089577,
+        "terminal_stage_counts": {
+          "1": 16550,
+          "16": 5502,
+          "2": 64,
+          "4": 55,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050819967561722836,
+          "correct_tokens": 564,
+          "mean_cumulative_proxy_cost": 8.243827716705713,
+          "terminal_stage_counts": {
+            "1": 9288,
+            "16": 1741,
+            "2": 27,
+            "4": 42,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04632890815497155,
+          "correct_tokens": 513,
+          "mean_cumulative_proxy_cost": 16.637857852433847,
+          "terminal_stage_counts": {
+            "1": 7262,
+            "16": 3761,
+            "2": 37,
+            "4": 13,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 12.436110234089577,
+      "name": "confidence_ge_or_le_0.0406518490042",
+      "terminal_stage_counts": {
+        "1": 16550,
+        "16": 5502,
+        "2": 64,
+        "4": 55,
+        "8": 0
+      },
+      "threshold": 0.040651849004214674,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046297125458941525,
+        "correct_tokens": 517,
+        "mean_cumulative_proxy_cost": 17.480343870332227,
+        "terminal_stage_counts": {
+          "1": 6919,
+          "16": 3968,
+          "2": 43,
+          "4": 237,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 20.959767263542464,
+        "terminal_stage_counts": {
+          "1": 12433,
+          "16": 9609,
+          "2": 65,
+          "4": 64,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05100018021265093,
+          "correct_tokens": 566,
+          "mean_cumulative_proxy_cost": 17.391241665164895,
+          "terminal_stage_counts": {
+            "1": 7061,
+            "16": 3945,
+            "2": 28,
+            "4": 64,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04659983744242752,
+          "correct_tokens": 516,
+          "mean_cumulative_proxy_cost": 24.53634967940034,
+          "terminal_stage_counts": {
+            "1": 5372,
+            "16": 5664,
+            "2": 37,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 20.959767263542464,
+      "name": "confidence_ge_or_le_0.0413751870036",
+      "terminal_stage_counts": {
+        "1": 12433,
+        "16": 9609,
+        "2": 65,
+        "4": 64,
+        "8": 0
+      },
+      "threshold": 0.041375187003561284,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.048847593703486535,
+      "calibration": {
+        "accuracy": 0.046476224590310734,
+        "correct_tokens": 519,
+        "mean_cumulative_proxy_cost": 27.872391868899435,
+        "terminal_stage_counts": {
+          "1": 4593,
+          "16": 6519,
+          "2": 30,
+          "4": 25,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1083,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.048847593703486535,
+        "correct_tokens": 1083,
+        "mean_cumulative_proxy_cost": 30.117134996166165,
+        "terminal_stage_counts": {
+          "1": 8047,
+          "16": 14027,
+          "2": 67,
+          "4": 30,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05100018021265093,
+          "correct_tokens": 566,
+          "mean_cumulative_proxy_cost": 27.097134618850244,
+          "terminal_stage_counts": {
+            "1": 4747,
+            "16": 6291,
+            "2": 30,
+            "4": 30,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04669014720491285,
+          "correct_tokens": 517,
+          "mean_cumulative_proxy_cost": 33.143953761401605,
+          "terminal_stage_counts": {
+            "1": 3300,
+            "16": 7736,
+            "2": 37,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 30.117134996166165,
+      "name": "confidence_ge_or_le_0.0424802488492",
+      "terminal_stage_counts": {
+        "1": 8047,
+        "16": 14027,
+        "2": 67,
+        "4": 30,
+        "8": 0
+      },
+      "threshold": 0.042480248849156535,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04866717784493257,
+      "calibration": {
+        "accuracy": 0.046476224590310734,
+        "correct_tokens": 519,
+        "mean_cumulative_proxy_cost": 37.32363213038417,
+        "terminal_stage_counts": {
+          "1": 2256,
+          "16": 8805,
+          "2": 10,
+          "4": 96,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1079,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04866717784493257,
+        "correct_tokens": 1079,
+        "mean_cumulative_proxy_cost": 40.136710116819266,
+        "terminal_stage_counts": {
+          "1": 2637,
+          "16": 18776,
+          "2": 136,
+          "4": 622,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05091007388718688,
+          "correct_tokens": 565,
+          "mean_cumulative_proxy_cost": 39.35069381870607,
+          "terminal_stage_counts": {
+            "1": 1598,
+            "16": 9229,
+            "2": 136,
+            "4": 135,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04641921791745688,
+          "correct_tokens": 514,
+          "mean_cumulative_proxy_cost": 40.92450103856227,
+          "terminal_stage_counts": {
+            "1": 1039,
+            "16": 9547,
+            "2": 0,
+            "4": 487,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 40.136710116819266,
+      "name": "confidence_ge_or_le_0.0479621576496",
+      "terminal_stage_counts": {
+        "1": 2637,
+        "16": 18776,
+        "2": 136,
+        "4": 622,
+        "8": 0
+      },
+      "threshold": 0.047962157649579604,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 40.994447926927556,
+        "terminal_stage_counts": {
+          "1": 296,
+          "16": 9646,
+          "2": 1112,
+          "4": 113,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 43.997248658157055,
+        "terminal_stage_counts": {
+          "1": 869,
+          "16": 20637,
+          "2": 0,
+          "4": 665,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 43.36222742836547,
+          "terminal_stage_counts": {
+            "1": 482,
+            "16": 10161,
+            "2": 0,
+            "4": 455,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 44.63370360335952,
+          "terminal_stage_counts": {
+            "1": 387,
+            "16": 10476,
+            "2": 0,
+            "4": 210,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 43.997248658157055,
+      "name": "confidence_ge_or_le_0.0575407330362",
+      "terminal_stage_counts": {
+        "1": 869,
+        "16": 20637,
+        "2": 0,
+        "4": 665,
+        "8": 0
+      },
+      "threshold": 0.05754073303619673,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 46.99588071997851,
+        "terminal_stage_counts": {
+          "1": 1,
+          "16": 11166,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 47.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 22171,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 47.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 11098,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 47.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 11073,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence",
+      "mean_cumulative_proxy_cost": 47.0,
+      "name": "confidence_ge_or_le_0.0733872936978",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 22171,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 0.07338729369780551,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04871228180957106,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 46.99588071997851,
+        "terminal_stage_counts": {
+          "1": 1,
+          "16": 11166,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1080,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04871228180957106,
+        "correct_tokens": 1080,
+        "mean_cumulative_proxy_cost": 46.9294573993054,
+        "terminal_stage_counts": {
+          "1": 34,
+          "16": 22137,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05091007388718688,
+          "correct_tokens": 565,
+          "mean_cumulative_proxy_cost": 46.85907370697423,
+          "terminal_stage_counts": {
+            "1": 34,
+            "16": 11064,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 47.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 11073,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 46.9294573993054,
+      "name": "entropy_ge_or_le_6.95647526689",
+      "terminal_stage_counts": {
+        "1": 34,
+        "16": 22137,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 6.956475266889529,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04749447476433179,
+      "calibration": {
+        "accuracy": 0.04567027849914928,
+        "correct_tokens": 510,
+        "mean_cumulative_proxy_cost": 30.873018715859228,
+        "terminal_stage_counts": {
+          "1": 3915,
+          "16": 7252,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1053,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04749447476433179,
+        "correct_tokens": 1053,
+        "mean_cumulative_proxy_cost": 32.811375219881825,
+        "terminal_stage_counts": {
+          "1": 6824,
+          "16": 15326,
+          "2": 0,
+          "4": 0,
+          "8": 21
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050009010632546404,
+          "correct_tokens": 555,
+          "mean_cumulative_proxy_cost": 31.31573256442602,
+          "terminal_stage_counts": {
+            "1": 3784,
+            "16": 7314,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.044974261717691685,
+          "correct_tokens": 498,
+          "mean_cumulative_proxy_cost": 34.31039465366206,
+          "terminal_stage_counts": {
+            "1": 3040,
+            "16": 8012,
+            "2": 0,
+            "4": 0,
+            "8": 21
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 32.811375219881825,
+      "name": "entropy_ge_or_le_7.19815942686",
+      "terminal_stage_counts": {
+        "1": 6824,
+        "16": 15326,
+        "2": 0,
+        "4": 0,
+        "8": 21
+      },
+      "threshold": 7.198159426860782,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04731405890577782,
+      "calibration": {
+        "accuracy": 0.044595683710934,
+        "correct_tokens": 498,
+        "mean_cumulative_proxy_cost": 13.1710396704576,
+        "terminal_stage_counts": {
+          "1": 8208,
+          "16": 2954,
+          "2": 0,
+          "4": 5,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1049,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04731405890577782,
+        "correct_tokens": 1049,
+        "mean_cumulative_proxy_cost": 11.444454467547697,
+        "terminal_stage_counts": {
+          "1": 17137,
+          "16": 5034,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05054964858533069,
+          "correct_tokens": 561,
+          "mean_cumulative_proxy_cost": 8.435934402595063,
+          "terminal_stage_counts": {
+            "1": 9304,
+            "16": 1794,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.044071164092838434,
+          "correct_tokens": 488,
+          "mean_cumulative_proxy_cost": 14.459767000812787,
+          "terminal_stage_counts": {
+            "1": 7833,
+            "16": 3240,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 11.444454467547697,
+      "name": "entropy_ge_or_le_7.24091661625",
+      "terminal_stage_counts": {
+        "1": 17137,
+        "16": 5034,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 7.240916616245646,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04681791529475441,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.2183218411390704,
+        "terminal_stage_counts": {
+          "1": 11114,
+          "16": 53,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1038,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04681791529475441,
+        "correct_tokens": 1038,
+        "mean_cumulative_proxy_cost": 1.0795633936222995,
+        "terminal_stage_counts": {
+          "1": 22077,
+          "16": 30,
+          "2": 0,
+          "4": 64,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0145972247251758,
+          "terminal_stage_counts": {
+            "1": 11071,
+            "16": 0,
+            "2": 0,
+            "4": 27,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04316806646798519,
+          "correct_tokens": 478,
+          "mean_cumulative_proxy_cost": 1.14467623950149,
+          "terminal_stage_counts": {
+            "1": 11006,
+            "16": 30,
+            "2": 0,
+            "4": 37,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0795633936222995,
+      "name": "entropy_ge_or_le_7.31127704957",
+      "terminal_stage_counts": {
+        "1": 22077,
+        "16": 30,
+        "2": 0,
+        "4": 64,
+        "8": 0
+      },
+      "threshold": 7.311277049565737,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.046682603400838935,
+      "calibration": {
+        "accuracy": 0.041730097609026594,
+        "correct_tokens": 466,
+        "mean_cumulative_proxy_cost": 1.0272230679681205,
+        "terminal_stage_counts": {
+          "1": 11143,
+          "16": 4,
+          "2": 0,
+          "4": 20,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1035,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.046682603400838935,
+        "correct_tokens": 1035,
+        "mean_cumulative_proxy_cost": 1.0141626448964864,
+        "terminal_stage_counts": {
+          "1": 22094,
+          "16": 0,
+          "2": 37,
+          "4": 40,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0102721211029013,
+          "terminal_stage_counts": {
+            "1": 11077,
+            "16": 0,
+            "2": 3,
+            "4": 18,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04289713718052922,
+          "correct_tokens": 475,
+          "mean_cumulative_proxy_cost": 1.0180619524970649,
+          "terminal_stage_counts": {
+            "1": 11017,
+            "16": 0,
+            "2": 34,
+            "4": 22,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0141626448964864,
+      "name": "entropy_ge_or_le_7.41602971438",
+      "terminal_stage_counts": {
+        "1": 22094,
+        "16": 0,
+        "2": 37,
+        "4": 40,
+        "8": 0
+      },
+      "threshold": 7.416029714381949,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.046682603400838935,
+      "calibration": {
+        "accuracy": 0.041730097609026594,
+        "correct_tokens": 466,
+        "mean_cumulative_proxy_cost": 1.0266857705740127,
+        "terminal_stage_counts": {
+          "1": 11144,
+          "16": 4,
+          "2": 0,
+          "4": 19,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1035,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.046682603400838935,
+        "correct_tokens": 1035,
+        "mean_cumulative_proxy_cost": 1.0092914167155294,
+        "terminal_stage_counts": {
+          "1": 22106,
+          "16": 0,
+          "2": 46,
+          "4": 19,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0036042530185618,
+          "terminal_stage_counts": {
+            "1": 11078,
+            "16": 0,
+            "2": 20,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04289713718052922,
+          "correct_tokens": 475,
+          "mean_cumulative_proxy_cost": 1.0149914205725639,
+          "terminal_stage_counts": {
+            "1": 11028,
+            "16": 0,
+            "2": 26,
+            "4": 19,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0092914167155294,
+      "name": "entropy_ge_or_le_7.42626475001",
+      "terminal_stage_counts": {
+        "1": 22106,
+        "16": 0,
+        "2": 46,
+        "4": 19,
+        "8": 0
+      },
+      "threshold": 7.426264750005979,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.046682603400838935,
+      "calibration": {
+        "accuracy": 0.041730097609026594,
+        "correct_tokens": 466,
+        "mean_cumulative_proxy_cost": 1.0107459478821528,
+        "terminal_stage_counts": {
+          "1": 11147,
+          "16": 0,
+          "2": 0,
+          "4": 20,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1035,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.046682603400838935,
+        "correct_tokens": 1035,
+        "mean_cumulative_proxy_cost": 1.0084795453520365,
+        "terminal_stage_counts": {
+          "1": 22115,
+          "16": 0,
+          "2": 37,
+          "4": 19,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0036042530185618,
+          "terminal_stage_counts": {
+            "1": 11078,
+            "16": 0,
+            "2": 20,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04289713718052922,
+          "correct_tokens": 475,
+          "mean_cumulative_proxy_cost": 1.013365844847828,
+          "terminal_stage_counts": {
+            "1": 11037,
+            "16": 0,
+            "2": 17,
+            "4": 19,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0084795453520365,
+      "name": "entropy_ge_or_le_7.43162023066",
+      "terminal_stage_counts": {
+        "1": 22115,
+        "16": 0,
+        "2": 37,
+        "4": 19,
+        "8": 0
+      },
+      "threshold": 7.431620230656021,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.046682603400838935,
+      "calibration": {
+        "accuracy": 0.041730097609026594,
+        "correct_tokens": 466,
+        "mean_cumulative_proxy_cost": 1.0091340556998298,
+        "terminal_stage_counts": {
+          "1": 11150,
+          "16": 0,
+          "2": 0,
+          "4": 17,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1035,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.046682603400838935,
+        "correct_tokens": 1035,
+        "mean_cumulative_proxy_cost": 1.0073068422714357,
+        "terminal_stage_counts": {
+          "1": 22126,
+          "16": 0,
+          "2": 27,
+          "4": 18,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0036042530185618,
+          "terminal_stage_counts": {
+            "1": 11078,
+            "16": 0,
+            "2": 20,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04289713718052922,
+          "correct_tokens": 475,
+          "mean_cumulative_proxy_cost": 1.0110177910232097,
+          "terminal_stage_counts": {
+            "1": 11048,
+            "16": 0,
+            "2": 7,
+            "4": 18,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0073068422714357,
+      "name": "entropy_ge_or_le_7.455617763",
+      "terminal_stage_counts": {
+        "1": 22126,
+        "16": 0,
+        "2": 27,
+        "4": 18,
+        "8": 0
+      },
+      "threshold": 7.455617762996749,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.046682603400838935,
+      "calibration": {
+        "accuracy": 0.041730097609026594,
+        "correct_tokens": 466,
+        "mean_cumulative_proxy_cost": 1.0085967583057223,
+        "terminal_stage_counts": {
+          "1": 11151,
+          "16": 0,
+          "2": 0,
+          "4": 16,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1035,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.046682603400838935,
+        "correct_tokens": 1035,
+        "mean_cumulative_proxy_cost": 1.0066753867664968,
+        "terminal_stage_counts": {
+          "1": 22131,
+          "16": 0,
+          "2": 23,
+          "4": 17,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0036042530185618,
+          "terminal_stage_counts": {
+            "1": 11078,
+            "16": 0,
+            "2": 20,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04289713718052922,
+          "correct_tokens": 475,
+          "mean_cumulative_proxy_cost": 1.009753454348415,
+          "terminal_stage_counts": {
+            "1": 11053,
+            "16": 0,
+            "2": 3,
+            "4": 17,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0066753867664968,
+      "name": "entropy_ge_or_le_7.47831821064",
+      "terminal_stage_counts": {
+        "1": 22131,
+        "16": 0,
+        "2": 23,
+        "4": 17,
+        "8": 0
+      },
+      "threshold": 7.478318210644733,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04659239547156195,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.0021491895764305,
+        "terminal_stage_counts": {
+          "1": 11161,
+          "16": 0,
+          "2": 3,
+          "4": 3,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1033,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04659239547156195,
+        "correct_tokens": 1033,
+        "mean_cumulative_proxy_cost": 1.0021649903026475,
+        "terminal_stage_counts": {
+          "1": 22147,
+          "16": 0,
+          "2": 24,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050459542259866645,
+          "correct_tokens": 560,
+          "mean_cumulative_proxy_cost": 1.0025229771129933,
+          "terminal_stage_counts": {
+            "1": 11084,
+            "16": 0,
+            "2": 14,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04271651765555857,
+          "correct_tokens": 473,
+          "mean_cumulative_proxy_cost": 1.0018061952497066,
+          "terminal_stage_counts": {
+            "1": 11063,
+            "16": 0,
+            "2": 10,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0021649903026475,
+      "name": "entropy_ge_or_le_7.624591201",
+      "terminal_stage_counts": {
+        "1": 22147,
+        "16": 0,
+        "2": 24,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 7.624591201000396,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04663749943620044,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 11167,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1034,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04663749943620044,
+        "correct_tokens": 1034,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 22171,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05054964858533069,
+          "correct_tokens": 561,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11098,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04271651765555857,
+          "correct_tokens": 473,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11073,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "entropy",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "entropy_ge_or_le_9.36379746855",
+      "terminal_stage_counts": {
+        "1": 22171,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 9.363797468551903,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04663749943620044,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 11167,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1034,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04663749943620044,
+        "correct_tokens": 1034,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 22171,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05054964858533069,
+          "correct_tokens": 561,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11098,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04271651765555857,
+          "correct_tokens": 473,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11073,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "margin_ge_or_le_1.35655199605e-07",
+      "terminal_stage_counts": {
+        "1": 22171,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 1.3565519960470618e-07,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04785530648143972,
+      "calibration": {
+        "accuracy": 0.04280469239724188,
+        "correct_tokens": 478,
+        "mean_cumulative_proxy_cost": 1.9739410763857794,
+        "terminal_stage_counts": {
+          "1": 9473,
+          "16": 124,
+          "2": 1176,
+          "4": 337,
+          "8": 57
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1061,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04785530648143972,
+        "correct_tokens": 1061,
+        "mean_cumulative_proxy_cost": 1.5705651526769202,
+        "terminal_stage_counts": {
+          "1": 19772,
+          "16": 155,
+          "2": 2060,
+          "4": 147,
+          "8": 37
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05127049918904307,
+          "correct_tokens": 569,
+          "mean_cumulative_proxy_cost": 1.3094251216435393,
+          "terminal_stage_counts": {
+            "1": 10093,
+            "16": 27,
+            "2": 933,
+            "4": 38,
+            "8": 7
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.044432403142779735,
+          "correct_tokens": 492,
+          "mean_cumulative_proxy_cost": 1.8322947710647521,
+          "terminal_stage_counts": {
+            "1": 9679,
+            "16": 128,
+            "2": 1127,
+            "4": 109,
+            "8": 30
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 1.5705651526769202,
+      "name": "margin_ge_or_le_0.000904972465278",
+      "terminal_stage_counts": {
+        "1": 19772,
+        "16": 155,
+        "2": 2060,
+        "4": 147,
+        "8": 37
+      },
+      "threshold": 0.0009049724652782365,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.048396554057101616,
+      "calibration": {
+        "accuracy": 0.0459389271962031,
+        "correct_tokens": 513,
+        "mean_cumulative_proxy_cost": 6.968299453747649,
+        "terminal_stage_counts": {
+          "1": 7321,
+          "16": 1278,
+          "2": 1887,
+          "4": 681,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1073,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.048396554057101616,
+        "correct_tokens": 1073,
+        "mean_cumulative_proxy_cost": 4.0801497451626,
+        "terminal_stage_counts": {
+          "1": 16776,
+          "16": 1148,
+          "2": 2582,
+          "4": 1624,
+          "8": 41
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 2.403315912777077,
+          "terminal_stage_counts": {
+            "1": 9217,
+            "16": 202,
+            "2": 948,
+            "4": 731,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04560643005508896,
+          "correct_tokens": 505,
+          "mean_cumulative_proxy_cost": 5.760769439176375,
+          "terminal_stage_counts": {
+            "1": 7559,
+            "16": 946,
+            "2": 1634,
+            "4": 893,
+            "8": 41
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 4.0801497451626,
+      "name": "margin_ge_or_le_0.00149101674556",
+      "terminal_stage_counts": {
+        "1": 16776,
+        "16": 1148,
+        "2": 2582,
+        "4": 1624,
+        "8": 41
+      },
+      "threshold": 0.0014910167455584149,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04916332145595598,
+      "calibration": {
+        "accuracy": 0.04665532372167995,
+        "correct_tokens": 521,
+        "mean_cumulative_proxy_cost": 10.26945464314498,
+        "terminal_stage_counts": {
+          "1": 5799,
+          "16": 1941,
+          "2": 1726,
+          "4": 1630,
+          "8": 71
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1090,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04916332145595598,
+        "correct_tokens": 1090,
+        "mean_cumulative_proxy_cost": 8.953633124351631,
+        "terminal_stage_counts": {
+          "1": 10705,
+          "16": 3203,
+          "2": 5258,
+          "4": 2948,
+          "8": 57
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 6.7062533789872045,
+          "terminal_stage_counts": {
+            "1": 5904,
+            "16": 1101,
+            "2": 2969,
+            "4": 1124,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.047141696017339474,
+          "correct_tokens": 522,
+          "mean_cumulative_proxy_cost": 11.206086877991511,
+          "terminal_stage_counts": {
+            "1": 4801,
+            "16": 2102,
+            "2": 2289,
+            "4": 1824,
+            "8": 57
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 8.953633124351631,
+      "name": "margin_ge_or_le_0.00243663603834",
+      "terminal_stage_counts": {
+        "1": 10705,
+        "16": 3203,
+        "2": 5258,
+        "4": 2948,
+        "8": 57
+      },
+      "threshold": 0.002436636038340413,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04920842542059447,
+      "calibration": {
+        "accuracy": 0.04665532372167995,
+        "correct_tokens": 521,
+        "mean_cumulative_proxy_cost": 14.688009313154831,
+        "terminal_stage_counts": {
+          "1": 4016,
+          "16": 3028,
+          "2": 2879,
+          "4": 1201,
+          "8": 43
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1091,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04920842542059447,
+        "correct_tokens": 1091,
+        "mean_cumulative_proxy_cost": 12.346082720671147,
+        "terminal_stage_counts": {
+          "1": 7688,
+          "16": 4687,
+          "2": 5782,
+          "4": 3976,
+          "8": 38
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05127049918904307,
+          "correct_tokens": 569,
+          "mean_cumulative_proxy_cost": 9.74355739772932,
+          "terminal_stage_counts": {
+            "1": 4120,
+            "16": 1688,
+            "2": 3146,
+            "4": 2115,
+            "8": 29
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.047141696017339474,
+          "correct_tokens": 522,
+          "mean_cumulative_proxy_cost": 14.954483879707396,
+          "terminal_stage_counts": {
+            "1": 3568,
+            "16": 2999,
+            "2": 2636,
+            "4": 1861,
+            "8": 9
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 12.346082720671147,
+      "name": "margin_ge_or_le_0.0029762543784",
+      "terminal_stage_counts": {
+        "1": 7688,
+        "16": 4687,
+        "2": 5782,
+        "4": 3976,
+        "8": 38
+      },
+      "threshold": 0.002976254378398227,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.048892697668125026,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 19.14578669293454,
+        "terminal_stage_counts": {
+          "1": 3482,
+          "16": 4020,
+          "2": 1441,
+          "4": 2038,
+          "8": 186
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1084,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.048892697668125026,
+        "correct_tokens": 1084,
+        "mean_cumulative_proxy_cost": 20.31523160885842,
+        "terminal_stage_counts": {
+          "1": 5346,
+          "16": 8373,
+          "2": 2876,
+          "4": 5092,
+          "8": 484
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05127049918904307,
+          "correct_tokens": 569,
+          "mean_cumulative_proxy_cost": 16.963957469814382,
+          "terminal_stage_counts": {
+            "1": 3214,
+            "16": 3287,
+            "2": 1360,
+            "4": 2759,
+            "8": 478
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 23.674072067190462,
+          "terminal_stage_counts": {
+            "1": 2132,
+            "16": 5086,
+            "2": 1516,
+            "4": 2333,
+            "8": 6
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 20.31523160885842,
+      "name": "margin_ge_or_le_0.00383489663102",
+      "terminal_stage_counts": {
+        "1": 5346,
+        "16": 8373,
+        "2": 2876,
+        "4": 5092,
+        "8": 484
+      },
+      "threshold": 0.003834896631021545,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.048892697668125026,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 24.939285394465838,
+        "terminal_stage_counts": {
+          "1": 3202,
+          "16": 5546,
+          "2": 741,
+          "4": 1595,
+          "8": 83
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1084,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.048892697668125026,
+        "correct_tokens": 1084,
+        "mean_cumulative_proxy_cost": 27.89801993595237,
+        "terminal_stage_counts": {
+          "1": 4989,
+          "16": 12332,
+          "2": 824,
+          "4": 3616,
+          "8": 410
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05127049918904307,
+          "correct_tokens": 569,
+          "mean_cumulative_proxy_cost": 26.109028653811496,
+          "terminal_stage_counts": {
+            "1": 3170,
+            "16": 5793,
+            "2": 419,
+            "4": 1585,
+            "8": 131
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 29.691050302537704,
+          "terminal_stage_counts": {
+            "1": 1819,
+            "16": 6539,
+            "2": 405,
+            "4": 2031,
+            "8": 279
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 27.89801993595237,
+      "name": "margin_ge_or_le_0.00463136740937",
+      "terminal_stage_counts": {
+        "1": 4989,
+        "16": 12332,
+        "2": 824,
+        "4": 3616,
+        "8": 410
+      },
+      "threshold": 0.0046313674093692095,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04893780163276352,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 32.26784275096266,
+        "terminal_stage_counts": {
+          "1": 2753,
+          "16": 7532,
+          "2": 649,
+          "4": 233,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1085,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04893780163276352,
+        "correct_tokens": 1085,
+        "mean_cumulative_proxy_cost": 35.38067746154887,
+        "terminal_stage_counts": {
+          "1": 4096,
+          "16": 16430,
+          "2": 853,
+          "4": 790,
+          "8": 2
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05136060551450712,
+          "correct_tokens": 570,
+          "mean_cumulative_proxy_cost": 32.71670571274103,
+          "terminal_stage_counts": {
+            "1": 2674,
+            "16": 7608,
+            "2": 718,
+            "4": 98,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 38.05066377675427,
+          "terminal_stage_counts": {
+            "1": 1422,
+            "16": 8822,
+            "2": 135,
+            "4": 692,
+            "8": 2
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 35.38067746154887,
+      "name": "margin_ge_or_le_0.00684285195687",
+      "terminal_stage_counts": {
+        "1": 4096,
+        "16": 16430,
+        "2": 853,
+        "4": 790,
+        "8": 2
+      },
+      "threshold": 0.006842851956866028,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 36.78311095191188,
+        "terminal_stage_counts": {
+          "1": 1658,
+          "16": 8628,
+          "2": 646,
+          "4": 235,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 38.55924405755266,
+        "terminal_stage_counts": {
+          "1": 1936,
+          "16": 17973,
+          "2": 1901,
+          "4": 361,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 36.03892593260047,
+          "terminal_stage_counts": {
+            "1": 1213,
+            "16": 8381,
+            "2": 1422,
+            "4": 82,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 41.085252415786144,
+          "terminal_stage_counts": {
+            "1": 723,
+            "16": 9592,
+            "2": 479,
+            "4": 279,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 38.55924405755266,
+      "name": "margin_ge_or_le_0.0148750458297",
+      "terminal_stage_counts": {
+        "1": 1936,
+        "16": 17973,
+        "2": 1901,
+        "4": 361,
+        "8": 0
+      },
+      "threshold": 0.014875045829684574,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 40.734754186442196,
+        "terminal_stage_counts": {
+          "1": 206,
+          "16": 9569,
+          "2": 1202,
+          "4": 190,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 43.85886969464616,
+        "terminal_stage_counts": {
+          "1": 443,
+          "16": 20539,
+          "2": 426,
+          "4": 763,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 42.94377365291044,
+          "terminal_stage_counts": {
+            "1": 264,
+            "16": 10034,
+            "2": 218,
+            "4": 582,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 44.776031789036395,
+          "terminal_stage_counts": {
+            "1": 179,
+            "16": 10505,
+            "2": 208,
+            "4": 181,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 43.85886969464616,
+      "name": "margin_ge_or_le_0.0270381222647",
+      "terminal_stage_counts": {
+        "1": 443,
+        "16": 20539,
+        "2": 426,
+        "4": 763,
+        "8": 0
+      },
+      "threshold": 0.027038122264713464,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 46.996059819109874,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 11166,
+          "2": 1,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 45.71489783952009,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 21510,
+          "2": 513,
+          "4": 148,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 45.1423679942332,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 10616,
+            "2": 334,
+            "4": 148,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 46.28872031066558,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 10894,
+            "2": 179,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "margin",
+      "mean_cumulative_proxy_cost": 45.71489783952009,
+      "name": "margin_ge_or_le_0.0353484609685",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 21510,
+        "2": 513,
+        "4": 148,
+        "8": 0
+      },
+      "threshold": 0.03534846096848029,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04663749943620044,
+      "calibration": {
+        "accuracy": 0.04164054804334199,
+        "correct_tokens": 465,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 11167,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1034,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04663749943620044,
+        "correct_tokens": 1034,
+        "mean_cumulative_proxy_cost": 1.0,
+        "terminal_stage_counts": {
+          "1": 22171,
+          "16": 0,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05054964858533069,
+          "correct_tokens": 561,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11098,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04271651765555857,
+          "correct_tokens": 473,
+          "mean_cumulative_proxy_cost": 1.0,
+          "terminal_stage_counts": {
+            "1": 11073,
+            "16": 0,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 1.0,
+      "name": "confidence_agreement_0.000841604245418",
+      "terminal_stage_counts": {
+        "1": 22171,
+        "16": 0,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 0.0008416042454183638,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04776509855216274,
+      "calibration": {
+        "accuracy": 0.04262559326587266,
+        "correct_tokens": 476,
+        "mean_cumulative_proxy_cost": 1.2294259872839617,
+        "terminal_stage_counts": {
+          "1": 10848,
+          "16": 8,
+          "2": 0,
+          "4": 270,
+          "8": 41
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1059,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04776509855216274,
+        "correct_tokens": 1059,
+        "mean_cumulative_proxy_cost": 1.262054034549637,
+        "terminal_stage_counts": {
+          "1": 21564,
+          "16": 34,
+          "2": 0,
+          "4": 472,
+          "8": 101
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 1.1789511623715985,
+          "terminal_stage_counts": {
+            "1": 10847,
+            "16": 0,
+            "2": 0,
+            "4": 191,
+            "8": 60
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04434209338029441,
+          "correct_tokens": 491,
+          "mean_cumulative_proxy_cost": 1.3453445317438815,
+          "terminal_stage_counts": {
+            "1": 10717,
+            "16": 34,
+            "2": 0,
+            "4": 281,
+            "8": 41
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 1.262054034549637,
+      "name": "confidence_agreement_0.032776569665",
+      "terminal_stage_counts": {
+        "1": 21564,
+        "16": 34,
+        "2": 0,
+        "4": 472,
+        "8": 101
+      },
+      "threshold": 0.03277656966503455,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04776509855216274,
+      "calibration": {
+        "accuracy": 0.04262559326587266,
+        "correct_tokens": 476,
+        "mean_cumulative_proxy_cost": 1.2294259872839617,
+        "terminal_stage_counts": {
+          "1": 10848,
+          "16": 8,
+          "2": 0,
+          "4": 270,
+          "8": 41
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1059,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04776509855216274,
+        "correct_tokens": 1059,
+        "mean_cumulative_proxy_cost": 1.2623246583374679,
+        "terminal_stage_counts": {
+          "1": 21563,
+          "16": 34,
+          "2": 0,
+          "4": 473,
+          "8": 101
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 1.1794918003243828,
+          "terminal_stage_counts": {
+            "1": 10846,
+            "16": 0,
+            "2": 0,
+            "4": 192,
+            "8": 60
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04434209338029441,
+          "correct_tokens": 491,
+          "mean_cumulative_proxy_cost": 1.3453445317438815,
+          "terminal_stage_counts": {
+            "1": 10717,
+            "16": 34,
+            "2": 0,
+            "4": 281,
+            "8": 41
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 1.2623246583374679,
+      "name": "confidence_agreement_0.0334073423689",
+      "terminal_stage_counts": {
+        "1": 21563,
+        "16": 34,
+        "2": 0,
+        "4": 473,
+        "8": 101
+      },
+      "threshold": 0.03340734236894569,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04776509855216274,
+      "calibration": {
+        "accuracy": 0.04262559326587266,
+        "correct_tokens": 476,
+        "mean_cumulative_proxy_cost": 1.5940718187516791,
+        "terminal_stage_counts": {
+          "1": 10848,
+          "16": 118,
+          "2": 0,
+          "4": 201,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1059,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04776509855216274,
+        "correct_tokens": 1059,
+        "mean_cumulative_proxy_cost": 1.6036714627215731,
+        "terminal_stage_counts": {
+          "1": 21559,
+          "16": 233,
+          "2": 0,
+          "4": 330,
+          "8": 49
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051180392863579026,
+          "correct_tokens": 568,
+          "mean_cumulative_proxy_cost": 1.5256803027572536,
+          "terminal_stage_counts": {
+            "1": 10843,
+            "16": 106,
+            "2": 0,
+            "4": 141,
+            "8": 8
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04434209338029441,
+          "correct_tokens": 491,
+          "mean_cumulative_proxy_cost": 1.681838706764201,
+          "terminal_stage_counts": {
+            "1": 10716,
+            "16": 127,
+            "2": 0,
+            "4": 189,
+            "8": 41
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 1.6036714627215731,
+      "name": "confidence_agreement_0.0370916567725",
+      "terminal_stage_counts": {
+        "1": 21559,
+        "16": 233,
+        "2": 0,
+        "4": 330,
+        "8": 49
+      },
+      "threshold": 0.03709165677250801,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04844165802174011,
+      "calibration": {
+        "accuracy": 0.04495388197367243,
+        "correct_tokens": 502,
+        "mean_cumulative_proxy_cost": 6.98620936688457,
+        "terminal_stage_counts": {
+          "1": 9559,
+          "16": 1430,
+          "2": 0,
+          "4": 178,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1074,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04844165802174011,
+        "correct_tokens": 1074,
+        "mean_cumulative_proxy_cost": 4.88309052365703,
+        "terminal_stage_counts": {
+          "1": 20113,
+          "16": 1843,
+          "2": 0,
+          "4": 212,
+          "8": 3
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 3.3986303838529466,
+          "terminal_stage_counts": {
+            "1": 10448,
+            "16": 568,
+            "2": 0,
+            "4": 82,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04578704958005961,
+          "correct_tokens": 507,
+          "mean_cumulative_proxy_cost": 6.370902194527228,
+          "terminal_stage_counts": {
+            "1": 9665,
+            "16": 1275,
+            "2": 0,
+            "4": 130,
+            "8": 3
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 4.88309052365703,
+      "name": "confidence_agreement_0.0391589802693",
+      "terminal_stage_counts": {
+        "1": 20113,
+        "16": 1843,
+        "2": 0,
+        "4": 212,
+        "8": 3
+      },
+      "threshold": 0.03915898026934868,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.048576969915655584,
+      "calibration": {
+        "accuracy": 0.045849377630518495,
+        "correct_tokens": 512,
+        "mean_cumulative_proxy_cost": 13.321841139070475,
+        "terminal_stage_counts": {
+          "1": 7854,
+          "16": 2943,
+          "2": 0,
+          "4": 370,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1077,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.048576969915655584,
+        "correct_tokens": 1077,
+        "mean_cumulative_proxy_cost": 12.46533760317532,
+        "terminal_stage_counts": {
+          "1": 16550,
+          "16": 5511,
+          "2": 0,
+          "4": 106,
+          "8": 4
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.050819967561722836,
+          "correct_tokens": 564,
+          "mean_cumulative_proxy_cost": 8.25355919985583,
+          "terminal_stage_counts": {
+            "1": 9288,
+            "16": 1741,
+            "2": 0,
+            "4": 69,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04632890815497155,
+          "correct_tokens": 513,
+          "mean_cumulative_proxy_cost": 16.686625124175922,
+          "terminal_stage_counts": {
+            "1": 7262,
+            "16": 3770,
+            "2": 0,
+            "4": 37,
+            "8": 4
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 12.46533760317532,
+      "name": "confidence_agreement_0.0406518490042",
+      "terminal_stage_counts": {
+        "1": 16550,
+        "16": 5511,
+        "2": 0,
+        "4": 106,
+        "8": 4
+      },
+      "threshold": 0.040651849004214674,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046297125458941525,
+        "correct_tokens": 517,
+        "mean_cumulative_proxy_cost": 17.495746395629983,
+        "terminal_stage_counts": {
+          "1": 6919,
+          "16": 3968,
+          "2": 0,
+          "4": 280,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 20.971494294348474,
+        "terminal_stage_counts": {
+          "1": 12433,
+          "16": 9609,
+          "2": 0,
+          "4": 129,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05100018021265093,
+          "correct_tokens": 566,
+          "mean_cumulative_proxy_cost": 17.401333573616867,
+          "terminal_stage_counts": {
+            "1": 7061,
+            "16": 3945,
+            "2": 0,
+            "4": 92,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04659983744242752,
+          "correct_tokens": 516,
+          "mean_cumulative_proxy_cost": 24.54971552424817,
+          "terminal_stage_counts": {
+            "1": 5372,
+            "16": 5664,
+            "2": 0,
+            "4": 37,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 20.971494294348474,
+      "name": "confidence_agreement_0.0413751870036",
+      "terminal_stage_counts": {
+        "1": 12433,
+        "16": 9609,
+        "2": 0,
+        "4": 129,
+        "8": 0
+      },
+      "threshold": 0.041375187003561284,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.048847593703486535,
+      "calibration": {
+        "accuracy": 0.046476224590310734,
+        "correct_tokens": 519,
+        "mean_cumulative_proxy_cost": 27.883137816781588,
+        "terminal_stage_counts": {
+          "1": 4593,
+          "16": 6519,
+          "2": 0,
+          "4": 55,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1083,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.048847593703486535,
+        "correct_tokens": 1083,
+        "mean_cumulative_proxy_cost": 30.12922285868928,
+        "terminal_stage_counts": {
+          "1": 8047,
+          "16": 14027,
+          "2": 0,
+          "4": 97,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05100018021265093,
+          "correct_tokens": 566,
+          "mean_cumulative_proxy_cost": 27.10794737790593,
+          "terminal_stage_counts": {
+            "1": 4747,
+            "16": 6291,
+            "2": 0,
+            "4": 60,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04669014720491285,
+          "correct_tokens": 517,
+          "mean_cumulative_proxy_cost": 33.15731960624944,
+          "terminal_stage_counts": {
+            "1": 3300,
+            "16": 7736,
+            "2": 0,
+            "4": 37,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 30.12922285868928,
+      "name": "confidence_agreement_0.0424802488492",
+      "terminal_stage_counts": {
+        "1": 8047,
+        "16": 14027,
+        "2": 0,
+        "4": 97,
+        "8": 0
+      },
+      "threshold": 0.042480248849156535,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04866717784493257,
+      "calibration": {
+        "accuracy": 0.046476224590310734,
+        "correct_tokens": 519,
+        "mean_cumulative_proxy_cost": 37.32363213038417,
+        "terminal_stage_counts": {
+          "1": 2256,
+          "16": 8805,
+          "2": 10,
+          "4": 96,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1079,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04866717784493257,
+        "correct_tokens": 1079,
+        "mean_cumulative_proxy_cost": 40.136710116819266,
+        "terminal_stage_counts": {
+          "1": 2637,
+          "16": 18776,
+          "2": 136,
+          "4": 622,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.05091007388718688,
+          "correct_tokens": 565,
+          "mean_cumulative_proxy_cost": 39.35069381870607,
+          "terminal_stage_counts": {
+            "1": 1598,
+            "16": 9229,
+            "2": 136,
+            "4": 135,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.04641921791745688,
+          "correct_tokens": 514,
+          "mean_cumulative_proxy_cost": 40.92450103856227,
+          "terminal_stage_counts": {
+            "1": 1039,
+            "16": 9547,
+            "2": 0,
+            "4": 487,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 40.136710116819266,
+      "name": "confidence_agreement_0.0479621576496",
+      "terminal_stage_counts": {
+        "1": 2637,
+        "16": 18776,
+        "2": 136,
+        "4": 622,
+        "8": 0
+      },
+      "threshold": 0.047962157649579604,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 40.994447926927556,
+        "terminal_stage_counts": {
+          "1": 296,
+          "16": 9646,
+          "2": 1112,
+          "4": 113,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 43.997248658157055,
+        "terminal_stage_counts": {
+          "1": 869,
+          "16": 20637,
+          "2": 0,
+          "4": 665,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 43.36222742836547,
+          "terminal_stage_counts": {
+            "1": 482,
+            "16": 10161,
+            "2": 0,
+            "4": 455,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 44.63370360335952,
+          "terminal_stage_counts": {
+            "1": 387,
+            "16": 10476,
+            "2": 0,
+            "4": 210,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 43.997248658157055,
+      "name": "confidence_agreement_0.0575407330362",
+      "terminal_stage_counts": {
+        "1": 869,
+        "16": 20637,
+        "2": 0,
+        "4": 665,
+        "8": 0
+      },
+      "threshold": 0.05754073303619673,
+      "tokens": 22171
+    },
+    {
+      "accuracy": 0.04880248973884804,
+      "calibration": {
+        "accuracy": 0.046565774155995346,
+        "correct_tokens": 520,
+        "mean_cumulative_proxy_cost": 46.99588071997851,
+        "terminal_stage_counts": {
+          "1": 1,
+          "16": 11166,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 11167
+      },
+      "correct_tokens": 1082,
+      "cost_mode": "cumulative_ladder",
+      "deployable": true,
+      "family": "adaptive",
+      "heldout_aggregate": {
+        "accuracy": 0.04880248973884804,
+        "correct_tokens": 1082,
+        "mean_cumulative_proxy_cost": 47.0,
+        "terminal_stage_counts": {
+          "1": 0,
+          "16": 22171,
+          "2": 0,
+          "4": 0,
+          "8": 0
+        },
+        "tokens": 22171
+      },
+      "heldout_by_run": {
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m1-512_s20260805": {
+          "accuracy": 0.051090286538114975,
+          "correct_tokens": 567,
+          "mean_cumulative_proxy_cost": 47.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 11098,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11098
+        },
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m0/pilot_m4-air_s20260806": {
+          "accuracy": 0.0465095276799422,
+          "correct_tokens": 515,
+          "mean_cumulative_proxy_cost": 47.0,
+          "terminal_stage_counts": {
+            "1": 0,
+            "16": 11073,
+            "2": 0,
+            "4": 0,
+            "8": 0
+          },
+          "tokens": 11073
+        }
+      },
+      "kind": "confidence_agreement",
+      "mean_cumulative_proxy_cost": 47.0,
+      "name": "confidence_agreement_0.0733872936978",
+      "terminal_stage_counts": {
+        "1": 0,
+        "16": 22171,
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "threshold": 0.07338729369780551,
+      "tokens": 22171
+    }
+  ],
+  "selection_guard": {
+    "forbidden_policy_terms": [
+      "target",
+      "correct",
+      "loss",
+      "oracle"
+    ],
+    "note": "Ground truth is used only after feature-only terminal-stage selection; oracle is separately marked non-deployable.",
+    "policy_feature_columns": [
+      "q1_prediction",
+      "q1_confidence",
+      "q1_entropy",
+      "q1_margin",
+      "q2_prediction",
+      "q2_confidence",
+      "q2_entropy",
+      "q2_margin",
+      "q4_prediction",
+      "q4_confidence",
+      "q4_entropy",
+      "q4_margin",
+      "q8_prediction",
+      "q8_confidence",
+      "q8_entropy",
+      "q8_margin",
+      "q16_prediction",
+      "q16_confidence",
+      "q16_entropy",
+      "q16_margin"
+    ]
+  },
+  "stages": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ]
+}

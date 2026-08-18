@@ -1,0 +1,14 @@
+{
+  "captured_at_utc": "2026-07-20T17:17:17.059805+00:00",
+  "node": "m1-512",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "executable": "/Users/hozzy/Library/Mobile Documents/com~apple~CloudDocs/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+  "physical_memory_bytes": 8589934592,
+  "physical_memory_gib": 8.0,
+  "source_git_head": "92da5d11a812567335da710c131f10a729089a3a",
+  "environment": {
+    "TMPDIR": "/var/folders/cq/m6yz_wxd2_gdr_2y5t_cv_080000gn/T/"
+  }
+}

@@ -9,7 +9,7 @@ def test_model_config_rejects_invalid_schedule_and_mode():
     with pytest.raises(ValueError, match="precision_schedule length"):
         ModelConfig(n_diffusion_steps=2, precision_schedule=[1])
     with pytest.raises(ValueError, match="unsupported precision"):
-        ModelConfig(n_diffusion_steps=1, precision_schedule=[8])
+        ModelConfig(n_diffusion_steps=1, precision_schedule=[5])
     with pytest.raises(ValueError, match="model_type"):
         ModelConfig(model_type="unknown")
 

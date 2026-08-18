@@ -1,0 +1,205 @@
+{
+  "status": "complete",
+  "language": "cswiki-only",
+  "mode": "prompt-continuation",
+  "checkpoint": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki-eval/milestone-200k/checkpoint/best.npz",
+  "checkpoint_loaded": true,
+  "cache_meta_path": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/cache/meta_seq256_a92b21bd8b1775d0.json",
+  "tokenizer": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki/tokenizer/bpe16k",
+  "per_route": {
+    "q8_only": {
+      "schedule": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8"
+      ],
+      "prompt_continuation": {
+        "prompt": "Hlavn\u00edm m\u011bstem Francie je",
+        "prompt_token_ids": [
+          3,
+          13292,
+          81,
+          3611,
+          3380,
+          268
+        ],
+        "terminal_eos_id": 4,
+        "max_new_tokens": 5,
+        "passes": 4,
+        "continuation_token_ids": [
+          3,
+          13292,
+          81,
+          3611,
+          3380,
+          268,
+          1993,
+          1377,
+          265,
+          1619,
+          13,
+          4
+        ],
+        "refinements": [
+          "Hlavn\u00edm m\u011bstem Francie je nejv\u011bt\u0161\u00ed)",
+          "Hlavn\u00edm m\u011bstem Francie je nejv\u011bt\u0161\u00ed m\u011bsto)",
+          "Hlavn\u00edm m\u011bstem Francie je nejv\u011bt\u0161\u00ed m\u011bsto ()",
+          "Hlavn\u00edm m\u011bstem Francie je nejv\u011bt\u0161\u00ed m\u011bsto (2002)"
+        ]
+      }
+    },
+    "q8_fp16": {
+      "schedule": [
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16"
+      ],
+      "prompt_continuation": {
+        "prompt": "Hlavn\u00edm m\u011bstem Francie je",
+        "prompt_token_ids": [
+          3,
+          13292,
+          81,
+          3611,
+          3380,
+          268
+        ],
+        "terminal_eos_id": 4,
+        "max_new_tokens": 5,
+        "passes": 4,
+        "continuation_token_ids": [
+          3,
+          13292,
+          81,
+          3611,
+          3380,
+          268,
+          1993,
+          1377,
+          265,
+          1619,
+          13,
+          4
+        ],
+        "refinements": [
+          "Hlavn\u00edm m\u011bstem Francie je nejv\u011bt\u0161\u00ed)",
+          "Hlavn\u00edm m\u011bstem Francie je nejv\u011bt\u0161\u00ed m\u011bsto)",
+          "Hlavn\u00edm m\u011bstem Francie je nejv\u011bt\u0161\u00ed m\u011bsto ()",
+          "Hlavn\u00edm m\u011bstem Francie je nejv\u011bt\u0161\u00ed m\u011bsto (2002)"
+        ]
+      }
+    },
+    "q2_q8_fp16": {
+      "schedule": [
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q2",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "q8",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16",
+        "fp16"
+      ],
+      "prompt_continuation": {
+        "prompt": "Hlavn\u00edm m\u011bstem Francie je",
+        "prompt_token_ids": [
+          3,
+          13292,
+          81,
+          3611,
+          3380,
+          268
+        ],
+        "terminal_eos_id": 4,
+        "max_new_tokens": 5,
+        "passes": 4,
+        "continuation_token_ids": [
+          3,
+          13292,
+          81,
+          3611,
+          3380,
+          268,
+          213,
+          943,
+          2702,
+          13,
+          13,
+          4
+        ],
+        "refinements": [
+          "Hlavn\u00edm m\u011bstem Francie je v)",
+          "Hlavn\u00edm m\u011bstem Francie je v))",
+          "Hlavn\u00edm m\u011bstem Francie je v letech))",
+          "Hlavn\u00edm m\u011bstem Francie je v letech 1992))"
+        ]
+      }
+    }
+  },
+  "output_path": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/cswiki-eval/milestone-200k/results/prompt-pariz.json",
+  "limits": [
+    "Prompt prefix is held fixed by token id on every pass.",
+    "Four confidence-ranked infill passes are diagnostic decoding, not measured serving latency."
+  ]
+}

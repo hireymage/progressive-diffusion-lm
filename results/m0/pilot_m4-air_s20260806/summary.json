@@ -1,0 +1,161 @@
+{
+  "oracle": {
+    "always_full_ladder_proxy_bits_per_token": 47,
+    "cumulative_proxy_cost_vs_full_ladder": 0.9499914493948285,
+    "cumulative_proxy_cost_vs_single_fp32": 1.3952999412986544,
+    "cumulative_proxy_savings_vs_full_ladder": 0.05000855060517151,
+    "cumulative_proxy_savings_vs_single_fp32": -0.3952999412986544,
+    "mean_cumulative_proxy_bits": 44.64959812155694,
+    "mean_terminal_selected_bits": 15.238056533911315,
+    "note": "Internal precision 16 is the FP32 identity path, not FP16, and has proxy cost 32. Terminal selected bits are a precision outcome, not compute. Cumulative proxy cost sums explicit costs for each visited level. M0 currently full-recomputes every level independently, so these are not measured wall-clock savings or residual-reuse costs.",
+    "quality_masked_accuracy": 0.05165718414160571,
+    "single_fp32_proxy_bits_per_token": 32
+  },
+  "per_precision": {
+    "1": {
+      "masked_accuracy": 0.04271651765555857,
+      "masked_loss": 7.829324011108811,
+      "masked_tokens": 11073,
+      "mean_confidence": 0.04154358668144993,
+      "mean_entropy": 7.215840247282411,
+      "mean_top1_top2_margin": 0.003840342930772715
+    },
+    "16": {
+      "masked_accuracy": 0.0465095276799422,
+      "masked_loss": 7.455950998081026,
+      "masked_tokens": 11073,
+      "mean_confidence": 0.040743691877202344,
+      "mean_entropy": 7.426259944137649,
+      "mean_top1_top2_margin": 0.0067255466691235385
+    },
+    "2": {
+      "masked_accuracy": 0.044522712905265056,
+      "masked_loss": 7.464083261282944,
+      "masked_tokens": 11073,
+      "mean_confidence": 0.03531629294427636,
+      "mean_entropy": 7.595119316333579,
+      "mean_top1_top2_margin": 0.005243228391677353
+    },
+    "4": {
+      "masked_accuracy": 0.04596766910503025,
+      "masked_loss": 7.455822828243226,
+      "masked_tokens": 11073,
+      "mean_confidence": 0.04085317120604872,
+      "mean_entropy": 7.424051802449452,
+      "mean_top1_top2_margin": 0.0067236392203972395
+    },
+    "8": {
+      "masked_accuracy": 0.0465095276799422,
+      "masked_loss": 7.455946840310182,
+      "masked_tokens": 11073,
+      "mean_confidence": 0.0407639211064314,
+      "mean_entropy": 7.425345076457008,
+      "mean_top1_top2_margin": 0.006720398883697208
+    }
+  },
+  "precision_order": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "precision_proxy_costs": {
+    "1": 1,
+    "16": 32,
+    "2": 2,
+    "4": 4,
+    "8": 8
+  },
+  "run": {
+    "batch_size": 8,
+    "checkpoint_path": "checkpoints/full_baseline/step_0010000.npz",
+    "checkpoint_sha256": "ce27e61d9d2c5dead5a819c991902c76acff04e52832038fecd1f8f1fdc02ba4",
+    "checkpoint_step": 10000,
+    "config_path": "configs/full_baseline.json",
+    "fixture_batches": 10,
+    "fixture_seed": 20260806,
+    "full_logits_saved": false,
+    "git_commit": "38f2b2f20fabf99fe219c7a031595ba91d889828",
+    "hostname": "Hozak--MacBook-Air-2.local",
+    "machine": "arm64",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "simulated_wall_clock": {
+      "1": {
+        "elapsed_seconds": 1.0156476669944823,
+        "mean_batch_seconds": 0.10156476669944822
+      },
+      "16": {
+        "elapsed_seconds": 0.6666471239950624,
+        "mean_batch_seconds": 0.06666471239950625
+      },
+      "2": {
+        "elapsed_seconds": 0.9384427930053789,
+        "mean_batch_seconds": 0.09384427930053789
+      },
+      "4": {
+        "elapsed_seconds": 0.9568539580068318,
+        "mean_batch_seconds": 0.09568539580068318
+      },
+      "8": {
+        "elapsed_seconds": 0.9640259989973856,
+        "mean_batch_seconds": 0.09640259989973857
+      }
+    },
+    "utc_timestamp": "2026-08-04T07:57:32.868817+00:00",
+    "validation_data_path": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/data/cache/val_seq256_art50000_bytes500000000.npy",
+    "validation_data_sha256": "f691bc4100cd534271e2558b49a26365c1135e8c5f86c16fe5823e9a0a5fdb30",
+    "validation_data_source": "explicit_npy",
+    "wall_clock_note": "Simulated MLX wall clock for independent full recomputes; it is not a low-bit hardware or sequential-escalation speed measurement."
+  },
+  "transitions": {
+    "q1_to_q2": {
+      "corrected": 77,
+      "correctness_unchanged": 10939,
+      "higher_bits": 2,
+      "lower_bits": 1,
+      "mean_entropy_when_corrected": 7.228793368853954,
+      "mean_low_confidence_when_corrected": 0.9690615451503432,
+      "mean_small_margin_when_corrected": 0.9988457698549201,
+      "prediction_changed": 2289,
+      "prediction_unchanged": 8784,
+      "regressed": 57
+    },
+    "q2_to_q4": {
+      "corrected": 34,
+      "correctness_unchanged": 11021,
+      "higher_bits": 4,
+      "lower_bits": 2,
+      "mean_entropy_when_corrected": 7.599900140655236,
+      "mean_low_confidence_when_corrected": 0.9680944718857025,
+      "mean_small_margin_when_corrected": 0.99890126309967,
+      "prediction_changed": 885,
+      "prediction_unchanged": 10188,
+      "regressed": 18
+    },
+    "q4_to_q8": {
+      "corrected": 6,
+      "correctness_unchanged": 11067,
+      "higher_bits": 8,
+      "lower_bits": 4,
+      "mean_entropy_when_corrected": 7.446309000117531,
+      "mean_low_confidence_when_corrected": 0.9657658217255419,
+      "mean_small_margin_when_corrected": 0.9999123775337512,
+      "prediction_changed": 89,
+      "prediction_unchanged": 10984,
+      "regressed": 0
+    },
+    "q8_to_q16": {
+      "corrected": 0,
+      "correctness_unchanged": 11073,
+      "higher_bits": 16,
+      "lower_bits": 8,
+      "mean_entropy_when_corrected": null,
+      "mean_low_confidence_when_corrected": null,
+      "mean_small_margin_when_corrected": null,
+      "prediction_changed": 15,
+      "prediction_unchanged": 11058,
+      "regressed": 0
+    }
+  }
+}

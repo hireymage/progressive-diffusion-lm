@@ -1,0 +1,724 @@
+{
+  "run_id": "20260720-171516_phase2-bidir-incremental_s201-203_5cc8b566",
+  "node": "m1-256",
+  "campaign_config": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/configs/campaign/m1-256-phase2-bidir.json",
+  "campaign": {
+    "campaign_slug": "phase2-bidir-incremental",
+    "node": "m1-256",
+    "seeds": [
+      201,
+      203
+    ],
+    "minimum_memory_gib": 7.0,
+    "memory_profile": "8GB unified RAM; sequential metrics-only 10k runs; node-local data and MLX caches",
+    "max_parallel_tasks": 1,
+    "scientific_rationale": "Bidirectional progressive precision (Up: 1\u21922\u21924\u21928, Down: 8\u21924\u21922\u21921) vs constant precision baselines (1b/2b/4b/8b) and FP16 baseline. Isolates directionality effect from absolute precision level.",
+    "estimated_runtime_basis": "14 sequential 10k runs across 7 schedules x 2 seeds.",
+    "tasks": [
+      {
+        "id": "m1-256-progressive-up-s201",
+        "description": "progressive-up schedule [1, 1, 2, 2, 4, 4, 8, 8], seed 201.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_progressive_up_s201",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              1,
+              1,
+              2,
+              2,
+              4,
+              4,
+              8,
+              8
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 201,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_progressive_up_s201"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_progressive_up_s201",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_progressive_up_s201",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 201
+          }
+        }
+      },
+      {
+        "id": "m1-256-progressive-up-s203",
+        "description": "progressive-up schedule [1, 1, 2, 2, 4, 4, 8, 8], seed 203.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_progressive_up_s203",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              1,
+              1,
+              2,
+              2,
+              4,
+              4,
+              8,
+              8
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 203,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_progressive_up_s203"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_progressive_up_s203",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_progressive_up_s203",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 203
+          }
+        }
+      },
+      {
+        "id": "m1-256-progressive-down-s201",
+        "description": "progressive-down schedule [8, 8, 4, 4, 2, 2, 1, 1], seed 201.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_progressive_down_s201",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              8,
+              8,
+              4,
+              4,
+              2,
+              2,
+              1,
+              1
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 201,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_progressive_down_s201"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_progressive_down_s201",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_progressive_down_s201",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 201
+          }
+        }
+      },
+      {
+        "id": "m1-256-progressive-down-s203",
+        "description": "progressive-down schedule [8, 8, 4, 4, 2, 2, 1, 1], seed 203.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_progressive_down_s203",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              8,
+              8,
+              4,
+              4,
+              2,
+              2,
+              1,
+              1
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 203,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_progressive_down_s203"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_progressive_down_s203",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_progressive_down_s203",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 203
+          }
+        }
+      },
+      {
+        "id": "m1-256-constant-1b-s201",
+        "description": "constant-1b schedule [1, 1, 1, 1, 1, 1, 1, 1], seed 201.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_constant_1b_s201",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 201,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_constant_1b_s201"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_constant_1b_s201",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_constant_1b_s201",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 201
+          }
+        }
+      },
+      {
+        "id": "m1-256-constant-1b-s203",
+        "description": "constant-1b schedule [1, 1, 1, 1, 1, 1, 1, 1], seed 203.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_constant_1b_s203",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 203,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_constant_1b_s203"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_constant_1b_s203",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_constant_1b_s203",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 203
+          }
+        }
+      },
+      {
+        "id": "m1-256-constant-2b-s201",
+        "description": "constant-2b schedule [2, 2, 2, 2, 2, 2, 2, 2], seed 201.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_constant_2b_s201",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 201,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_constant_2b_s201"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_constant_2b_s201",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_constant_2b_s201",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 201
+          }
+        }
+      },
+      {
+        "id": "m1-256-constant-2b-s203",
+        "description": "constant-2b schedule [2, 2, 2, 2, 2, 2, 2, 2], seed 203.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_constant_2b_s203",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 203,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_constant_2b_s203"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_constant_2b_s203",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_constant_2b_s203",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 203
+          }
+        }
+      },
+      {
+        "id": "m1-256-constant-4b-s201",
+        "description": "constant-4b schedule [4, 4, 4, 4, 4, 4, 4, 4], seed 201.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_constant_4b_s201",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              4,
+              4,
+              4,
+              4,
+              4,
+              4,
+              4,
+              4
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 201,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_constant_4b_s201"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_constant_4b_s201",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_constant_4b_s201",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 201
+          }
+        }
+      },
+      {
+        "id": "m1-256-constant-4b-s203",
+        "description": "constant-4b schedule [4, 4, 4, 4, 4, 4, 4, 4], seed 203.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_constant_4b_s203",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              4,
+              4,
+              4,
+              4,
+              4,
+              4,
+              4,
+              4
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 203,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_constant_4b_s203"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_constant_4b_s203",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_constant_4b_s203",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 203
+          }
+        }
+      },
+      {
+        "id": "m1-256-constant-8b-s201",
+        "description": "constant-8b schedule [8, 8, 8, 8, 8, 8, 8, 8], seed 201.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_constant_8b_s201",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 201,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_constant_8b_s201"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_constant_8b_s201",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_constant_8b_s201",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 201
+          }
+        }
+      },
+      {
+        "id": "m1-256-constant-8b-s203",
+        "description": "constant-8b schedule [8, 8, 8, 8, 8, 8, 8, 8], seed 203.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_constant_8b_s203",
+          "model": {
+            "model_type": "progressive",
+            "precision_schedule": [
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8,
+              8
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 203,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_constant_8b_s203"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_constant_8b_s203",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_constant_8b_s203",
+            "model_type": "progressive",
+            "weight_noise_mode": "none",
+            "seed": 203
+          }
+        }
+      },
+      {
+        "id": "m1-256-baseline-fp16-s201",
+        "description": "baseline-fp16 schedule [16, 16, 16, 16, 16, 16, 16, 16], seed 201.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_baseline_fp16_s201",
+          "model": {
+            "model_type": "baseline",
+            "precision_schedule": [
+              16,
+              16,
+              16,
+              16,
+              16,
+              16,
+              16,
+              16
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 201,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_baseline_fp16_s201"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_baseline_fp16_s201",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_baseline_fp16_s201",
+            "model_type": "baseline",
+            "weight_noise_mode": "none",
+            "seed": 201
+          }
+        }
+      },
+      {
+        "id": "m1-256-baseline-fp16-s203",
+        "description": "baseline-fp16 schedule [16, 16, 16, 16, 16, 16, 16, 16], seed 203.",
+        "base_config": "configs/full_baseline.json",
+        "overrides": {
+          "experiment_name": "phase2_m1_256_baseline_fp16_s203",
+          "model": {
+            "model_type": "baseline",
+            "precision_schedule": [
+              16,
+              16,
+              16,
+              16,
+              16,
+              16,
+              16,
+              16
+            ],
+            "weight_noise_mode": "none",
+            "weight_noise_multiplier": 1.0
+          },
+          "train": {
+            "seed": 203,
+            "max_steps": 10000,
+            "save_checkpoints": false,
+            "checkpoint_every": 999999,
+            "checkpoint_dir": "checkpoints/campaign",
+            "results_dir": "results/campaign"
+          }
+        },
+        "command": [
+          "{python}",
+          "-m",
+          "src.train",
+          "--config",
+          "{config}"
+        ],
+        "artifacts": [
+          "results/campaign/phase2_m1_256_baseline_fp16_s203"
+        ],
+        "expected_metrics_contract": {
+          "artifact_dir": "results/campaign/phase2_m1_256_baseline_fp16_s203",
+          "expected_summary": {
+            "experiment_name": "phase2_m1_256_baseline_fp16_s203",
+            "model_type": "baseline",
+            "weight_noise_mode": "none",
+            "seed": 203
+          }
+        }
+      }
+    ]
+  },
+  "source": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm",
+  "runtime_repo": "/Users/hozzy/Library/Application Support/ML-Experiments/progressive-diffusion-lm/m1-256/20260720-171516_phase2-bidir-incremental_s201-203_5cc8b566/repo",
+  "shared_destination": "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/results/m1-256/20260720-171516_phase2-bidir-incremental_s201-203_5cc8b566",
+  "created_at_utc": "2026-07-20T17:15:16.991104+00:00"
+}

@@ -2,13 +2,28 @@
 
 > **Experimental proof-of-concept** on Apple Silicon. Not a production chatbot.
 
-A research project investigating whether a masked diffusion language model can train effectively with extremely low-bit weight representations, and whether assigning lower precision to high-noise denoising steps and higher precision to fine-grained steps (a "progressive precision schedule") provides any benefit.
+## Project Goal
+
+The project is now being reframed around a diffusion language model that starts from a coarse prediction and progressively refines it only when needed. Instead of treating precision as something that is simply reduced or increased on a fixed schedule, the model should add more computation and higher precision step by step until the current token decision is precise enough.
+
+In practice, the target is a model that:
+
+- can generate text with a diffusion-style workflow over multiple tokens at once,
+- begins with a cheap, coarse pass,
+- adds more refinement only where uncertainty remains,
+- and stops increasing precision once the result is already good enough.
+
+This makes the model closer to a "coarse map to detailed map" process than to a one-way compression experiment.
+
+The proposed architecture, training stages, measurements, and decision gates
+for this direction are described in
+[`docs/adaptive-progressive-diffusion-design.md`](docs/adaptive-progressive-diffusion-design.md).
 
 ---
 
 ## Research Hypothesis
 
-Early denoising steps (high noise, coarse structure) may only need binary (1-bit) weights. Late refinement steps (low noise, token disambiguation) benefit from higher precision (4-bit). A single set of FP32 master weights can be evaluated at different precisions across diffusion steps via runtime switching — no separate models needed.
+The working hypothesis is that a diffusion LM can be trained to operate across multiple precisions and use them as refinement stages during generation. Early, coarse passes may rely on low-bit computation, while later refinement passes can add more precision only where the current sequence is still ambiguous.
 
 **Key finding so far** (from 18 completed ablation runs, 6 variants × 3 seeds × 10k steps):
 - Binary (const_1bit) ranks first with mean best_val_loss 7.4336 vs. baseline 7.4434 (0.01 nats better)
@@ -35,7 +50,7 @@ Quantization schemes (all simulated in float32 via STE):
 | 2 | True 2-bit | 4: {-3,-1,+1,+3} × step | 2.0 |
 | 3 | True 3-bit | 8: {-7,...,+7} × step | 3.0 |
 | 4 | True 4-bit | 16: {-15,...,+15} × step | 4.0 |
-| 16 | FP32 | identity | 16.0 |
+| 16 (internal ID) | FP32 | identity; no quantization | 32.0 compute proxy |
 | 0 | Ternary (optional) | 3: {-1,0,+1} × max(\|w\|) | ~1.585 |
 
 ---
@@ -128,6 +143,15 @@ python -m src.generate \
 
 ## Project Status
 
+> **Current Czech flexible-model snapshot (2026-08-18):** the shared-master
+> `d_model=64` model completed 3,000,000 updates with finite held-out metrics
+> on all three precision routes and is now resuming toward 20,000,000 updates.
+> See [`docs/cswiki-flexible-project-status-2026-08-18.md`](docs/cswiki-flexible-project-status-2026-08-18.md)
+> for the verified metrics, preliminary conclusions, and limitations.
+> The same Czech checkpoint format can also be converted and resumed with the
+> optional PyTorch/CUDA backend; see
+> [`docs/cuda-training.md`](docs/cuda-training.md).
+
 | Experiment | Status | Runs |
 |---|---|---|
 | Smoke tests | DONE | 2 variants, 50 steps |
@@ -143,16 +167,25 @@ See `PROJECT_DOCUMENTATION.md` for full technical documentation including all nu
 
 ## Requirements and Hardware
 
-- macOS 13.5+ with Apple Silicon (M1/M2/M3/M4)
-- 16 GB unified memory (tested on M4 16 GB)
-- No CUDA, no NVIDIA GPU required
-- Python dependencies: `mlx>=0.21.0`, `tokenizers`, `datasets`, `numpy`, `tqdm`
+- Primary backend: macOS 13.5+ with Apple Silicon (M1/M2/M3/M4) and MLX
+- Optional backend: Linux or Windows with a CUDA-capable NVIDIA GPU and PyTorch
+- CUDA is supported for checkpoint conversion and continued training, but is
+  not required to run the primary MLX implementation
+- 16 GB unified memory is sufficient for the small MLX experiments (tested on
+  M4 16 GB)
+- MLX dependencies: `mlx>=0.21.0`, `tokenizers`, `datasets`, `numpy`, `tqdm`
+- CUDA dependencies and setup: [`requirements-cuda.txt`](requirements-cuda.txt)
+  and [`docs/cuda-training.md`](docs/cuda-training.md)
 
 ---
 
 ## Known Limitations
 
 **Most important**: All 1-bit, 2-bit, 3-bit, and 4-bit operations are **simulated in float32** via Straight-Through Estimation. No packed integer arithmetic is used. A packed Q1 `QuantizedLinear` weight tensor alone would be 32× smaller than FP32, but embeddings, normalization, biases, and other non-quantized parameters prevent that ratio from applying to the whole model. For the current progressive schedule, the storage report estimates only ~2.67× whole-model compression vs. FP32. None of this compression is realized by the current implementation, and wall-clock speed does NOT reflect real low-bit hardware performance.
+
+This limitation applies to both MLX and CUDA. The CUDA backend executes the
+same fake-quant training semantics in PyTorch; it does not yet provide packed
+Q2/Q8 kernels or guaranteed low-bit acceleration.
 
 Other limitations:
 - Small model (~28M params) and dataset (~69M tokens) — findings may not generalize to production scale

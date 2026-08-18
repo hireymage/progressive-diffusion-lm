@@ -1,0 +1,38 @@
+{
+  "schedule": [
+    "q1",
+    "q1",
+    "q1",
+    "q1",
+    "q1",
+    "q2",
+    "q2",
+    "q2",
+    "q2",
+    "q2",
+    "q4",
+    "q4",
+    "q4",
+    "q4",
+    "q4",
+    "q8",
+    "q8",
+    "q8",
+    "q8",
+    "q8",
+    "fp16",
+    "fp16",
+    "fp16",
+    "fp16",
+    "fp16"
+  ],
+  "exit_layers": [
+    5,
+    6,
+    7,
+    8
+  ],
+  "layer_8_proxy_cost": 11,
+  "full_proxy_cost": 155,
+  "fp32_reference_cost": 800
+}

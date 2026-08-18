@@ -1,0 +1,44 @@
+{
+  "m4-air-progressive-up-s201": [
+    "results/campaign/phase2_m4_air_progressive_up_s201"
+  ],
+  "m4-air-progressive-up-s203": [
+    "results/campaign/phase2_m4_air_progressive_up_s203"
+  ],
+  "m4-air-progressive-down-s201": [
+    "results/campaign/phase2_m4_air_progressive_down_s201"
+  ],
+  "m4-air-progressive-down-s203": [
+    "results/campaign/phase2_m4_air_progressive_down_s203"
+  ],
+  "m4-air-constant-1b-s201": [
+    "results/campaign/phase2_m4_air_constant_1b_s201"
+  ],
+  "m4-air-constant-1b-s203": [
+    "results/campaign/phase2_m4_air_constant_1b_s203"
+  ],
+  "m4-air-constant-2b-s201": [
+    "results/campaign/phase2_m4_air_constant_2b_s201"
+  ],
+  "m4-air-constant-2b-s203": [
+    "results/campaign/phase2_m4_air_constant_2b_s203"
+  ],
+  "m4-air-constant-4b-s201": [
+    "results/campaign/phase2_m4_air_constant_4b_s201"
+  ],
+  "m4-air-constant-4b-s203": [
+    "results/campaign/phase2_m4_air_constant_4b_s203"
+  ],
+  "m4-air-constant-8b-s201": [
+    "results/campaign/phase2_m4_air_constant_8b_s201"
+  ],
+  "m4-air-constant-8b-s203": [
+    "results/campaign/phase2_m4_air_constant_8b_s203"
+  ],
+  "m4-air-baseline-fp16-s201": [
+    "results/campaign/phase2_m4_air_baseline_fp16_s201"
+  ],
+  "m4-air-baseline-fp16-s203": [
+    "results/campaign/phase2_m4_air_baseline_fp16_s203"
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "run_id": "20260720-171512_phase2-bidir-incremental_s201-203_5f1932c4",
+  "campaign": "phase2-bidir-incremental",
+  "node": "m4-air",
+  "status": "completed",
+  "tasks": {
+    "m4-air-progressive-up-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-progressive-up-s201.json"
+      ],
+      "started_at_utc": "2026-07-20T17:15:12.852545+00:00",
+      "finished_at_utc": "2026-07-20T18:21:09.137885+00:00"
+    },
+    "m4-air-progressive-up-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-progressive-up-s203.json"
+      ],
+      "started_at_utc": "2026-07-20T18:21:09.139560+00:00",
+      "finished_at_utc": "2026-07-20T19:29:07.129074+00:00"
+    },
+    "m4-air-progressive-down-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-progressive-down-s201.json"
+      ],
+      "started_at_utc": "2026-07-20T19:29:07.130520+00:00",
+      "finished_at_utc": "2026-07-20T20:36:35.050849+00:00"
+    },
+    "m4-air-progressive-down-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-progressive-down-s203.json"
+      ],
+      "started_at_utc": "2026-07-20T20:36:35.052152+00:00",
+      "finished_at_utc": "2026-07-20T21:56:02.141478+00:00"
+    },
+    "m4-air-constant-1b-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-constant-1b-s201.json"
+      ],
+      "started_at_utc": "2026-07-20T21:56:02.142712+00:00",
+      "finished_at_utc": "2026-07-20T23:12:27.722617+00:00"
+    },
+    "m4-air-constant-1b-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-constant-1b-s203.json"
+      ],
+      "started_at_utc": "2026-07-20T23:12:27.723881+00:00",
+      "finished_at_utc": "2026-07-21T00:28:41.843370+00:00"
+    },
+    "m4-air-constant-2b-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-constant-2b-s201.json"
+      ],
+      "started_at_utc": "2026-07-21T00:28:41.844542+00:00",
+      "finished_at_utc": "2026-07-21T01:47:31.391942+00:00"
+    },
+    "m4-air-constant-2b-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-constant-2b-s203.json"
+      ],
+      "started_at_utc": "2026-07-21T01:47:31.393446+00:00",
+      "finished_at_utc": "2026-07-21T03:06:03.770610+00:00"
+    },
+    "m4-air-constant-4b-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-constant-4b-s201.json"
+      ],
+      "started_at_utc": "2026-07-21T03:06:03.772000+00:00",
+      "finished_at_utc": "2026-07-21T04:25:40.047937+00:00"
+    },
+    "m4-air-constant-4b-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-constant-4b-s203.json"
+      ],
+      "started_at_utc": "2026-07-21T04:25:40.048780+00:00",
+      "finished_at_utc": "2026-07-21T06:32:45.007269+00:00"
+    },
+    "m4-air-constant-8b-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-constant-8b-s201.json"
+      ],
+      "started_at_utc": "2026-07-21T06:32:45.008308+00:00",
+      "finished_at_utc": "2026-07-21T08:03:56.196154+00:00"
+    },
+    "m4-air-constant-8b-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-constant-8b-s203.json"
+      ],
+      "started_at_utc": "2026-07-21T08:03:56.198212+00:00",
+      "finished_at_utc": "2026-07-21T09:47:31.738311+00:00"
+    },
+    "m4-air-baseline-fp16-s201": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-baseline-fp16-s201.json"
+      ],
+      "started_at_utc": "2026-07-21T09:47:31.741947+00:00",
+      "finished_at_utc": "2026-07-21T11:21:18.673528+00:00"
+    },
+    "m4-air-baseline-fp16-s203": {
+      "status": "completed",
+      "exit_code": 0,
+      "command": [
+        "/Users/hozzy/Documents/Projekty/progressive-diffusion-lm/.venv/bin/python",
+        "-m",
+        "src.train",
+        "--config",
+        "configs/campaign/generated/m4-air-baseline-fp16-s203.json"
+      ],
+      "started_at_utc": "2026-07-21T11:21:18.675951+00:00",
+      "finished_at_utc": "2026-07-21T12:37:05.414409+00:00"
+    }
+  },
+  "completed_at_utc": "2026-07-21T12:37:05.414953+00:00"
+}
