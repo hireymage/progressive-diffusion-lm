@@ -1,0 +1,5 @@
+# Install into a CUDA-enabled Python environment. Select the PyTorch wheel
+# matching the installed CUDA driver from https://pytorch.org/get-started/locally/.
+torch>=2.4
+numpy>=1.24
+tokenizers>=0.15

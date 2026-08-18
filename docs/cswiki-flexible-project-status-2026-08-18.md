@@ -104,10 +104,44 @@ každý s 300 route forward/backward průchody:
 Joint režim je proto označen jako slibný experiment, nikoli jako nový výchozí
 trenér. Hlavní běh dál používá ověřenou strategii A se střídáním routes.
 
+## Implementované backendy a provozní nástroje
+
+Projekt už není omezený pouze na MLX. Ověřená hlavní cesta zůstává MLX na
+Apple Silicon, ale repozitář obsahuje také volitelný **PyTorch/CUDA backend**:
+
+- převod MLX `.npz` checkpointu do PyTorch `.pt`, včetně AdamW momentů a
+  celkového čísla kroku,
+- pokračování tréninku z převedeného checkpointu bez učení od nuly,
+- stejné sdílené FP32 master váhy a routes `q8_only`, `q8_fp16` a
+  `q2_q8_fp16`,
+- kontrolu kompatibility cache a checkpointu, konečnosti loss a gradientů,
+  ukládání `latest`, `best` a neměnných archivních checkpointů,
+- shodu Q8 logits mezi MLX a PyTorch v toleranci pokrytou automatickým testem.
+
+CUDA backend je funkční trénovací backend, nikoli skutečný packed low-bit
+runtime. Q2 a Q8 jsou v něm stejně jako v MLX simulované kvantizace přes STE
+nad FP32 master vahami. Přítomnost CUDA proto sama o sobě neznamená úsporu
+paměti ani zrychlení Q2/Q8. Postup instalace, převodu a krátkého ověřovacího
+resume je v [`docs/cuda-training.md`](cuda-training.md).
+
+Součástí projektu jsou také nástroje pro:
+
+- vzdálené monitorování více nodů a tabulku checkpointů po 10 000 krocích,
+- automatické vyhodnocování českých doplňovacích vět nad novými checkpointy,
+- evidenci důvodu ukončení generace a vrstvy předčasného exitu,
+- HTML dashboard výsledků checkpointů,
+- interaktivní doplňování i experimentální přepis celé věty,
+- krátké joint-route a distribuované experimenty.
+
+Distribuované trénování samostatných routes a následné průměrování checkpointů
+zůstává pouze experimentální. Není výchozí strategií, protože nezávislé větve
+nemají stejný optimalizační stav a jejich prosté sloučení nezaručuje ekvivalent
+jednoho korektního společného kroku.
+
 ## Omezení interpretace
 
-- Low-bit výpočty jsou stále simulované; nejde o důkaz reálného Q2/Q8
-  zrychlení ani úspory paměti.
+- Low-bit výpočty jsou stále simulované v MLX i CUDA; nejde o důkaz reálného
+  Q2/Q8 zrychlení ani úspory paměti.
 - Model je záměrně velmi malý a jeho kapacita může být hlavním limitem.
 - Jednotlivé validační body kolísají; rozhoduje dlouhodobý trend a nejlepší
   worst-route checkpoint, ne jediný lokální vrchol accuracy.

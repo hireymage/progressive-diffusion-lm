@@ -148,6 +148,9 @@ python -m src.generate \
 > on all three precision routes and is now resuming toward 20,000,000 updates.
 > See [`docs/cswiki-flexible-project-status-2026-08-18.md`](docs/cswiki-flexible-project-status-2026-08-18.md)
 > for the verified metrics, preliminary conclusions, and limitations.
+> The same Czech checkpoint format can also be converted and resumed with the
+> optional PyTorch/CUDA backend; see
+> [`docs/cuda-training.md`](docs/cuda-training.md).
 
 | Experiment | Status | Runs |
 |---|---|---|
@@ -164,16 +167,25 @@ See `PROJECT_DOCUMENTATION.md` for full technical documentation including all nu
 
 ## Requirements and Hardware
 
-- macOS 13.5+ with Apple Silicon (M1/M2/M3/M4)
-- 16 GB unified memory (tested on M4 16 GB)
-- No CUDA, no NVIDIA GPU required
-- Python dependencies: `mlx>=0.21.0`, `tokenizers`, `datasets`, `numpy`, `tqdm`
+- Primary backend: macOS 13.5+ with Apple Silicon (M1/M2/M3/M4) and MLX
+- Optional backend: Linux or Windows with a CUDA-capable NVIDIA GPU and PyTorch
+- CUDA is supported for checkpoint conversion and continued training, but is
+  not required to run the primary MLX implementation
+- 16 GB unified memory is sufficient for the small MLX experiments (tested on
+  M4 16 GB)
+- MLX dependencies: `mlx>=0.21.0`, `tokenizers`, `datasets`, `numpy`, `tqdm`
+- CUDA dependencies and setup: [`requirements-cuda.txt`](requirements-cuda.txt)
+  and [`docs/cuda-training.md`](docs/cuda-training.md)
 
 ---
 
 ## Known Limitations
 
 **Most important**: All 1-bit, 2-bit, 3-bit, and 4-bit operations are **simulated in float32** via Straight-Through Estimation. No packed integer arithmetic is used. A packed Q1 `QuantizedLinear` weight tensor alone would be 32× smaller than FP32, but embeddings, normalization, biases, and other non-quantized parameters prevent that ratio from applying to the whole model. For the current progressive schedule, the storage report estimates only ~2.67× whole-model compression vs. FP32. None of this compression is realized by the current implementation, and wall-clock speed does NOT reflect real low-bit hardware performance.
+
+This limitation applies to both MLX and CUDA. The CUDA backend executes the
+same fake-quant training semantics in PyTorch; it does not yet provide packed
+Q2/Q8 kernels or guaranteed low-bit acceleration.
 
 Other limitations:
 - Small model (~28M params) and dataset (~69M tokens) — findings may not generalize to production scale

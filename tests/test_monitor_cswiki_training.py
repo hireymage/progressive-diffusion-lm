@@ -10,6 +10,10 @@ def _remote(report, latest, process="123 python scripts/train_cswiki_flexible.py
     return "__REPORT__\n" + json.dumps(report) + "\n__LATEST__\n" + json.dumps(latest) + "\n__PROCESS__\n" + process
 
 
+def _remote_with_logs(report, latest, process="", logs=""):
+    return _remote(report, latest, process) + "\n__LOGS__\n" + logs
+
+
 def test_parse_and_render_czech_dashboard_with_worst_route_and_best_eta():
     history = [
         {"step": 40000, "elapsed_seconds": 7000, "loss": 5.4, "accuracy": .20, "perplexity": 220, "worst_route": "q2_q8_fp16"},
@@ -62,14 +66,17 @@ def test_remote_command_quotes_base_and_has_report_checkpoint_and_process_reads(
     command = monitor.remote_command("/tmp/a space")
     assert "report.json" in command and "checkpoints/latest.json" in command
     assert "pgrep" in command and "ps -ww" in command and "'" in command
+    assert "__LOGS__" in command and "head -n 1" in command
 
 
 def test_default_selection_contains_all_three_nodes_with_independent_runs():
     nodes = dict(monitor.selected_nodes(None, None))
     assert list(nodes) == ["m4-air", "m1-512", "m1-256"]
     assert "cswiki-real" in nodes["m4-air"]
-    assert "cswiki-wide128" in nodes["m1-512"]
-    assert monitor.DEFAULT_TARGETS["m1-512"] == 400000
+    assert "cswiki-d64-m1-512" in nodes["m1-512"]
+    assert nodes["m1-256"].endswith("/cswiki-m1-256/run-current")
+    assert monitor.DEFAULT_TARGETS["m1-512"] == 3000000
+    assert monitor.DEFAULT_TARGETS["m1-256"] == 400000
 
 
 def test_render_dashboard_uses_supplied_host_name():
@@ -109,3 +116,32 @@ def test_reset_optimizer_recovery_prefers_restored_checkpoint_history():
     text = monitor.render_dashboard(state, host="m1-512")
     assert "běží" in text and "NUMERICKÁ CHYBA" not in text
     assert "51,000 / 55,000" in text
+
+
+def test_recent_floating_point_log_marks_stopped_run_as_numerical_error():
+    history = [{"step": 52000, "loss": 6.54, "accuracy": .08, "perplexity": 696.}]
+    logs = "FloatingPointError: non-finite training value at step 52223: loss=nan, gradient_norm=nan"
+    state = monitor.parse_remote_output(_remote_with_logs({"status": "running", "history": history}, {}, "", logs))
+    text = monitor.render_dashboard(state, 400000, host="m1-512")
+    assert "NUMERICKÁ CHYBA" in text
+    assert "Poslední chyba: numerická chyba v tréninku @ krok 52,223" in text
+
+
+def test_render_comparison_uses_10k_milestones_and_empty_missing_node():
+    m4 = monitor.parse_remote_output(_remote({"history": [
+        {"step": 10000, "loss": 7.0, "accuracy": .06},
+        {"step": 20000, "loss": 6.4, "accuracy": .13},
+    ]}, {}))
+    m1_512 = monitor.parse_remote_output(_remote({"history": [
+        {"step": 10000, "loss": 7.1, "accuracy": .065},
+    ]}, {}))
+    missing = monitor.parse_remote_output(_remote({}, {}))
+    text = monitor.render_comparison(
+        {"m4-air": m4, "m1-512": m1_512, "m1-256": missing},
+        {"m4-air": 20000, "m1-512": 20000, "m1-256": 20000},
+    )
+    assert "Srovnání po 10k krocích" in text
+    assert "10,000" in text and "7.0000 / 6.00 %" in text
+    assert "7.1000 / 6.50 %" in text
+    assert "m1-256" in text and "—" in text
+    assert "20,000" in text and "6.4000 / 13.00 %" in text
