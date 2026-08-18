@@ -143,6 +143,12 @@ python -m src.generate \
 
 ## Project Status
 
+> **Current Czech flexible-model snapshot (2026-08-18):** the shared-master
+> `d_model=64` model completed 3,000,000 updates with finite held-out metrics
+> on all three precision routes and is now resuming toward 20,000,000 updates.
+> See [`docs/cswiki-flexible-project-status-2026-08-18.md`](docs/cswiki-flexible-project-status-2026-08-18.md)
+> for the verified metrics, preliminary conclusions, and limitations.
+
 | Experiment | Status | Runs |
 |---|---|---|
 | Smoke tests | DONE | 2 variants, 50 steps |

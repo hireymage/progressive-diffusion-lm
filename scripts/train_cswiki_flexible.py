@@ -166,6 +166,10 @@ def checkpoint(model, optimizer, directory: Path, kind: str, metadata: dict) -> 
     atomic_json_write(directory / f"{kind}.json", metadata)
 
 
+def step_checkpoint_name(step: int) -> str:
+    return f"step_{step:07d}"
+
+
 def load_checkpoint(model, optimizer, path: Path, expected: dict, *, load_optimizer: bool = True) -> dict:
     metadata = json.loads(path.with_suffix(".json").read_text())
     for key, value in expected.items():
@@ -192,32 +196,42 @@ def ensure_outside_icloud(path: Path | str) -> None:
 
 
 def run(a) -> dict:
-    if not 1 <= a.steps <= 1_000_000:
-        raise ValueError("--steps must be in [1, 1000000]")
+    if not 1 <= a.steps <= 20_000_000:
+        raise ValueError("--steps must be in [1, 20000000]")
+    archive_every = getattr(a, "archive_every", 10000)
     if a.batch_size < 1 or a.eval_steps < 1 or a.eval_every < 1:
         raise ValueError("batch size, eval steps, and eval interval must be positive")
+    if archive_every < 0:
+        raise ValueError("--archive-every must be non-negative")
+    if archive_every and archive_every % a.eval_every != 0:
+        raise ValueError("--archive-every must be 0 or a multiple of --eval-every")
     grad_clip = getattr(a, "grad_clip", 0.0)
     reset_optimizer = getattr(a, "reset_optimizer", False)
     if grad_clip < 0:
         raise ValueError("--grad-clip must be non-negative")
     if reset_optimizer and not a.resume:
         raise ValueError("--reset-optimizer requires --resume")
+    d_model, d_ff = getattr(a, "d_model", D_MODEL), getattr(a, "d_ff", D_FF)
+    n_heads, n_layers = getattr(a, "n_heads", N_HEADS), getattr(a, "n_layers", N_LAYERS)
+    seq_len = getattr(a, "seq_len", SEQ_LEN)
+    pool = route_pool(n_layers)
+    training_route_names = tuple(getattr(a, "training_routes", None) or pool.keys())
+    unknown_training_routes = sorted(set(training_route_names) - set(pool))
+    if unknown_training_routes:
+        raise ValueError(f"unknown --training-routes: {unknown_training_routes}")
+    training_pool = {name: pool[name] for name in training_route_names}
     if not a.resume and a.output.exists():
         raise FileExistsError(f"Refusing to overwrite historical report: {a.output}")
     if not a.resume and any((a.checkpoint_dir / name).exists()
                             for name in ("latest.npz", "latest.json", "best.npz", "best.json")):
         raise FileExistsError(f"Refusing to overwrite historical checkpoints: {a.checkpoint_dir}")
     a.output.parent.mkdir(parents=True, exist_ok=True)
-    d_model, d_ff = getattr(a, "d_model", D_MODEL), getattr(a, "d_ff", D_FF)
-    n_heads, n_layers = getattr(a, "n_heads", N_HEADS), getattr(a, "n_layers", N_LAYERS)
-    seq_len = getattr(a, "seq_len", SEQ_LEN)
     train, val, cache_meta, cache_meta_path = select_verified_cswiki_cache(a.cache_dir, seq_len)
     tokenizer = load_tokenizer(cache_meta["tokenizer"])
     mx.random.seed(a.seed)
     model = build_model(tokenizer.get_vocab_size(), d_model=d_model, d_ff=d_ff,
                         n_heads=n_heads, n_layers=n_layers, seq_len=seq_len)
     optimizer = optim.AdamW(learning_rate=a.lr)
-    pool = route_pool(n_layers)
     contract = {"cache_train_sha256": cache_meta["train_sha256"], "cache_val_sha256": cache_meta["val_sha256"],
                 "route_pool": pool, "strategy": "A-constant-50pct",
                 "architecture": [n_layers, d_model, d_ff, n_heads, seq_len]}
@@ -237,7 +251,7 @@ def run(a) -> dict:
         layer_weights=tuple(weight for _, weight in milestones)))
     began = time.time()
     for step in range(start_step + 1, a.steps + 1):
-        route, schedule = route_for_training_step(pool, step)
+        route, schedule = route_for_training_step(training_pool, step)
         model.set_layer_precisions(schedule)
         x, targets, mask = corrupt_50(fixed_batch(train, a.batch_size, a.seed + step), model.cfg.mask_token_id(), a.seed + 10_000 + step)
         loss, grads = grad_fn(model, x, targets, mask)
@@ -254,7 +268,7 @@ def run(a) -> dict:
         if step % a.eval_every == 0 or step == a.steps:
             report = evaluate_routes(model, val, a.batch_size, a.eval_steps, a.seed + 900_000)
             # Avoid runtime precision leakage after the three route passes.
-            next_route, next_schedule = route_for_training_step(pool, step + 1); model.set_layer_precisions(next_schedule)
+            next_route, next_schedule = route_for_training_step(training_pool, step + 1); model.set_layer_precisions(next_schedule)
             report.update({"step": step, "training_route": route, "next_training_route": next_route,
                            "train_loss": float(loss), "elapsed_seconds": time.time() - began})
             history.append(report)
@@ -262,14 +276,20 @@ def run(a) -> dict:
             checkpoint(model, optimizer, a.checkpoint_dir, "latest", metadata)
             if report["loss"] < best_loss:
                 best_loss = report["loss"]; checkpoint(model, optimizer, a.checkpoint_dir, "best", metadata)
+            if archive_every and (step % archive_every == 0 or step == a.steps):
+                step_kind = step_checkpoint_name(step)
+                if not (a.checkpoint_dir / f"{step_kind}.npz").exists():
+                    checkpoint(model, optimizer, a.checkpoint_dir, step_kind, metadata | {"checkpoint_kind": step_kind})
             atomic_json_write(a.output, {"status": "running", "cache_meta_path": str(cache_meta_path), "history": history})
     final = history[-1] if history else None
     result = {"status": "complete", "language": "cswiki-only", "strategy": "A-constant-50pct",
               "architecture": {"n_layers": n_layers, "d_model": d_model, "d_ff": d_ff, "n_heads": n_heads, "seq_len": seq_len,
                                "route_pool": pool, "active_schedule": list(model.cfg.layer_precisions)},
-              "cache_meta_path": str(cache_meta_path), "cache_metadata": cache_meta, "checkpoint_policy": "atomic latest+best; best is minimum worst-route held-out loss",
+              "cache_meta_path": str(cache_meta_path), "cache_metadata": cache_meta,
+              "checkpoint_policy": f"atomic latest+best plus immutable step snapshots every {archive_every} steps; best is minimum worst-route held-out loss",
               "optimizer_policy": {"learning_rate": a.lr, "reset_on_resume": reset_optimizer,
-                                   "gradient_clip": grad_clip},
+                                   "gradient_clip": grad_clip,
+                                   "training_routes": list(training_route_names)},
               "steps": a.steps, "history": history, "final": final}
     atomic_json_write(a.output, result)
     return result
@@ -288,6 +308,10 @@ def main() -> None:
     p.add_argument("--seed", type=int, default=20260804); p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument("--grad-clip", type=float, default=0.0,
                    help="global gradient norm cap; 0 disables clipping")
+    p.add_argument("--archive-every", type=int, default=10000,
+                   help="save immutable step_NNNNNNN checkpoint snapshots at this step interval; 0 disables")
+    p.add_argument("--training-routes", nargs="+", choices=("q8_only", "q8_fp16", "q2_q8_fp16"),
+                   help="routes used for parameter updates; validation still checks the full route pool")
     p.add_argument("--min-free-gb", type=float, default=10.0); p.add_argument("--resume", action="store_true")
     p.add_argument("--reset-optimizer", action="store_true",
                    help="resume model weights but initialize fresh optimizer moments")

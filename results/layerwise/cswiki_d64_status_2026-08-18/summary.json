@@ -1,0 +1,78 @@
+{
+  "snapshot_date": "2026-08-18",
+  "status": "running",
+  "language": "cswiki-only",
+  "strategy": "A-constant-50pct alternating routes",
+  "architecture": {
+    "n_layers": 25,
+    "d_model": 64,
+    "d_ff": 256,
+    "n_heads": 4,
+    "seq_len": 256,
+    "vocab_size": 16000
+  },
+  "routes": [
+    "q8_only",
+    "q8_fp16",
+    "q2_q8_fp16"
+  ],
+  "dataset": {
+    "total_tokens": 73706496,
+    "n_train_chunks": 272702,
+    "n_val_chunks": 15214,
+    "seq_len": 256,
+    "train_sha256": "43104092ef2168470a3d44c40b5c551399760056d501c17824cc00c42aa89f52",
+    "val_sha256": "d3318e89cf1a7df5f5fcb5386a4813fdec6646db110bd72d67dd00f7d4826547",
+    "tokenizer_sha256": "318e5f9904f0bf8386bbc07517213d63f7b07f75382ce8aaf98cb3f7405bc0de"
+  },
+  "completed_3000000": {
+    "step": 3000000,
+    "worst_route": "q2_q8_fp16",
+    "loss": 4.412950656929625,
+    "accuracy": 0.3117440735365264,
+    "perplexity": 82.51257095374514
+  },
+  "best_checkpoint_so_far": {
+    "step": 2891500,
+    "worst_route_loss": 4.34507259448254
+  },
+  "current_snapshot": {
+    "step": 3189500,
+    "target_step": 20000000,
+    "worst_route": "q2_q8_fp16",
+    "loss": 4.375662166482882,
+    "accuracy": 0.3160377358490566,
+    "perplexity": 79.49245937103586,
+    "per_route": {
+      "q8_only": {
+        "loss": 4.083940510595254,
+        "accuracy": 0.35250362844702465,
+        "perplexity": 59.37899299853621
+      },
+      "q8_fp16": {
+        "loss": 4.0839171610307625,
+        "accuracy": 0.352322206095791,
+        "perplexity": 59.37760654109639
+      },
+      "q2_q8_fp16": {
+        "loss": 4.375662166482882,
+        "accuracy": 0.3160377358490566,
+        "perplexity": 79.49245937103586
+      }
+    }
+  },
+  "milestones": [
+    {"step": 500000, "loss": 4.722656021155075, "accuracy": 0.26971456216739237, "perplexity": 112.46656991290769},
+    {"step": 1000000, "loss": 4.600198547333753, "accuracy": 0.284833091436865, "perplexity": 99.50406994857234},
+    {"step": 1500000, "loss": 4.5207835447978555, "accuracy": 0.2948717948717949, "perplexity": 91.90758348146092},
+    {"step": 2000000, "loss": 4.527641432955464, "accuracy": 0.2985002418964683, "perplexity": 92.54004159457492},
+    {"step": 2500000, "loss": 4.438375545920643, "accuracy": 0.3090227382680213, "perplexity": 84.63734046767809},
+    {"step": 3000000, "loss": 4.412950656929625, "accuracy": 0.3117440735365264, "perplexity": 82.51257095374514}
+  ],
+  "checkpoint_policy": {
+    "latest_and_best_eval_interval": 500,
+    "immutable_archive_interval_after_3000000": 100000,
+    "selection_metric": "minimum worst-route held-out loss"
+  },
+  "preliminary_conclusion": "Shared master weights train stably across all three routes; q8 routes are nearly tied, q2_q8_fp16 remains the bounded worst route, and the tiny model is improving slowly but is not yet a reliable conversational model."
+}

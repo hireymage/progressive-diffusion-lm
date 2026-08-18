@@ -68,15 +68,26 @@ def test_new_run_refuses_historical_report_before_loading_cache(tmp_path):
         run(args)
 
 
-def test_real_trainer_hard_cap_allows_100000_and_rejects_over_one_million(tmp_path):
-    accepted = type("Args", (), {"steps": 100000, "output": tmp_path / "report.json"})()
-    rejected = type("Args", (), {"steps": 1_000_001, "output": tmp_path / "report.json"})()
-    # 100k clears the cap check; the following missing batch field proves it
+def test_real_trainer_hard_cap_allows_twenty_million_and_rejects_over_cap(tmp_path):
+    accepted = type("Args", (), {"steps": 20_000_000, "output": tmp_path / "report.json",
+                                  "batch_size": 1, "eval_steps": 1, "eval_every": 500,
+                                  "archive_every": 10000})()
+    rejected = type("Args", (), {"steps": 20_000_001, "output": tmp_path / "report.json"})()
+    # 20M clears the cap and archive interval checks; the following missing
+    # resume field proves it
     # reached later validation without touching cache/model state.
-    with pytest.raises(AttributeError, match="batch_size"):
+    with pytest.raises(AttributeError, match="resume"):
         run(accepted)
-    with pytest.raises(ValueError, match="1000000"):
+    with pytest.raises(ValueError, match="20000000"):
         run(rejected)
+
+
+def test_archive_every_must_align_with_eval_every(tmp_path):
+    args = type("Args", (), {"steps": 100000, "output": tmp_path / "report.json",
+                             "batch_size": 1, "eval_steps": 1, "eval_every": 500,
+                             "archive_every": 750})()
+    with pytest.raises(ValueError, match="archive-every"):
+        run(args)
 
 
 def test_custom_128_512_architecture_and_routes_use_requested_values():
@@ -110,4 +121,13 @@ def test_negative_gradient_clip_is_rejected_before_loading_cache(tmp_path):
         "output": tmp_path / "report.json", "checkpoint_dir": tmp_path / "checkpoints",
         "cache_dir": tmp_path / "missing"})()
     with pytest.raises(ValueError, match="grad-clip"):
+        run(args)
+
+
+def test_training_routes_are_validated_before_loading_cache(tmp_path):
+    args = type("Args", (), {"steps": 1, "batch_size": 1, "eval_steps": 1,
+        "eval_every": 1, "resume": True, "reset_optimizer": False, "grad_clip": 0.0,
+        "training_routes": ["q8_only", "bad_route"], "output": tmp_path / "report.json",
+        "checkpoint_dir": tmp_path / "checkpoints", "cache_dir": tmp_path / "missing"})()
+    with pytest.raises(ValueError, match="unknown --training-routes"):
         run(args)
