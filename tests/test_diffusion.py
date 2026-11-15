@@ -5,11 +5,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import numpy as np
+import pytest
 import mlx.core as mx
 
 from src.diffusion import (
     corrupt_tokens, mask_rate_to_step, compute_loss,
     generate, generate_incremental, generate_with_early_exit,
+    _reveal_positions, _token_predictions,
 )
 from src.model import DiffusionLM, IncrementalCache
 from src.config import ModelConfig
@@ -315,6 +317,27 @@ class TestForwardIncremental:
             atol=1e-6,
         )
 
+    def test_cached_update_is_a_scaled_full_recompute(self):
+        """A cached call still equals the full forward blended with the cache."""
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        x = mx.array([[1, 2, 3, 4, 5, 6, 7, 8,
+                       mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id, mask_id]])
+        step_frac_1 = mx.array([0.8])
+        step_frac_2 = mx.array([0.4])
+        model.set_bits(1)
+        _, cache = model.forward_incremental(x, step_frac_1, cache=None)
+        model.set_bits(4)
+        logits, _ = model.forward_incremental(x, step_frac_2, cache=cache, delta_weight=0.25)
+        full = model(x, step_frac_2)
+        expected = cache.logits + 0.25 * (full - cache.logits)
+        mx.eval(logits, expected)
+        np.testing.assert_allclose(
+            np.array(logits.tolist()),
+            np.array(expected.tolist()),
+            atol=1e-6,
+        )
+
     def test_incremental_cache_chain(self):
         """Chaining multiple incremental steps should work without errors."""
         model, cfg = make_small_model()
@@ -586,6 +609,116 @@ class TestGenerateWithEarlyExit:
         assert np.all(tokens_np >= 0) and np.all(tokens_np < cfg.vocab_size)
 
 
+class TestTemperatureSampling:
+    def _greedy_reference(self, model, cfg, seq_len, batch_size):
+        """The previous argmax reveal loop, kept here so greedy stays fixed."""
+        mask_id = cfg.mask_token_id()
+        schedule = cfg.precision_schedule
+        n_steps = len(schedule)
+        x = mx.full((batch_size, seq_len), mask_id, dtype=mx.int32)
+        for step_i in range(n_steps):
+            model.set_bits(schedule[step_i])
+            step_frac = mx.full((batch_size,), 1.0 - step_i / n_steps)
+            target = int((step_i + 1) / n_steps * seq_len)
+            current = int((x != mask_id).sum()) // batch_size
+            n_to_reveal = max(0, target - current)
+            if n_to_reveal == 0:
+                continue
+            logits = model(x, step_frac)
+            pred_ids = mx.argmax(logits.astype(mx.float32), axis=-1).astype(mx.int32)
+            confidence = mx.softmax(logits.astype(mx.float32), axis=-1).max(axis=-1)
+            x = _reveal_positions(x, pred_ids, confidence, mask_id, n_to_reveal)
+            mx.eval(x)
+        still_masked = x == mask_id
+        if bool(still_masked.any()):
+            model.set_bits(schedule[-1])
+            logits = model(x, mx.zeros((batch_size,)))
+            pred_ids = mx.argmax(logits.astype(mx.float32), axis=-1).astype(mx.int32)
+            mx.eval(pred_ids)
+            x = mx.where(still_masked, pred_ids, x)
+            mx.eval(x)
+        return x
+
+    def test_temperature_zero_matches_greedy_argmax_and_ignores_rng(self):
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        kwargs = dict(
+            seq_len=8,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            batch_size=2,
+        )
+        reference = self._greedy_reference(model, cfg, 8, 2)
+        mx.random.seed(1)
+        greedy = generate(model, temperature=0.0, **kwargs)
+        mx.random.seed(99)
+        default = generate(model, **kwargs)
+        mx.eval(reference, greedy, default)
+        np.testing.assert_array_equal(np.array(greedy.tolist()), np.array(reference.tolist()))
+        np.testing.assert_array_equal(np.array(default.tolist()), np.array(reference.tolist()))
+
+    def test_positive_temperature_is_deterministic_and_samples(self):
+        mx.random.seed(5)
+        model, cfg = make_small_model()
+        mask_id = cfg.mask_token_id()
+        kwargs = dict(
+            seq_len=12,
+            mask_token_id=mask_id,
+            precision_schedule=cfg.precision_schedule,
+            temperature=1.0,
+            batch_size=2,
+        )
+        mx.random.seed(11)
+        first = generate(model, **kwargs)
+        mx.eval(first)
+        mx.random.seed(11)
+        second = generate(model, **kwargs)
+        mx.eval(second)
+        mx.random.seed(11)
+        incremental = generate_incremental(model, delta_weight=1.0, **kwargs)
+        mx.eval(incremental)
+        greedy = generate(model, temperature=0.0, seq_len=12, mask_token_id=mask_id,
+                          precision_schedule=cfg.precision_schedule, batch_size=2)
+        mx.eval(greedy)
+        first_np = np.array(first.tolist())
+        np.testing.assert_array_equal(first_np, np.array(second.tolist()))
+        np.testing.assert_array_equal(first_np, np.array(incremental.tolist()))
+        assert not np.array_equal(first_np, np.array(greedy.tolist()))
+        assert not np.any(first_np == mask_id)
+        assert np.all(first_np >= 0) and np.all(first_np < cfg.vocab_size)
+
+    def test_reveal_order_follows_confidence(self):
+        mask_id = 9
+        tokens = mx.full((1, 4), mask_id, dtype=mx.int32)
+        predictions = mx.array([[3, 4, 5, 6]], dtype=mx.int32)
+        confidence = mx.array([[0.1, 0.9, 0.2, 0.8]])
+        revealed = _reveal_positions(tokens, predictions, confidence, mask_id, n_to_reveal=2)
+        mx.eval(revealed)
+        assert revealed.tolist() == [[mask_id, 4, mask_id, 6]]
+
+    def test_confidence_uses_the_sampling_distribution(self):
+        logits = mx.array([[[4.0, 0.0, 0.0, 0.0]]])
+        greedy_ids, greedy_conf = _token_predictions(logits, 0.0)
+        _, unit_conf = _token_predictions(logits, 1.0)
+        _, sharp_conf = _token_predictions(logits, 0.5)
+        _, flat_conf = _token_predictions(logits, 50.0)
+        mx.eval(greedy_ids, greedy_conf, unit_conf, sharp_conf, flat_conf)
+        assert int(greedy_ids.item()) == 0
+        assert float(greedy_conf.item()) == pytest.approx(float(unit_conf.item()))
+        assert float(sharp_conf.item()) > float(unit_conf.item()) > float(flat_conf.item())
+
+    def test_negative_temperature_is_rejected(self):
+        model, cfg = make_small_model()
+        with pytest.raises(ValueError, match="temperature"):
+            generate(
+                model,
+                seq_len=4,
+                mask_token_id=cfg.mask_token_id(),
+                precision_schedule=cfg.precision_schedule,
+                temperature=-0.1,
+            )
+
+
 def run_all():
     test_classes = [
         TestCorruptTokens,
@@ -595,6 +728,7 @@ def run_all():
         TestForwardIncremental,
         TestGenerateIncremental,
         TestGenerateWithEarlyExit,
+        TestTemperatureSampling,
     ]
 
     passed = 0

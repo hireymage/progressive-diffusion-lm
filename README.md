@@ -144,11 +144,13 @@ python -m src.evaluate \
     --progressive checkpoints/full_progressive_1_2_4/step_0010000.npz \
     --config configs/full_progressive_1_2_4.json --eval-steps 100
 
-# Generate text
+# Generate text. --temperature 0 (the default) is greedy argmax.
+# A positive temperature samples from softmax(logits / temperature);
+# confidence from that distribution still chooses which positions open first.
 python -m src.generate \
     --checkpoint checkpoints/full_progressive_1_2_4/step_0010000.npz \
     --config configs/full_progressive_1_2_4.json \
-    --n-sequences 4 --seq-len 128
+    --n-sequences 4 --seq-len 128 --temperature 0
 ```
 
 ---

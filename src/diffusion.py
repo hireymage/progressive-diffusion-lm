@@ -24,13 +24,13 @@ We use a simple MASK-absorbing forward process:
     Start: x_T = all MASK tokens.
     For refinement step i = 1 … T:
       1. Compute predicted logits (using precision schedule[i-1]).
-      2. For each currently masked position, compute a probability distribution.
-      3. Unmask the top-k highest-confidence positions (argmax confidence).
-      4. Sample or argmax the token for those positions.
+      2. Choose a token at every position. temperature 0 is a greedy argmax.
+         A positive temperature draws from softmax(logits / temperature).
+      3. Unmask the top-k highest-confidence masked positions.
     After T steps, x_0 is fully revealed.
 
-The "confidence" of a masked position is the probability of the top-predicted
-token: max_j softmax(logits[j]).
+Confidence is the maximum probability of that same distribution, so the
+reveal order still follows the temperature-scaled softmax.
 
 Progressive precision schedule
 -------------------------------
@@ -134,46 +134,56 @@ def compute_loss(
     return loss
 
 
-@mx.compile
-def _generate_step(
-    model,
+def _check_temperature(temperature: float) -> None:
+    if not math.isfinite(temperature) or temperature < 0:
+        raise ValueError("temperature must be a non-negative finite number")
+
+
+def _token_predictions(logits: mx.array, temperature: float) -> tuple[mx.array, mx.array]:
+    """Choose token ids and the confidence used to order reveals.
+
+    ``temperature == 0`` is greedy argmax. A positive temperature samples
+    from ``softmax(logits / temperature)``. Confidence is the maximum
+    probability of that distribution, so reveal order follows the same
+    temperature that produced the tokens.
+    """
+    _check_temperature(temperature)
+    logits = logits.astype(mx.float32)
+    if temperature == 0.0:
+        scaled = logits
+        pred_ids = mx.argmax(scaled, axis=-1)
+    else:
+        scaled = logits / temperature
+        pred_ids = mx.random.categorical(scaled, axis=-1)
+    confidence = nn.softmax(scaled, axis=-1).max(axis=-1)
+    return pred_ids.astype(mx.int32), confidence
+
+
+def _reveal_positions(
     x: mx.array,
-    step_frac: mx.array,
+    pred_ids: mx.array,
+    confidence: mx.array,
     mask_token_id: int,
-    n_to_unmask: int,
+    n_to_reveal: int,
 ) -> mx.array:
-    """One refinement step: predict + unmask the most confident positions."""
-    B, L = x.shape
-    logits = model(x, step_frac)  # (B, L, V)
-    probs = nn.softmax(logits, axis=-1)  # (B, L, V)
-
-    # Confidence = max token probability at each position
-    confidence = probs.max(axis=-1)   # (B, L)
-    pred_ids = probs.argmax(axis=-1)  # (B, L)
-
-    # Only consider currently masked positions
-    is_masked = (x == mask_token_id)  # (B, L) bool
-
-    # Set confidence of already-unmasked positions to -inf so they're not selected
-    confidence = mx.where(is_masked, confidence, mx.full_like(confidence, -1e9))
-
-    # Unmask top-n most confident masked positions per sequence
-    # (sort descending by confidence, take top n)
-    sorted_indices = mx.argsort(-confidence, axis=-1)  # (B, L) descending
-
-    new_x = x
-    for b in range(B):
-        indices_to_unmask = sorted_indices[b, :n_to_unmask]
-        for idx_pos in range(n_to_unmask):
-            pos = int(sorted_indices[b, idx_pos])
-            if confidence[b, pos] > -1e8:   # is a real masked position
-                new_x = mx.array(new_x.tolist())  # materialize for index write
-                tokens = new_x[b].tolist()
-                tokens[pos] = int(pred_ids[b, pos])
-                new_x = mx.array(
-                    new_x[:b].tolist() + [tokens] + new_x[b+1:].tolist()
-                )
-    return new_x
+    """Write predictions into the n_to_reveal most confident masked positions."""
+    batch_size, seq_len = x.shape
+    is_masked = x == mask_token_id
+    mx.eval(x, confidence, pred_ids, is_masked)
+    x_np = x.tolist()
+    conf_np = confidence.tolist()
+    pred_np = pred_ids.tolist()
+    masked_np = is_masked.tolist()
+    for batch in range(batch_size):
+        candidates = [
+            (conf_np[batch][pos], pos)
+            for pos in range(seq_len)
+            if masked_np[batch][pos]
+        ]
+        candidates.sort(reverse=True)
+        for _, pos in candidates[:n_to_reveal]:
+            x_np[batch][pos] = int(pred_np[batch][pos])
+    return mx.array(x_np, dtype=mx.int32)
 
 
 def generate(
@@ -182,7 +192,7 @@ def generate(
     mask_token_id: int,
     precision_schedule: list[int],
     n_steps: int | None = None,
-    temperature: float = 1.0,
+    temperature: float = 0.0,
     batch_size: int = 1,
 ) -> mx.array:
     """
@@ -195,20 +205,21 @@ def generate(
     mask_token_id : the [MASK] token ID
     precision_schedule : list of bits per step (length = n_steps)
     n_steps : number of refinement steps (default: len(precision_schedule))
-    temperature : softmax temperature for sampling (1.0 = no change)
+    temperature : 0 selects the greedy argmax. A positive value samples each
+        token from softmax(logits / temperature). Confidence, and therefore
+        the reveal order, uses that same distribution.
     batch_size : number of sequences to generate in parallel
 
     Returns
     -------
     token_ids : (batch_size, seq_len) integer array
     """
+    _check_temperature(temperature)
     if n_steps is None:
         n_steps = len(precision_schedule)
 
     # Start from all-masked sequence
     x = mx.full((batch_size, seq_len), mask_token_id, dtype=mx.int32)
-
-    tokens_per_step = max(1, seq_len // n_steps)
 
     for step_i in range(n_steps):
         bits = precision_schedule[step_i]
@@ -226,49 +237,19 @@ def generate(
         if n_to_reveal == 0:
             continue
 
-        # Forward pass
         logits = model(x, step_frac)  # (B, L, V)
-
-        if temperature != 1.0:
-            logits = logits / temperature
-
-        probs = nn.softmax(logits.astype(mx.float32), axis=-1)
-        pred_ids = probs.argmax(axis=-1)         # (B, L)
-        confidence = probs.max(axis=-1)          # (B, L)
-
-        is_masked = (x == mask_token_id)
-
-        # Evaluate to numpy for per-sequence index manipulation
-        mx.eval(x, confidence, pred_ids, is_masked)
-
-        x_np = x.tolist()
-        conf_np = confidence.tolist()
-        pred_np = pred_ids.tolist()
-        masked_np = is_masked.tolist()
-
-        for b in range(batch_size):
-            # Collect (confidence, position) for masked positions
-            candidates = [
-                (conf_np[b][p], p)
-                for p in range(seq_len)
-                if masked_np[b][p]
-            ]
-            # Sort descending by confidence, pick top n_to_reveal
-            candidates.sort(reverse=True)
-            for _, pos in candidates[:n_to_reveal]:
-                x_np[b][pos] = pred_np[b][pos]
-
-        x = mx.array(x_np, dtype=mx.int32)
+        pred_ids, confidence = _token_predictions(logits, temperature)
+        x = _reveal_positions(x, pred_ids, confidence, mask_token_id, n_to_reveal)
         mx.eval(x)
 
-    # Ensure any remaining masked tokens are filled with model's best guess
+    # Fill any positions the integer schedule left masked.
     still_masked = (x == mask_token_id)
     if bool(still_masked.any()):
         step_frac = mx.zeros((batch_size,))
         model.set_bits(precision_schedule[-1])
         logits = model(x, step_frac)
-        mx.eval(logits)
-        pred_ids = logits.argmax(axis=-1)
+        pred_ids, _ = _token_predictions(logits, temperature)
+        mx.eval(pred_ids)
         x = mx.where(still_masked, pred_ids, x)
         mx.eval(x)
 
@@ -281,22 +262,18 @@ def generate_incremental(
     mask_token_id: int,
     precision_schedule: list[int],
     n_steps: int | None = None,
-    temperature: float = 1.0,
+    temperature: float = 0.0,
     batch_size: int = 1,
     delta_weight: float = 1.0,
 ) -> mx.array:
     """
-    Generate via progressive refinement using the incremental forward API.
+    Generate with ``model.forward_incremental``.
 
-    This is the Phase 2 variant of ``generate`` that uses
-    ``model.forward_incremental`` with an ``IncrementalCache`` to compute
-        y_next = y_prev + delta_weight * Δ
-    at each refinement step.
-
-    When delta_weight=1.0 the output is mathematically identical to the
-    standard ``generate`` function (parity guarantee).  When delta_weight<1.0
-    the residual is attenuated, which may improve robustness at the cost of
-    slightly slower convergence.
+    That call still runs a full forward and blends it with the cached
+    logits. ``delta_weight=1`` matches ``generate`` token for token when
+    both use the same temperature and random seed. ``delta_weight<1``
+    keeps part of the previous logits. It does not reduce the amount of
+    model compute.
 
     Parameters
     ----------
@@ -305,9 +282,9 @@ def generate_incremental(
     mask_token_id : the [MASK] token ID
     precision_schedule : list of bits per step
     n_steps : number of refinement steps (default: len(precision_schedule))
-    temperature : softmax temperature
+    temperature : 0 is greedy argmax; a positive value samples
     batch_size : number of sequences to generate in parallel
-    delta_weight : residual scaling factor (1.0 = exact parity)
+    delta_weight : 1 returns the full forward; 0 keeps the cached logits
 
     Returns
     -------
@@ -315,6 +292,7 @@ def generate_incremental(
     """
     from .model import IncrementalCache
 
+    _check_temperature(temperature)
     if n_steps is None:
         n_steps = len(precision_schedule)
 
@@ -336,33 +314,8 @@ def generate_incremental(
             continue
 
         logits, cache = model.forward_incremental(x, step_frac, cache, delta_weight)
-
-        if temperature != 1.0:
-            logits = logits / temperature
-
-        probs = nn.softmax(logits.astype(mx.float32), axis=-1)
-        pred_ids = probs.argmax(axis=-1)
-        confidence = probs.max(axis=-1)
-        is_masked = (x == mask_token_id)
-
-        mx.eval(x, confidence, pred_ids, is_masked)
-
-        x_np = x.tolist()
-        conf_np = confidence.tolist()
-        pred_np = pred_ids.tolist()
-        masked_np = is_masked.tolist()
-
-        for b in range(batch_size):
-            candidates = [
-                (conf_np[b][p], p)
-                for p in range(seq_len)
-                if masked_np[b][p]
-            ]
-            candidates.sort(reverse=True)
-            for _, pos in candidates[:n_to_reveal]:
-                x_np[b][pos] = pred_np[b][pos]
-
-        x = mx.array(x_np, dtype=mx.int32)
+        pred_ids, confidence = _token_predictions(logits, temperature)
+        x = _reveal_positions(x, pred_ids, confidence, mask_token_id, n_to_reveal)
         mx.eval(x)
 
     still_masked = (x == mask_token_id)
@@ -370,8 +323,8 @@ def generate_incremental(
         step_frac = mx.zeros((batch_size,))
         model.set_bits(precision_schedule[-1])
         logits, _ = model.forward_incremental(x, step_frac, cache, delta_weight)
-        mx.eval(logits)
-        pred_ids = logits.argmax(axis=-1)
+        pred_ids, _ = _token_predictions(logits, temperature)
+        mx.eval(pred_ids)
         x = mx.where(still_masked, pred_ids, x)
         mx.eval(x)
 
@@ -385,7 +338,7 @@ def generate_with_early_exit(
     precision_schedule: list[int],
     confidence_threshold: float = 0.95,
     n_steps: int | None = None,
-    temperature: float = 1.0,
+    temperature: float = 0.0,
     batch_size: int = 1,
     min_steps: int = 1,
     use_incremental: bool = False,
@@ -403,11 +356,11 @@ def generate_with_early_exit(
     precision_schedule : list of bits per step
     confidence_threshold : mean top-1 confidence above which we stop early
     n_steps : max number of refinement steps (default: len(schedule))
-    temperature : softmax temperature
+    temperature : 0 is greedy argmax; a positive value samples
     batch_size : number of sequences to generate in parallel
     min_steps : minimum steps before early-exit is allowed (default 1)
-    use_incremental : if True, use forward_incremental instead of standard forward
-    delta_weight : residual scaling for incremental mode (1.0 = parity)
+    use_incremental : if True, blend each full forward with cached logits
+    delta_weight : 1 returns the full forward; 0 keeps the cached logits
 
     Returns
     -------
@@ -416,6 +369,7 @@ def generate_with_early_exit(
     """
     from .model import IncrementalCache
 
+    _check_temperature(temperature)
     if n_steps is None:
         n_steps = len(precision_schedule)
 
@@ -442,17 +396,11 @@ def generate_with_early_exit(
         else:
             logits = model(x, step_frac)
 
-        if temperature != 1.0:
-            logits = logits / temperature
-
-        probs = nn.softmax(logits.astype(mx.float32), axis=-1)
-        pred_ids = probs.argmax(axis=-1)
-        confidence = probs.max(axis=-1)
+        pred_ids, confidence = _token_predictions(logits, temperature)
         is_masked = (x == mask_token_id)
+        mx.eval(confidence, is_masked)
 
-        mx.eval(x, confidence, pred_ids, is_masked)
-
-        # Early-exit check: mean confidence of masked positions
+        # Early-exit check: mean confidence of positions still masked.
         conf_np = confidence.tolist()
         masked_np = is_masked.tolist()
         masked_confs = [
@@ -463,20 +411,7 @@ def generate_with_early_exit(
         ]
         mean_conf = sum(masked_confs) / max(len(masked_confs), 1)
 
-        # Reveal tokens
-        x_np = x.tolist()
-        pred_np = pred_ids.tolist()
-        for b in range(batch_size):
-            candidates = [
-                (conf_np[b][p], p)
-                for p in range(seq_len)
-                if masked_np[b][p]
-            ]
-            candidates.sort(reverse=True)
-            for _, pos in candidates[:n_to_reveal]:
-                x_np[b][pos] = pred_np[b][pos]
-
-        x = mx.array(x_np, dtype=mx.int32)
+        x = _reveal_positions(x, pred_ids, confidence, mask_token_id, n_to_reveal)
         mx.eval(x)
         steps_used += 1
 
@@ -493,8 +428,8 @@ def generate_with_early_exit(
             logits, _ = model.forward_incremental(x, step_frac, cache, delta_weight)
         else:
             logits = model(x, step_frac)
-        mx.eval(logits)
-        pred_ids = logits.argmax(axis=-1)
+        pred_ids, _ = _token_predictions(logits, temperature)
+        mx.eval(pred_ids)
         x = mx.where(still_masked, pred_ids, x)
         mx.eval(x)
 
