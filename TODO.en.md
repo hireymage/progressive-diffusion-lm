@@ -2,10 +2,10 @@
 
 [English](TODO.en.md) | [Čeština](TODO.md)
 
-<!-- doc-status: living; verified: 2026-08-18 -->
-> **Document status:** Living documentation, verified against the current code and published results on 2026-08-18.
+<!-- doc-status: living; verified: 2026-11-15 -->
+> **Document status:** Living documentation, verified against the current code and published results on 2026-11-15.
 
-Last update: 2026-08-18
+Last update: 2026-11-15
 
 ---
 
@@ -62,7 +62,7 @@ Last update: 2026-08-18
 - [x] **Phase 2 — Bidirectional incremental** (42 runs, 7 schedules, bits=8 added)
   - Best: constant-2b (7.4287); progressive-down the worst
 - [x] **Phase 2 — Inference eval** (3 nodes, early-exit to 9.47× speedup)
-- [x] M2 Incremental forward (`y_next = y_prev + Δ`, 1.32× speedup)
+- [x] M2 Incremental forward blends a new full forward with cached logits (`y = cache + delta_weight * (full - cache)`). The current function does not skip work, so it does not deliver a 1.32× speedup.
 - [x] M3 Early-exit generation (threshold ≤ 0.03 → 1 step, 5–9× speedup, 100% match)
 
 ### Documentation

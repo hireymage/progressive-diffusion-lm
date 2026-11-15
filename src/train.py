@@ -329,8 +329,14 @@ def evaluate(
 # ---------------------------------------------------------------------------
 
 def lr_schedule(step: int, warmup: int, total: int, base_lr: float) -> float:
-    if step < warmup:
-        return base_lr * step / max(warmup, 1)
+    """Linear warmup followed by cosine decay.
+
+    With a positive warmup, step 0 uses ``base_lr / warmup`` and step
+    ``warmup - 1`` reaches ``base_lr``. The first update is therefore not
+    multiplied by zero.
+    """
+    if warmup > 0 and step < warmup:
+        return base_lr * (step + 1) / warmup
     progress = (step - warmup) / max(total - warmup, 1)
     return base_lr * 0.5 * (1.0 + np.cos(np.pi * progress))
 

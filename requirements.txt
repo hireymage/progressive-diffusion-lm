@@ -1,8 +1,12 @@
 # Progressive Diffusion LM — Python dependencies
 # Install with: pip install -r requirements.txt
 
-# Core ML framework — Apple Silicon only
-mlx>=0.21.0
+# Core ML framework.
+# mlx[cpu] installs the Linux CPU backend (mlx-cpu). On macOS the extra is
+# unused and the base package still installs MLX Metal. Plain `mlx` on Linux
+# does not ship libmlx.so, so `import mlx` fails. The cpu extra exists from
+# mlx 0.26.5.
+mlx[cpu]>=0.26.5
 
 # Tokenization
 tokenizers>=0.15.0

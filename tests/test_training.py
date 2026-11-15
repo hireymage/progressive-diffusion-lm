@@ -16,7 +16,7 @@ import mlx.utils
 from src.model import DiffusionLM
 from src.config import ModelConfig, ExperimentConfig, DataConfig, TrainConfig
 from src.diffusion import compute_loss
-from src.train import save_checkpoint, load_checkpoint
+from src.train import lr_schedule, save_checkpoint, load_checkpoint
 import src.train as train_module
 
 
@@ -278,11 +278,25 @@ class TestBaselineModel:
             "Baseline and progressive should have identical architecture"
 
 
+class TestLearningRateSchedule:
+    def test_warmup_first_step_is_not_zero(self):
+        base = 1e-3
+        assert lr_schedule(0, warmup=5, total=50, base_lr=base) == pytest.approx(base / 5)
+        assert lr_schedule(4, warmup=5, total=50, base_lr=base) == pytest.approx(base)
+        assert lr_schedule(5, warmup=5, total=50, base_lr=base) == pytest.approx(base)
+        assert lr_schedule(49, warmup=5, total=50, base_lr=base) < base / 10
+
+    def test_no_warmup_starts_at_base_lr(self):
+        base = 3e-4
+        assert lr_schedule(0, warmup=0, total=10, base_lr=base) == pytest.approx(base)
+
+
 def run_all():
     test_classes = [
         TestOneTrainingStep,
         TestCheckpointing,
         TestBaselineModel,
+        TestLearningRateSchedule,
     ]
 
     passed = 0

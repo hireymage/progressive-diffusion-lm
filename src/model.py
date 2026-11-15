@@ -65,13 +65,9 @@ class IncrementalCache:
     """
     Cached state from a previous diffusion refinement step.
 
-    The incremental forward API computes:
-        y_next = y_prev + Δ
-
-    where Δ is the residual produced by running the model at a *different*
-    precision on the *same* (or slightly modified) input.  The idea is that
-    coarser-step logits are a good approximation and the finer step only
-    needs to compute a small correction.
+    ``forward_incremental`` stores the logits of a previous full forward so a
+    later call can blend them with a new full forward. It does not reuse
+    hidden activations, and it does not skip layers.
 
     Fields
     ------
@@ -318,29 +314,26 @@ class DiffusionLM(nn.Module):
         pad_mask: mx.array = None,
     ) -> tuple[mx.array, IncrementalCache]:
         """
-        Incremental forward: y_next = y_prev + delta_weight * Δ.
+        Blend a new full forward with cached logits.
 
-        If cache is None or the input has changed significantly, this falls
-        back to a full forward pass and returns a fresh cache.
+        Every call runs the full model. Generation changes the revealed
+        tokens and the precision schedule changes the quantized weights, so
+        there is no correct activation-reuse shortcut in this architecture.
+        The result is::
 
-        If cache is provided with matching input shape, the residual Δ is
-        computed as:
-            Δ = model_full(token_ids, step_frac) - model_full(token_ids, cache.step_frac)
-        and the output is:
-            y_next = cache.logits + delta_weight * Δ
+            full = model(token_ids, step_frac)
+            logits = cache.logits + delta_weight * (full - cache.logits)
 
-        For A/B validation against the full-recompute path, set
-        delta_weight=1.0 and verify parity with the standard __call__.
+        ``delta_weight=1`` returns that full forward. ``delta_weight=0``
+        returns the cached logits. This is not a faster kernel, and it does
+        not implement the historical 1.32× speedup claim.
 
         Returns
         -------
         logits : (B, L, vocab_size)
         new_cache : IncrementalCache  (can be passed to the next step)
         """
-        B, L = token_ids.shape
-
         if cache is None or cache.logits is None:
-            # Full recompute — no cache available
             logits = self(token_ids, step_frac, pad_mask)
             new_cache = IncrementalCache(
                 hidden=None,  # hidden not exposed in full forward for now
@@ -350,15 +343,8 @@ class DiffusionLM(nn.Module):
             )
             return logits, new_cache
 
-        # Incremental path: compute delta from cached logits
-        # Run full forward at current precision (the model's weights are
-        # already set to the desired bits by the caller via set_bits).
         full_logits = self(token_ids, step_frac, pad_mask)
-
-        # Δ = full_logits - cache.logits
         delta = full_logits - cache.logits
-
-        # y_next = y_prev + delta_weight * Δ
         logits = cache.logits + delta_weight * delta
 
         new_cache = IncrementalCache(

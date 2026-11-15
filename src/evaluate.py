@@ -42,7 +42,7 @@ from .config import ExperimentConfig, ModelConfig
 from .model import DiffusionLM
 from .diffusion import corrupt_tokens, mask_rate_to_step
 from .data import build_and_cache_dataset, BatchIterator
-from .quantization import model_storage_report, bits_per_param_from_schedule
+from .quantization import EFFECTIVE_BITS, model_storage_report, bits_per_param_from_schedule
 from .train import load_checkpoint
 
 
@@ -50,7 +50,7 @@ DISCLAIMER = """
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 IMPORTANT: This is an experimental proof-of-concept.
 
-All 1-bit, 2-bit, and 4-bit weight operations are SIMULATED
+All 1-bit, 2-bit, 3-bit, 4-bit, and 8-bit weight operations are SIMULATED
 using float32 MLX operations via Straight-Through Estimation.
 
   * Theoretical storage savings are real (if weights were stored
@@ -207,15 +207,25 @@ def precision_report(model: DiffusionLM, cfg: ExperimentConfig) -> str:
 
 
 def estimate_flop_savings(precision_schedule: list[int]) -> dict:
-    """Estimate theoretical FLOPs reduction vs full-precision baseline."""
-    avg_bits = np.mean(precision_schedule)
-    full_bits = 16.0  # bfloat16 baseline
-    # Linear layer FLOPs scale roughly with bit-width (for MACs)
-    theoretical_reduction = full_bits / avg_bits
+    """Estimate a theoretical MAC ratio against the float32 path this code runs.
+
+    Schedule entries are internal bit ids. ``bits=16`` is the identity path
+    and counts as ``EFFECTIVE_BITS[16]`` (32), not as bfloat16. The model
+    still executes float32 MACs, so the ratio is not a measured speedup.
+    """
+    if not precision_schedule:
+        raise ValueError("precision_schedule must not be empty")
+    effective = [EFFECTIVE_BITS.get(bits, float(bits)) for bits in precision_schedule]
+    avg_effective_bits = float(np.mean(effective))
+    fp32_bits = float(EFFECTIVE_BITS[16])
     return {
-        "avg_bits": avg_bits,
-        "theoretical_flop_reduction_vs_bf16": theoretical_reduction,
-        "note": "Simulated; actual speedup requires dedicated low-bit kernels",
+        "avg_effective_bits": avg_effective_bits,
+        "fp32_effective_bits": fp32_bits,
+        "theoretical_flop_reduction_vs_fp32": fp32_bits / avg_effective_bits,
+        "note": (
+            "Simulated. The model still executes float32 MACs; "
+            "this ratio is not a measured speedup."
+        ),
     }
 
 
@@ -252,10 +262,12 @@ def print_report(results: list[dict], flop_info: dict = None) -> None:
 
     if flop_info:
         print(f"\n{'─'*40}")
-        print("  Theoretical Compute Savings (Progressive vs Baseline)")
+        print("  Theoretical compute versus the FP32 identity path")
         print(f"{'─'*40}")
-        print(f"  Average bits/step:      {flop_info['avg_bits']:.2f}")
-        print(f"  vs BF16 baseline:       {flop_info['theoretical_flop_reduction_vs_bf16']:.1f}×")
+        print(f"  Average effective bits/step: {flop_info['avg_effective_bits']:.3f}")
+        print(f"  FP32 path effective bits:    {flop_info['fp32_effective_bits']:.1f}")
+        print(f"  vs FP32 identity path:       "
+              f"{flop_info['theoretical_flop_reduction_vs_fp32']:.1f}×")
         print(f"  ⚠ {flop_info['note']}")
 
     if len(results) == 2:

@@ -38,7 +38,16 @@ def main():
     parser.add_argument("--config", type=str, required=True)
     parser.add_argument("--n-sequences", type=int, default=4)
     parser.add_argument("--seq-len", type=int, default=64)
-    parser.add_argument("--temperature", type=float, default=1.0)
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.0,
+        help=(
+            "0 reveals the greedy argmax token. A positive value samples each "
+            "revealed token from softmax(logits / temperature). Confidence "
+            "from that same distribution still chooses which positions open first."
+        ),
+    )
     parser.add_argument("--show-steps", action="store_true",
                         help="Print intermediate refinement steps")
     args = parser.parse_args()

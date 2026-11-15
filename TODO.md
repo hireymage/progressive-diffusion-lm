@@ -2,10 +2,10 @@
 
 [English](TODO.en.md) | [Čeština](TODO.md)
 
-<!-- doc-status: living; verified: 2026-08-18 -->
-> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 18. 8. 2026.
+<!-- doc-status: living; verified: 2026-11-15 -->
+> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 15. 11. 2026.
 
-Poslední aktualizace: 2026-08-18
+Poslední aktualizace: 2026-11-15
 
 ---
 
@@ -62,7 +62,7 @@ Poslední aktualizace: 2026-08-18
 - [x] **Phase 2 — Bidirectional incremental** (42 běhů, 7 schedules, bits=8 přidán)
   - Nejlepší: constant-2b (7,4287); progressive-down nejhorší
 - [x] **Phase 2 — Inference eval** (3 nody, early-exit až 9,47× speedup)
-- [x] M2 Incremental forward (`y_next = y_prev + Δ`, 1,32× speedup)
+- [x] M2 Incremental forward míchá nový plný forward s uloženými logity (`y = cache + delta_weight * (full - cache)`). Současná funkce nic nepřeskakuje, takže nedává zrychlení 1,32×.
 - [x] M3 Early-exit generation (threshold ≤ 0,03 → 1 krok, 5–9× speedup, 100% shoda)
 
 ### Dokumentace
