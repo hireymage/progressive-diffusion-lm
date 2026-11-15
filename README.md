@@ -2,8 +2,8 @@
 
 [English](README.md) | [Čeština](README.cs.md)
 
-<!-- doc-status: living; verified: 2026-08-18 -->
-> **Document status:** Living documentation, verified against the current code and published results on 2026-08-18.
+<!-- doc-status: living; verified: 2026-11-15 -->
+> **Document status:** Living documentation, verified against the current code and published results on 2026-11-15.
 
 [Documentation](docs/) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Citation](CITATION.cff)
 
@@ -66,6 +66,8 @@ Quantization schemes (all simulated in float32 via STE):
 ---
 
 ## Quick Start
+
+`requirements.txt` installs MLX Metal on Apple Silicon and the MLX CPU backend on Linux. A plain `mlx` package on Linux does not include `libmlx.so`, so `import mlx` fails until the CPU extra is installed.
 
 ```bash
 # 1. Install
@@ -185,12 +187,15 @@ the canonical distinction between the implemented system and the full vision.
 ## Requirements and Hardware
 
 - Primary backend: macOS 13.5+ with Apple Silicon (M1/M2/M3/M4) and MLX
+- Linux CPU: the same MLX implementation runs through the CPU backend installed
+  by `requirements.txt`. It is a functional simulator, not a faster low-bit kernel
 - Optional backend: Linux or Windows with a CUDA-capable NVIDIA GPU and PyTorch
 - CUDA is supported for checkpoint conversion and continued training, but is
   not required to run the primary MLX implementation
 - 16 GB unified memory is sufficient for the small MLX experiments (tested on
   M4 16 GB)
-- MLX dependencies: `mlx>=0.21.0`, `tokenizers`, `datasets`, `numpy`, `tqdm`
+- MLX dependencies: `mlx[cpu]>=0.26.5` (Metal on macOS, CPU backend on Linux),
+  `tokenizers`, `datasets`, `numpy`, `tqdm`
 - CUDA dependencies and setup: [`requirements-cuda.txt`](requirements-cuda.txt)
   and [`docs/cuda-training.en.md`](docs/cuda-training.en.md)
 

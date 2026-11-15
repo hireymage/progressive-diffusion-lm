@@ -2,8 +2,8 @@
 
 [English](README.md) | [Čeština](README.cs.md)
 
-<!-- doc-status: living; verified: 2026-08-18 -->
-> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 18. 8. 2026.
+<!-- doc-status: living; verified: 2026-11-15 -->
+> **Stav dokumentu:** Živá dokumentace, obsah ověřen proti aktuálnímu kódu a publikovaným výsledkům 15. 11. 2026.
 
 [Dokumentace](docs/) · [Přispívání](CONTRIBUTING.md) · [Bezpečnost](SECURITY.md) · [Citace](CITATION.cff)
 
@@ -75,6 +75,8 @@ Kvantizační schémata jsou simulovaná v FP32 přes STE:
 ---
 
 ## Rychlý start
+
+`requirements.txt` na Apple Silicon nainstaluje MLX Metal a na Linuxu MLX CPU backend. Samotný balíček `mlx` na Linuxu neobsahuje `libmlx.so`, takže `import mlx` bez CPU extra selže.
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
@@ -169,11 +171,14 @@ rozlišení mezi implementovaným systémem a úplnou vizí je v
 ## Požadavky a hardware
 
 - hlavní backend: macOS 13.5+ na Apple Silicon a MLX,
+- Linux bez GPU: stejná MLX implementace běží přes CPU backend z
+  `requirements.txt`. Je to funkční simulace, ne rychlejší low-bit kernel,
 - volitelný backend: Linux nebo Windows s NVIDIA GPU podporující CUDA a PyTorch,
 - CUDA podporuje převod checkpointu a pokračování tréninku, ale pro hlavní MLX
   implementaci není povinná,
 - 16 GB unified memory stačí pro malé MLX experimenty, ověřeno na M4 16 GB,
-- MLX závislosti: `mlx>=0.21.0`, `tokenizers`, `datasets`, `numpy`, `tqdm`,
+- MLX závislosti: `mlx[cpu]>=0.26.5` (Metal na macOS, CPU backend na Linuxu),
+  `tokenizers`, `datasets`, `numpy`, `tqdm`,
 - CUDA závislosti a postup: [`requirements-cuda.txt`](requirements-cuda.txt) a
   [`docs/cuda-training.md`](docs/cuda-training.md).
 
